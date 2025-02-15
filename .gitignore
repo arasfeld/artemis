@@ -1,0 +1,10 @@
+# npm / pnpm / yarn
+node_modules
+npm-debug.log
+yarn-error.log
+
+# built code
+dist
+
+# OSX
+.DS_Store
