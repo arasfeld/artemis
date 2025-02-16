@@ -1,15 +1,19 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <LinearGradient colors={['#83b59c', '#4f685b']} style={styles.background}>
       <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    </LinearGradient>
   );
 }
+
+const styles = StyleSheet.create({
+  background: {
+    alignItems: 'center',
+    backgroundColor: '#83b59c',
+    flex: 1,
+    justifyContent: 'center',
+  },
+});
