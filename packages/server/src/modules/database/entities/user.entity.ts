@@ -26,14 +26,16 @@ export class User {
 
   @Property({
     length: 24,
-    comment: "Public-facing username (or 'handle') of the user.",
+    nullable: true,
+    comment:
+      "Public-facing username (or 'handle') of the user. Optional for OAuth users.",
   })
   @Check<User>({
     expression: (columns) =>
-      `length(${columns.username}) >= 2 and length(${columns.username}) <= 24 and ${columns.username} ~ '^[a-zA-Z]([_]?[a-zA-Z0-9])+$'`,
+      `${columns.username} IS NULL OR (length(${columns.username}) >= 2 and length(${columns.username}) <= 24 and ${columns.username} ~ '^[a-zA-Z]([_]?[a-zA-Z0-9])+$')`,
   })
   @Unique()
-  public username!: string;
+  public username?: string;
 
   @Property()
   public createdAt: Date = new Date();

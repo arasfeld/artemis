@@ -5,7 +5,7 @@ export class Users extends Migration {
     this.addSql(
       `create table "users" (
         "id" uuid not null,
-        "username" varchar(24) not null,
+        "username" varchar(24) null,
         "created_at" timestamptz(0) not null,
         "updated_at" timestamptz(0) not null,
         constraint "users_pkey" primary key ("id"),
