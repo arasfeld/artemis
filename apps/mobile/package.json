@@ -1,16 +1,17 @@
 {
-  "name": "@artemis/native",
+  "name": "@artemis/mobile",
   "version": "0.0.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
+    "clean": "rm -rf .expo node_modules",
+    "dev": "expo start",
     "ios": "expo start --ios",
-    "web": "expo start --web",
+    "lint": "expo lint",
+    "start": "expo start",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "web": "expo start --web"
   },
   "jest": {
     "preset": "jest-expo"

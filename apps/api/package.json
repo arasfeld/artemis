@@ -1,9 +1,11 @@
 {
-  "name": "@artemis/server",
+  "name": "@artemis/api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "nest build",
+    "clean": "rm -rf dist node_modules",
+    "dev": "nest start --watch",
     "db:migrate:up": "npx mikro-orm migration:up --config ./src/modules/database/mikro-orm.config.ts",
     "db:migrate:down": "npx mikro-orm migration:down --config ./src/modules/database/mikro-orm.config.ts",
     "db:migrate:fresh": "npx mikro-orm migration:fresh --config ./src/modules/database/mikro-orm.config.ts",
@@ -38,6 +40,8 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
+    "@artemis/eslint-config": "workspace:*",
+    "@artemis/typescript-config": "workspace:*",
     "@mikro-orm/cli": "^6.4.6",
     "@nestjs/cli": "^11.0.2",
     "@nestjs/schematics": "^11.0.0",
