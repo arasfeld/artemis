@@ -35,6 +35,10 @@ export interface OnboardingContextType {
   setCurrentStep: (step: number) => void;
   reset: () => void;
   isComplete: boolean;
+  // API sync state
+  isSyncing: boolean;
+  syncError: string | null;
+  clearSyncError: () => void;
 }
 
 export const TOTAL_ONBOARDING_STEPS = 7;

@@ -19,6 +19,49 @@ export interface ApiError {
   statusCode: number;
 }
 
+// Profile types for onboarding data
+export type Gender = 'male' | 'female' | 'non-binary';
+export type Seeking = 'male' | 'female' | 'everyone';
+export type RelationshipType = 'casual' | 'serious' | 'friendship' | 'unsure';
+export type LocationType = 'automatic' | 'manual';
+
+export interface LocationData {
+  type: LocationType;
+  country?: string;
+  zipCode?: string;
+  coordinates?: { lat: number; lng: number };
+}
+
+export interface PhotoData {
+  id: string;
+  url: string;
+  displayOrder: number;
+}
+
+export interface ProfileData {
+  firstName?: string;
+  dateOfBirth?: string;
+  gender?: Gender;
+  seeking?: Seeking;
+  relationshipType?: RelationshipType;
+  ageRangeMin: number;
+  ageRangeMax: number;
+  location?: LocationData;
+  photos: PhotoData[];
+  isOnboardingComplete: boolean;
+}
+
+export interface UpdateProfileData {
+  firstName?: string;
+  dateOfBirth?: string;
+  gender?: Gender;
+  seeking?: Seeking;
+  relationshipType?: RelationshipType;
+  ageRangeMin?: number;
+  ageRangeMax?: number;
+  location?: LocationData;
+}
+
 class ApiClient {
   private async request<T>(
     endpoint: string,
@@ -69,6 +112,38 @@ class ApiClient {
 
   async logout(): Promise<void> {
     await this.request('/auth/logout', { method: 'POST' });
+  }
+
+  // Profile endpoints for onboarding data
+  async getOnboardingProfile(): Promise<ProfileData> {
+    return this.request<ProfileData>('/profile');
+  }
+
+  async updateProfile(data: UpdateProfileData): Promise<ProfileData> {
+    return this.request<ProfileData>('/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async addPhoto(url: string, displayOrder?: number): Promise<ProfileData> {
+    return this.request<ProfileData>('/profile/photos', {
+      method: 'POST',
+      body: JSON.stringify({ url, displayOrder }),
+    });
+  }
+
+  async deletePhoto(photoId: string): Promise<ProfileData> {
+    return this.request<ProfileData>(`/profile/photos/${photoId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async reorderPhotos(photoIds: string[]): Promise<ProfileData> {
+    return this.request<ProfileData>('/profile/photos/reorder', {
+      method: 'PATCH',
+      body: JSON.stringify({ photoIds }),
+    });
   }
 }
 

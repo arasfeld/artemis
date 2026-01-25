@@ -3,5 +3,7 @@ export * from './role.entity';
 export * from './user-authentication.entity';
 export * from './user-email.entity';
 export * from './user-email-secrets.entity';
+export * from './user-photo.entity';
+export * from './user-profile.entity';
 export * from './user-secrets.entity';
 export * from './user.entity';

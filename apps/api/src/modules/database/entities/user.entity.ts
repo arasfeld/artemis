@@ -14,6 +14,7 @@ import { Permission } from './permission.entity';
 import { Role } from './role.entity';
 import { UserAuthentication } from './user-authentication.entity';
 import { UserEmail } from './user-email.entity';
+import { UserProfile } from './user-profile.entity';
 import { UserSecrets } from './user-secrets.entity';
 
 @Entity({
@@ -63,6 +64,9 @@ export class User {
     hidden: true,
   })
   public userSecrets?: UserSecrets;
+
+  @OneToOne(() => UserProfile, (userProfile) => userProfile.user)
+  public userProfile?: UserProfile;
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);
