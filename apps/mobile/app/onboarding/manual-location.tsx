@@ -10,7 +10,7 @@ import {
   Select,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 
 const COUNTRY_OPTIONS = [
@@ -43,7 +43,7 @@ const COUNTRY_OPTIONS = [
 export default function ManualLocationScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/manual-location');
-  const { updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { updateData, setCurrentStep, totalSteps } = useAppOnboarding();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [zipCode, setZipCode] = useState('');
 

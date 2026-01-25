@@ -9,13 +9,13 @@ import {
   ProgressIndicator,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 
 export default function FirstNameScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/first-name');
-  const { data, updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
   const [firstName, setFirstName] = useState(data.firstName);
   const [error, setError] = useState('');
 

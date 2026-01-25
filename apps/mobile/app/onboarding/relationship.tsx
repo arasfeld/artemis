@@ -9,7 +9,7 @@ import {
   OptionCard,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 import type { RelationshipType } from '../../types/onboarding';
 
@@ -39,7 +39,7 @@ const RELATIONSHIP_OPTIONS: { value: RelationshipType; label: string; subtitle: 
 export default function RelationshipScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/relationship');
-  const { data, updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
   const [relationshipType, setRelationshipType] = useState<RelationshipType | null>(
     data.relationshipType
   );

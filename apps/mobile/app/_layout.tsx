@@ -1,14 +1,15 @@
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { AuthProvider, useAuth } from '../context/AuthContext';
-import { OnboardingProvider } from '../context/OnboardingContext';
+import { Provider } from 'react-redux';
+import { store } from '../store';
+import { useAppAuth } from '../hooks/useAppAuth';
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
-  const { isLoading } = useAuth();
+  const { isLoading } = useAppAuth();
 
   useEffect(() => {
     // Hide splash screen when auth state is determined
@@ -17,11 +18,8 @@ function RootLayoutNav() {
     }
   }, [isLoading]);
 
-  if (isLoading) {
-    // Keep splash screen visible while loading
-    return null;
-  }
-
+  // Always render the Stack - expo-router requires it
+  // The index screen handles showing a loading state
   return (
     <Stack
       screenOptions={{
@@ -38,10 +36,8 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <OnboardingProvider>
-        <RootLayoutNav />
-      </OnboardingProvider>
-    </AuthProvider>
+    <Provider store={store}>
+      <RootLayoutNav />
+    </Provider>
   );
 }

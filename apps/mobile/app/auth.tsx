@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAppAuth } from '../hooks/useAppAuth';
 import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
 
 export default function AuthScreen() {
-  const { isLoading, error, signInWithGoogle, clearError } = useAuth();
+  const { isLoading, error, signInWithGoogle, clearError } = useAppAuth();
   const { isAuthenticated, navigate } = useOnboardingFlow();
 
   // Redirect to appropriate screen when authenticated

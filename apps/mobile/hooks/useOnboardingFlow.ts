@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../context/AuthContext';
-import { useOnboarding } from '../context/OnboardingContext';
+import { useAppAuth } from './useAppAuth';
+import { useAppOnboarding } from './useAppOnboarding';
+import type { OnboardingData } from '../types/onboarding';
 
 export type OnboardingRoute =
   | '/onboarding/welcome'
@@ -47,7 +48,7 @@ const PREVIOUS_ROUTE_MAP: Record<OnboardingRoute, OnboardingRoute | null> = {
  */
 const ONBOARDING_STEPS: {
   route: FlowDestination;
-  isComplete: (data: ReturnType<typeof useOnboarding>['data']) => boolean;
+  isComplete: (data: OnboardingData) => boolean;
 }[] = [
   {
     route: '/onboarding/first-name',
@@ -111,8 +112,10 @@ interface OnboardingFlowResult {
  */
 export function useOnboardingFlow(): OnboardingFlowResult {
   const router = useRouter();
-  const { isLoading, isAuthenticated, user } = useAuth();
-  const { data, isComplete } = useOnboarding();
+  const { isLoading: authLoading, isAuthenticated, user } = useAppAuth();
+  const { data, isComplete, isLoading: onboardingLoading } = useAppOnboarding();
+
+  const isLoading = authLoading || onboardingLoading;
 
   // Check server-side onboarding status first, fall back to local state
   const isOnboardingComplete = user?.isOnboardingComplete ?? isComplete;

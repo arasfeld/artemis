@@ -13,7 +13,7 @@ import {
   shadow,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 
 const MAX_PHOTOS = 6;
@@ -22,7 +22,7 @@ const MIN_PHOTOS = 2;
 export default function PhotosScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/photos');
-  const { data, updateData, totalSteps } = useOnboarding();
+  const { data, updateData, totalSteps } = useAppOnboarding();
   const [photos, setPhotos] = useState<string[]>(data.photos);
 
   const isValid = photos.length >= MIN_PHOTOS;

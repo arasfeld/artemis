@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useOnboarding } from '../context/OnboardingContext';
+import { useAppAuth } from '../hooks/useAppAuth';
+import { useAppOnboarding } from '../hooks/useAppOnboarding';
 import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
 
 export default function HomeScreen() {
-  const { isLoading, user, signOut } = useAuth();
-  const { reset: resetOnboarding } = useOnboarding();
+  const { isLoading, user, signOut } = useAppAuth();
+  const { reset: resetOnboarding } = useAppOnboarding();
   const { isAuthenticated, navigate } = useOnboardingFlow();
 
   // Redirect based on flow state if not authenticated

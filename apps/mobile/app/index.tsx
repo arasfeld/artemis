@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
 
 export default function Index() {
-  const { isLoading, navigate } = useOnboardingFlow();
+  const { isLoading, navigate, destination } = useOnboardingFlow();
 
   useEffect(() => {
     if (isLoading) return;
@@ -15,7 +15,7 @@ export default function Index() {
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [isLoading, navigate]);
+  }, [isLoading, navigate, destination]);
 
   return (
     <LinearGradient colors={['#83b59c', '#4f685b']} style={styles.background}>

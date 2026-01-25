@@ -10,13 +10,13 @@ import {
   colors,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 
 export default function DateOfBirthScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/date-of-birth');
-  const { data, updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
 
   const [month, setMonth] = useState('');
   const [day, setDay] = useState('');

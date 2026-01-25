@@ -10,13 +10,13 @@ import {
   colors,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 
 export default function LocationScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/location');
-  const { updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { updateData, setCurrentStep, totalSteps } = useAppOnboarding();
 
   const handleEnableLocation = async () => {
     // Stub: In a real app, request location permissions here

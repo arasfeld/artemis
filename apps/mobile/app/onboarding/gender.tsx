@@ -9,7 +9,7 @@ import {
   OptionCard,
   spacing,
 } from '@artemis/ui';
-import { useOnboarding } from '../../context/OnboardingContext';
+import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
 import type { Gender, Seeking } from '../../types/onboarding';
 
@@ -28,7 +28,7 @@ const SEEKING_OPTIONS: { value: Seeking; label: string }[] = [
 export default function GenderScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/gender');
-  const { data, updateData, setCurrentStep, totalSteps } = useOnboarding();
+  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
   const [gender, setGender] = useState<Gender | null>(data.gender);
   const [seeking, setSeeking] = useState<Seeking | null>(data.seeking);
 
