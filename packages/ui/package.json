@@ -6,9 +6,10 @@
     "./*": "./src/*.tsx"
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules",
     "generate:component": "turbo gen react-component",
-    "check-types": "tsc --noEmit"
+    "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
     "@artemis/eslint-config": "workspace:*",
@@ -20,7 +21,7 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   }
 }
