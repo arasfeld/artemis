@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
-import { AuthProvider } from '../context/AuthContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { OnboardingProvider } from '../context/OnboardingContext';
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -31,6 +31,7 @@ function RootLayoutNav() {
       <Stack.Screen name="index" options={{ animation: 'none' }} />
       <Stack.Screen name="auth" />
       <Stack.Screen name="home" />
+      <Stack.Screen name="onboarding" />
     </Stack>
   );
 }
@@ -38,7 +39,9 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <OnboardingProvider>
+        <RootLayoutNav />
+      </OnboardingProvider>
     </AuthProvider>
   );
 }

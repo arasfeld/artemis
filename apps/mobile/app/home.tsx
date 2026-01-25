@@ -1,22 +1,25 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
+import { useOnboarding } from '../context/OnboardingContext';
+import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
 
 export default function HomeScreen() {
-  const router = useRouter();
-  const { isLoading, isAuthenticated, user, signOut } = useAuth();
+  const { isLoading, user, signOut } = useAuth();
+  const { reset: resetOnboarding } = useOnboarding();
+  const { isAuthenticated, navigate } = useOnboardingFlow();
 
-  // Redirect to auth if not authenticated
+  // Redirect based on flow state if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.replace('/auth');
+      navigate();
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
+    resetOnboarding();
   };
 
   if (isLoading || !user) {

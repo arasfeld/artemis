@@ -1,20 +1,19 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
+import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
 
 export default function AuthScreen() {
-  const router = useRouter();
-  const { isLoading, isAuthenticated, error, signInWithGoogle, clearError } =
-    useAuth();
+  const { isLoading, error, signInWithGoogle, clearError } = useAuth();
+  const { isAuthenticated, navigate } = useOnboardingFlow();
 
-  // Redirect to home when authenticated
+  // Redirect to appropriate screen when authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/home');
+      navigate();
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, navigate]);
 
   // Show error alerts
   useEffect(() => {
