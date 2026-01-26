@@ -1,9 +1,21 @@
 import { View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { ScreenContainer, Text, Button, spacing } from '@artemis/ui';
+import { useAppAuth } from '../../hooks/useAppAuth';
+import { useOnboardingFlow } from '../../hooks/useOnboardingFlow';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAppAuth();
+  const { navigate } = useOnboardingFlow();
+
+  // Redirect authenticated users away from welcome screen
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate();
+    }
+  }, [isLoading, isAuthenticated, navigate]);
 
   const handleSignIn = () => {
     router.push('/auth');
@@ -12,6 +24,27 @@ export default function WelcomeScreen() {
   const handleJoin = () => {
     router.push('/onboarding/first-name');
   };
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <ScreenContainer centered>
+        <View style={styles.content}>
+          <Text variant="title" center>
+            Artemis
+          </Text>
+          <Text variant="subtitle" center>
+            Dating for Animal Lovers
+          </Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  // Don't render welcome screen if authenticated
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <ScreenContainer centered>

@@ -97,3 +97,59 @@ Copy `apps/api/.env.example` to `apps/api/.env` and configure:
 - `POSTGRES_*` - Database connection
 - `JWT_SECRET` / `JWT_EXPIRES_IN` - Token signing
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - OAuth credentials
+
+## Code Style Guidelines
+
+### Import Organization
+
+Order imports in the following groups, separated by blank lines:
+
+1. External packages (e.g., `react`, `expo-router`, `@nestjs/common`)
+2. Internal modules using absolute imports with `@/` prefix (when alias is configured)
+3. Relative imports for closely related files (e.g., `./utils`, `../components`)
+
+Within each group:
+
+- Alphabetize imports by module path
+- Alphabetize destructured items within each import statement
+- Remove unused imports
+
+```typescript
+// External packages
+import { useCallback, useMemo, useState } from 'react';
+import { Stack } from 'expo-router';
+
+// Internal modules (absolute)
+import { useAuth } from '@/context/AuthContext';
+import { api } from '@/lib/api';
+
+// Relative imports
+import { Button } from './Button';
+import { formatDate, formatName } from './utils';
+```
+
+### Alphabetization
+
+When order doesn't affect functionality, alphabetize for easier scanning:
+
+- Import statements and their destructured items
+- Object keys and interface/type properties
+- Component props (both definition and usage)
+- Array items (when order is arbitrary)
+- CSS/style properties
+- Enum values
+
+### React Performance
+
+Use `useCallback` and `useMemo` appropriately:
+
+- `useCallback` for functions passed as props or used in dependency arrays
+- `useMemo` for expensive computations or objects/arrays used in dependency arrays
+- Avoid premature optimization for simple values or rarely re-rendered components
+
+### General Conventions
+
+- Prefer named exports over default exports for better refactoring support
+- Use descriptive variable names; avoid abbreviations unless widely understood
+- Keep components and functions focused on a single responsibility
+- Colocate related files (tests, styles, types) near their source files

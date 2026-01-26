@@ -28,6 +28,13 @@
     "plugins": [
       "expo-router",
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to provide personalized services and location-based features.",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location while using the app to show relevant content based on your current location."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",

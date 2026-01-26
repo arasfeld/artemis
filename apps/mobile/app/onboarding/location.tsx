@@ -1,4 +1,5 @@
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -12,33 +13,65 @@ import {
 } from '@artemis/ui';
 import { useAppOnboarding } from '../../hooks/useAppOnboarding';
 import { useSafeBack } from '../../hooks/useOnboardingFlow';
+import { getCurrentLocation } from '../../utils/location';
 
 export default function LocationScreen() {
   const router = useRouter();
   const safeBack = useSafeBack('/onboarding/location');
   const { updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEnableLocation = async () => {
-    // Stub: In a real app, request location permissions here
-    Alert.alert(
-      'Location Services',
-      'This would request location permissions. For now, we\'ll simulate success.',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            updateData({
-              location: {
-                type: 'automatic',
-                coordinates: { lat: 37.7749, lng: -122.4194 },
-              },
-            });
-            setCurrentStep(3);
-            router.push('/onboarding/gender');
+    setIsLoading(true);
+    
+    try {
+      const locationResult = await getCurrentLocation();
+      
+      if (locationResult) {
+        updateData({
+          location: {
+            type: 'automatic',
+            coordinates: locationResult.coordinates,
+            country: locationResult.country,
+            zipCode: locationResult.zipCode,
           },
-        },
-      ]
-    );
+        });
+        setCurrentStep(3);
+        router.push('/onboarding/gender');
+      } else {
+        Alert.alert(
+          'Location Error',
+          'Unable to get your location. Please make sure location services are enabled and try again.',
+          [
+            {
+              text: 'Try Again',
+              onPress: handleEnableLocation,
+            },
+            {
+              text: 'Enter Manually',
+              onPress: handleEnterManually,
+            },
+          ]
+        );
+      }
+    } catch {
+      Alert.alert(
+        'Location Error',
+        'Failed to access location services. Please enable location permissions and try again.',
+        [
+          {
+            text: 'Try Again',
+            onPress: handleEnableLocation,
+          },
+          {
+            text: 'Enter Manually',
+            onPress: handleEnterManually,
+          },
+        ]
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleEnterManually = () => {
@@ -64,8 +97,17 @@ export default function LocationScreen() {
       </View>
 
       <View style={styles.footer}>
-        <Button onPress={handleEnableLocation} fullWidth>
-          Enable Location Services
+        <Button onPress={handleEnableLocation} fullWidth disabled={isLoading}>
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color={colors.white} />
+              <Text style={styles.loadingText}>
+                Getting Location...
+              </Text>
+            </View>
+          ) : (
+            'Enable Location Services'
+          )}
         </Button>
         <View style={styles.linkContainer}>
           <LinkText onPress={handleEnterManually}>
@@ -98,5 +140,14 @@ const styles = StyleSheet.create({
   linkContainer: {
     alignItems: 'center',
     marginTop: spacing.lg,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+  },
+  loadingText: {
+    color: colors.white,
   },
 });
