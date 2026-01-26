@@ -1,28 +1,17 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useAppAuth } from '../hooks/useAppAuth';
-import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
+import { useAppAuth } from '../../hooks/useAppAuth';
 
-export default function AuthScreen() {
-  const { isLoading, error, signInWithGoogle, clearError } = useAppAuth();
-  const { isAuthenticated, navigate } = useOnboardingFlow();
-
-  // Redirect to appropriate screen when authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate();
-    }
-  }, [isAuthenticated, navigate]);
+export default function SignInScreen() {
+  const { clearError, error, isLoading, signInWithGoogle } = useAppAuth();
 
   // Show error alerts
   useEffect(() => {
     if (error) {
-      Alert.alert('Sign In Error', error, [
-        { text: 'OK', onPress: clearError },
-      ]);
+      Alert.alert('Sign In Error', error, [{ text: 'OK', onPress: clearError }]);
     }
-  }, [error, clearError]);
+  }, [clearError, error]);
 
   return (
     <LinearGradient colors={['#83b59c', '#4f685b']} style={styles.background}>
@@ -46,42 +35,42 @@ export default function AuthScreen() {
 
 const styles = StyleSheet.create({
   background: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: 'rgba(255, 255, 255, 0.9)',
-    marginBottom: 60,
   },
   button: {
     backgroundColor: 'white',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
     borderRadius: 25,
+    elevation: 3,
+    paddingHorizontal: 40,
+    paddingVertical: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
+    color: '#4f685b',
     fontSize: 16,
     fontWeight: '600',
-    color: '#4f685b',
+  },
+  container: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  subtitle: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 18,
+    marginBottom: 60,
+  },
+  title: {
+    color: 'white',
+    fontSize: 48,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });

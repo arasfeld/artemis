@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  ScreenContainer,
-  Text,
-  TextInput,
   Button,
   ProgressIndicator,
+  ScreenContainer,
   spacing,
+  Text,
+  TextInput,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
 
 export default function FirstNameScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/first-name');
-  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/first-name');
+  const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [firstName, setFirstName] = useState(data.firstName);
   const [error, setError] = useState('');
 
@@ -28,7 +28,7 @@ export default function FirstNameScreen() {
     }
     updateData({ firstName: firstName.trim() });
     setCurrentStep(2);
-    router.push('/onboarding/location');
+    router.push('/(main)/onboarding/location');
   };
 
   return (
@@ -41,10 +41,10 @@ export default function FirstNameScreen() {
 
         <View style={styles.content}>
           <Text variant="title" center>
-            What's your first name?
+            What&apos;s your first name?
           </Text>
           <Text variant="subtitle" center>
-            This is how you'll appear on Artemis
+            This is how you&apos;ll appear on Artemis
           </Text>
 
           <TextInput

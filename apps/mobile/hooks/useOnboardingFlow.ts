@@ -5,41 +5,41 @@ import { useAppOnboarding } from './useAppOnboarding';
 import type { OnboardingData } from '../types/onboarding';
 
 export type OnboardingRoute =
-  | '/onboarding/welcome'
-  | '/onboarding/first-name'
-  | '/onboarding/location'
-  | '/onboarding/manual-location'
-  | '/onboarding/gender'
-  | '/onboarding/date-of-birth'
-  | '/onboarding/relationship'
-  | '/onboarding/age-range'
-  | '/onboarding/photos';
+  | '/(auth)/welcome'
+  | '/(main)/onboarding/first-name'
+  | '/(main)/onboarding/location'
+  | '/(main)/onboarding/manual-location'
+  | '/(main)/onboarding/gender'
+  | '/(main)/onboarding/date-of-birth'
+  | '/(main)/onboarding/relationship'
+  | '/(main)/onboarding/age-range'
+  | '/(main)/onboarding/photos';
 
 export type FlowDestination =
-  | '/onboarding/welcome'
-  | '/onboarding/first-name'
-  | '/onboarding/location'
-  | '/onboarding/gender'
-  | '/onboarding/date-of-birth'
-  | '/onboarding/relationship'
-  | '/onboarding/age-range'
-  | '/onboarding/photos'
-  | '/home';
+  | '/(auth)/welcome'
+  | '/(main)/onboarding/first-name'
+  | '/(main)/onboarding/location'
+  | '/(main)/onboarding/gender'
+  | '/(main)/onboarding/date-of-birth'
+  | '/(main)/onboarding/relationship'
+  | '/(main)/onboarding/age-range'
+  | '/(main)/onboarding/photos'
+  | '/(main)/(tabs)';
 
 /**
  * Map of onboarding routes to their previous route.
  * Used for safe back navigation when there's no navigation history.
  */
 const PREVIOUS_ROUTE_MAP: Record<OnboardingRoute, OnboardingRoute | null> = {
-  '/onboarding/welcome': null,
-  '/onboarding/first-name': '/onboarding/welcome',
-  '/onboarding/location': '/onboarding/first-name',
-  '/onboarding/manual-location': '/onboarding/location',
-  '/onboarding/gender': '/onboarding/location',
-  '/onboarding/date-of-birth': '/onboarding/gender',
-  '/onboarding/relationship': '/onboarding/date-of-birth',
-  '/onboarding/age-range': '/onboarding/relationship',
-  '/onboarding/photos': '/onboarding/age-range',
+  '/(auth)/welcome': null,
+  '/(main)/onboarding/first-name': null, // No back from first onboarding step (user is authenticated)
+  '/(main)/onboarding/location': '/(main)/onboarding/first-name',
+  '/(main)/onboarding/manual-location': '/(main)/onboarding/location',
+  '/(main)/onboarding/gender': '/(main)/onboarding/location',
+  '/(main)/onboarding/date-of-birth': '/(main)/onboarding/gender',
+  '/(main)/onboarding/relationship': '/(main)/onboarding/date-of-birth',
+  '/(main)/onboarding/age-range': '/(main)/onboarding/relationship',
+  '/(main)/onboarding/photos': '/(main)/onboarding/age-range',
 };
 
 /**
@@ -51,31 +51,31 @@ const ONBOARDING_STEPS: {
   isComplete: (data: OnboardingData) => boolean;
 }[] = [
   {
-    route: '/onboarding/first-name',
+    route: '/(main)/onboarding/first-name',
     isComplete: (data) => data.firstName.length >= 2,
   },
   {
-    route: '/onboarding/location',
+    route: '/(main)/onboarding/location',
     isComplete: (data) => data.location !== null,
   },
   {
-    route: '/onboarding/gender',
+    route: '/(main)/onboarding/gender',
     isComplete: (data) => data.gender !== null && data.seeking !== null,
   },
   {
-    route: '/onboarding/date-of-birth',
+    route: '/(main)/onboarding/date-of-birth',
     isComplete: (data) => data.dateOfBirth !== null,
   },
   {
-    route: '/onboarding/relationship',
+    route: '/(main)/onboarding/relationship',
     isComplete: (data) => data.relationshipType !== null,
   },
   {
-    route: '/onboarding/age-range',
+    route: '/(main)/onboarding/age-range',
     isComplete: (data) => data.ageRange.min >= 18 && data.ageRange.max >= data.ageRange.min,
   },
   {
-    route: '/onboarding/photos',
+    route: '/(main)/onboarding/photos',
     isComplete: (data) => data.photos.length >= 2,
   },
 ];
@@ -108,7 +108,7 @@ interface OnboardingFlowResult {
  * Routing rules:
  * - Not authenticated → Welcome screen
  * - Authenticated + onboarding incomplete → First incomplete onboarding step
- * - Authenticated + onboarding complete → Main app (home)
+ * - Authenticated + onboarding complete → Main app (tabs)
  */
 export function useOnboardingFlow(): OnboardingFlowResult {
   const router = useRouter();
@@ -133,14 +133,14 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   // Determine the destination based on current state
   const destination = useMemo((): FlowDestination => {
     if (!isAuthenticated) {
-      return '/onboarding/welcome';
+      return '/(auth)/welcome';
     }
 
     if (!isOnboardingComplete && firstIncompleteStep < ONBOARDING_STEPS.length) {
       return ONBOARDING_STEPS[firstIncompleteStep].route;
     }
 
-    return '/home';
+    return '/(main)/(tabs)';
   }, [isAuthenticated, isOnboardingComplete, firstIncompleteStep]);
 
   // Navigate to the determined destination
@@ -165,15 +165,15 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   }, [router, currentStep]);
 
   return {
-    isLoading,
-    isAuthenticated,
-    isOnboardingComplete,
-    destination,
-    navigate,
-    currentStep,
-    totalSteps,
     canGoBack,
+    currentStep,
+    destination,
     goBack,
+    isAuthenticated,
+    isLoading,
+    isOnboardingComplete,
+    navigate,
+    totalSteps,
   };
 }
 

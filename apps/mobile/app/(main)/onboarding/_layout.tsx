@@ -4,12 +4,11 @@ export default function OnboardingLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
         animation: 'slide_from_right',
         gestureEnabled: true,
+        headerShown: false,
       }}
     >
-      <Stack.Screen name="welcome" />
       <Stack.Screen name="first-name" />
       <Stack.Screen name="location" />
       <Stack.Screen name="manual-location" />

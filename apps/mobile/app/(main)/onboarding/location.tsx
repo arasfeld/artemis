@@ -1,55 +1,55 @@
-import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  ScreenContainer,
-  Text,
   Button,
+  colors,
   LinkText,
   ProgressIndicator,
-  colors,
+  ScreenContainer,
   spacing,
+  Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
-import { getCurrentLocation } from '../../utils/location';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import { getCurrentLocation } from '../../../utils/location';
 
 export default function LocationScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/location');
-  const { updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/location');
+  const { setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEnableLocation = async () => {
     setIsLoading(true);
-    
+
     try {
       const locationResult = await getCurrentLocation();
-      
+
       if (locationResult) {
         updateData({
           location: {
-            type: 'automatic',
             coordinates: locationResult.coordinates,
             country: locationResult.country,
+            type: 'automatic',
             zipCode: locationResult.zipCode,
           },
         });
         setCurrentStep(3);
-        router.push('/onboarding/gender');
+        router.push('/(main)/onboarding/gender');
       } else {
         Alert.alert(
           'Location Error',
           'Unable to get your location. Please make sure location services are enabled and try again.',
           [
             {
-              text: 'Try Again',
               onPress: handleEnableLocation,
+              text: 'Try Again',
             },
             {
-              text: 'Enter Manually',
               onPress: handleEnterManually,
+              text: 'Enter Manually',
             },
           ]
         );
@@ -60,12 +60,12 @@ export default function LocationScreen() {
         'Failed to access location services. Please enable location permissions and try again.',
         [
           {
-            text: 'Try Again',
             onPress: handleEnableLocation,
+            text: 'Try Again',
           },
           {
-            text: 'Enter Manually',
             onPress: handleEnterManually,
+            text: 'Enter Manually',
           },
         ]
       );
@@ -75,7 +75,7 @@ export default function LocationScreen() {
   };
 
   const handleEnterManually = () => {
-    router.push('/onboarding/manual-location');
+    router.push('/(main)/onboarding/manual-location');
   };
 
   return (
@@ -101,9 +101,7 @@ export default function LocationScreen() {
           {isLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="small" color={colors.white} />
-              <Text style={styles.loadingText}>
-                Getting Location...
-              </Text>
+              <Text style={styles.loadingText}>Getting Location...</Text>
             </View>
           ) : (
             'Enable Location Services'
@@ -121,13 +119,10 @@ export default function LocationScreen() {
 
 const styles = StyleSheet.create({
   content: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: spacing.md,
-  },
-  iconContainer: {
-    marginBottom: spacing.lg,
   },
   description: {
     marginTop: spacing.md,
@@ -137,15 +132,18 @@ const styles = StyleSheet.create({
   footer: {
     paddingBottom: spacing.xl,
   },
+  iconContainer: {
+    marginBottom: spacing.lg,
+  },
   linkContainer: {
     alignItems: 'center',
     marginTop: spacing.lg,
   },
   loadingContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row',
     gap: spacing.sm,
+    justifyContent: 'center',
   },
   loadingText: {
     color: colors.white,

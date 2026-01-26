@@ -1,61 +1,72 @@
-import { useState } from "react";
-import { View, StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
-import { useRouter } from "expo-router";
+import { useState } from 'react';
 import {
-  ScreenContainer,
-  Text,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import {
   Button,
   ProgressIndicator,
-  TextInput,
+  ScreenContainer,
   spacing,
-} from "@artemis/ui";
-import { useAppOnboarding } from "@/hooks/useAppOnboarding";
-import { useSafeBack } from "@/hooks/useOnboardingFlow";
+  Text,
+  TextInput,
+} from '@artemis/ui';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
 
 const MIN_AGE = 18;
 const MAX_AGE = 99;
 
 export default function AgeRangeScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack("/onboarding/age-range");
-  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/age-range');
+  const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [minAge, setMinAge] = useState(data.ageRange.min.toString());
   const [maxAge, setMaxAge] = useState(data.ageRange.max.toString());
 
   const handleMinChange = (value: string) => {
-    // Allow empty input or valid numbers
+    // Allow empty input
     if (value === '') {
       setMinAge('');
       return;
     }
-    
-    const newMin = parseInt(value);
-    // Only update if it's a valid number within bounds
-    if (!isNaN(newMin) && newMin >= MIN_AGE && newMin <= MAX_AGE) {
-      setMinAge(newMin.toString());
-    }
+
+    // Only allow numeric input
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setMinAge(numericValue);
   };
 
   const handleMaxChange = (value: string) => {
-    // Allow empty input or valid numbers
+    // Allow empty input
     if (value === '') {
       setMaxAge('');
       return;
     }
-    
-    const newMax = parseInt(value);
-    // Only update if it's a valid number within bounds
-    if (!isNaN(newMax) && newMax >= MIN_AGE && newMax <= MAX_AGE) {
-      setMaxAge(newMax.toString());
-    }
+
+    // Only allow numeric input
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setMaxAge(numericValue);
   };
 
   const handleContinue = () => {
     const min = parseInt(minAge) || MIN_AGE;
     const max = parseInt(maxAge) || MAX_AGE;
-    updateData({ ageRange: { min, max } });
+
+    // Validate that min is less than max
+    if (min >= max) {
+      // You could show an alert here, but for now just swap them
+      updateData({
+        ageRange: { max: Math.max(min, max), min: Math.min(min, max) },
+      });
+    } else {
+      updateData({ ageRange: { max, min } });
+    }
+
     setCurrentStep(7);
-    router.push("/onboarding/photos");
+    router.push('/(main)/onboarding/photos');
   };
 
   return (
@@ -86,12 +97,13 @@ export default function AgeRangeScreen() {
               <TextInput
                 value={minAge}
                 onChangeText={handleMinChange}
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder={`${MIN_AGE}`}
                 maxLength={2}
                 style={styles.ageInput}
                 returnKeyType="next"
                 onSubmitEditing={Keyboard.dismiss}
+                showSoftInputOnFocus={true}
               />
             </View>
 
@@ -100,12 +112,13 @@ export default function AgeRangeScreen() {
               <TextInput
                 value={maxAge}
                 onChangeText={handleMaxChange}
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder={`${MAX_AGE}`}
                 maxLength={2}
                 style={styles.ageInput}
                 returnKeyType="done"
                 onSubmitEditing={Keyboard.dismiss}
+                showSoftInputOnFocus={true}
               />
             </View>
           </View>
@@ -122,34 +135,34 @@ export default function AgeRangeScreen() {
 }
 
 const styles = StyleSheet.create({
+  ageInput: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: spacing.sm,
+    textAlign: 'center',
+  },
   content: {
     flex: 1,
     paddingHorizontal: spacing.md,
   },
-  rangeDisplay: {
-    marginTop: spacing["2xl"],
-    marginBottom: spacing.xl,
-  },
-  rangeText: {
-    fontSize: 56,
-    marginBottom: 0,
-  },
-  inputsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
-    gap: spacing.lg,
+  footer: {
+    paddingBottom: spacing.xl,
   },
   inputWrapper: {
     flex: 1,
   },
-  ageInput: {
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: spacing.sm,
+  inputsContainer: {
+    flexDirection: 'row',
+    gap: spacing.lg,
+    justifyContent: 'space-between',
+    marginTop: spacing.xl,
   },
-  footer: {
-    paddingBottom: spacing.xl,
+  rangeDisplay: {
+    marginBottom: spacing.xl,
+    marginTop: spacing['2xl'],
+  },
+  rangeText: {
+    fontSize: 56,
+    marginBottom: 0,
   },
 });

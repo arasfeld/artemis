@@ -27,9 +27,8 @@ function RootLayoutNav() {
       }}
     >
       <Stack.Screen name="index" options={{ animation: 'none' }} />
-      <Stack.Screen name="auth" />
-      <Stack.Screen name="home" />
-      <Stack.Screen name="onboarding" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(main)" />
     </Stack>
   );
 }

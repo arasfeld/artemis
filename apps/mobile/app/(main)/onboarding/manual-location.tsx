@@ -1,49 +1,49 @@
 import { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  ScreenContainer,
-  Text,
-  TextInput,
   Button,
   ProgressIndicator,
+  ScreenContainer,
   Select,
   spacing,
+  Text,
+  TextInput,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
 
 const COUNTRY_OPTIONS = [
-  { value: 'US', label: 'United States' },
-  { value: 'CA', label: 'Canada' },
-  { value: 'UK', label: 'United Kingdom' },
-  { value: 'AU', label: 'Australia' },
-  { value: 'DE', label: 'Germany' },
-  { value: 'FR', label: 'France' },
-  { value: 'ES', label: 'Spain' },
-  { value: 'IT', label: 'Italy' },
-  { value: 'NL', label: 'Netherlands' },
-  { value: 'BE', label: 'Belgium' },
-  { value: 'AT', label: 'Austria' },
-  { value: 'CH', label: 'Switzerland' },
-  { value: 'SE', label: 'Sweden' },
-  { value: 'NO', label: 'Norway' },
-  { value: 'DK', label: 'Denmark' },
-  { value: 'FI', label: 'Finland' },
-  { value: 'IE', label: 'Ireland' },
-  { value: 'NZ', label: 'New Zealand' },
-  { value: 'JP', label: 'Japan' },
-  { value: 'KR', label: 'South Korea' },
-  { value: 'SG', label: 'Singapore' },
-  { value: 'BR', label: 'Brazil' },
-  { value: 'MX', label: 'Mexico' },
-  { value: 'AR', label: 'Argentina' },
+  { label: 'United States', value: 'US' },
+  { label: 'Canada', value: 'CA' },
+  { label: 'United Kingdom', value: 'UK' },
+  { label: 'Australia', value: 'AU' },
+  { label: 'Germany', value: 'DE' },
+  { label: 'France', value: 'FR' },
+  { label: 'Spain', value: 'ES' },
+  { label: 'Italy', value: 'IT' },
+  { label: 'Netherlands', value: 'NL' },
+  { label: 'Belgium', value: 'BE' },
+  { label: 'Austria', value: 'AT' },
+  { label: 'Switzerland', value: 'CH' },
+  { label: 'Sweden', value: 'SE' },
+  { label: 'Norway', value: 'NO' },
+  { label: 'Denmark', value: 'DK' },
+  { label: 'Finland', value: 'FI' },
+  { label: 'Ireland', value: 'IE' },
+  { label: 'New Zealand', value: 'NZ' },
+  { label: 'Japan', value: 'JP' },
+  { label: 'South Korea', value: 'KR' },
+  { label: 'Singapore', value: 'SG' },
+  { label: 'Brazil', value: 'BR' },
+  { label: 'Mexico', value: 'MX' },
+  { label: 'Argentina', value: 'AR' },
 ];
 
 export default function ManualLocationScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/manual-location');
-  const { updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/manual-location');
+  const { setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [zipCode, setZipCode] = useState('');
 
@@ -54,13 +54,13 @@ export default function ManualLocationScreen() {
 
     updateData({
       location: {
-        type: 'manual',
         country: selectedCountry,
+        type: 'manual',
         zipCode: zipCode.trim(),
       },
     });
     setCurrentStep(3);
-    router.push('/onboarding/gender');
+    router.push('/(main)/onboarding/gender');
   };
 
   return (
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing.md,
   },
-  selectContainer: {
-    marginTop: spacing.xl,
+  footer: {
+    paddingBottom: spacing.xl,
   },
   inputContainer: {
     marginTop: spacing.xl,
   },
-  footer: {
-    paddingBottom: spacing.xl,
+  selectContainer: {
+    marginTop: spacing.xl,
   },
 });

@@ -1,34 +1,35 @@
 import { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import {
-  ScreenContainer,
-  Text,
-  Button,
-  ProgressIndicator,
-  colors,
   borderRadius,
+  Button,
+  colors,
+  ProgressIndicator,
+  ScreenContainer,
   shadow,
   spacing,
+  Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
 
 const MAX_PHOTOS = 6;
 const MIN_PHOTOS = 2;
 
 export default function PhotosScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/photos');
-  const { data, updateData, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/photos');
+  const { data, totalSteps, updateData } = useAppOnboarding();
   const [photos, setPhotos] = useState<string[]>(data.photos);
 
   const isValid = photos.length >= MIN_PHOTOS;
 
   const pickImage = async (index: number) => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
       Alert.alert(
@@ -39,9 +40,9 @@ export default function PhotosScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [3, 4],
+      mediaTypes: ['images'],
       quality: 0.8,
     });
 
@@ -67,8 +68,8 @@ export default function PhotosScreen() {
     if (!isValid) return;
 
     updateData({ photos });
-    // Navigate to home after completing onboarding
-    router.replace('/home');
+    // Navigate to tabs after completing onboarding
+    router.replace('/(main)/(tabs)');
   };
 
   const renderPhotoSlot = (index: number) => {
@@ -147,66 +148,66 @@ export default function PhotosScreen() {
 }
 
 const styles = StyleSheet.create({
+  bottomRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+  },
   content: {
     flex: 1,
     paddingHorizontal: spacing.md,
   },
+  emptySlot: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  footer: {
+    paddingBottom: spacing.xl,
+  },
   grid: {
     flexDirection: 'row',
-    marginTop: spacing.xl,
     gap: spacing.sm,
+    marginTop: spacing.xl,
   },
   mainColumn: {
     flex: 2,
   },
-  sideColumn: {
-    flex: 1,
-    gap: spacing.sm,
-  },
-  bottomRow: {
-    flexDirection: 'row',
-    marginTop: spacing.sm,
-    gap: spacing.sm,
-  },
-  photoSlot: {
-    flex: 1,
-    aspectRatio: 3 / 4,
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    overflow: 'hidden',
-    ...shadow.sm,
+  mainLabel: {
+    fontSize: 10,
+    marginTop: spacing.xs,
   },
   mainPhotoSlot: {
     aspectRatio: 3 / 4,
   },
-  photoContainer: {
-    flex: 1,
-  },
   photo: {
-    width: '100%',
     height: '100%',
     resizeMode: 'cover',
+    width: '100%',
   },
-  removeButton: {
-    position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-  },
-  emptySlot: {
+  photoContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mainLabel: {
-    marginTop: spacing.xs,
-    fontSize: 10,
   },
   photoCount: {
     marginTop: spacing.lg,
   },
-  footer: {
-    paddingBottom: spacing.xl,
+  photoSlot: {
+    aspectRatio: 3 / 4,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    flex: 1,
+    overflow: 'hidden',
+    ...shadow.sm,
+  },
+  removeButton: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    position: 'absolute',
+    right: spacing.xs,
+    top: spacing.xs,
+  },
+  sideColumn: {
+    flex: 1,
+    gap: spacing.sm,
   },
 });

@@ -1,48 +1,51 @@
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  ScreenContainer,
-  Text,
   Button,
-  ProgressIndicator,
   OptionCard,
+  ProgressIndicator,
+  ScreenContainer,
   spacing,
+  Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
-import type { RelationshipType } from '../../types/onboarding';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import type { RelationshipType } from '../../../types/onboarding';
 
-const RELATIONSHIP_OPTIONS: { value: RelationshipType; label: string; subtitle: string }[] = [
+const RELATIONSHIP_OPTIONS: {
+  label: string;
+  subtitle: string;
+  value: RelationshipType;
+}[] = [
   {
-    value: 'serious',
     label: 'Something serious',
     subtitle: 'Looking for a long-term relationship',
+    value: 'serious',
   },
   {
-    value: 'casual',
     label: 'Something casual',
     subtitle: 'Open to seeing where things go',
+    value: 'casual',
   },
   {
-    value: 'friendship',
     label: 'New friends',
     subtitle: 'Just looking to meet new people',
+    value: 'friendship',
   },
   {
-    value: 'unsure',
     label: "I'm not sure yet",
     subtitle: "Still figuring out what I'm looking for",
+    value: 'unsure',
   },
 ];
 
 export default function RelationshipScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/relationship');
-  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
-  const [relationshipType, setRelationshipType] = useState<RelationshipType | null>(
-    data.relationshipType
-  );
+  const safeBack = useSafeBack('/(main)/onboarding/relationship');
+  const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
+  const [relationshipType, setRelationshipType] =
+    useState<RelationshipType | null>(data.relationshipType);
 
   const isValid = relationshipType !== null;
 
@@ -51,7 +54,7 @@ export default function RelationshipScreen() {
 
     updateData({ relationshipType });
     setCurrentStep(6);
-    router.push('/onboarding/age-range');
+    router.push('/(main)/onboarding/age-range');
   };
 
   return (
@@ -93,11 +96,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing.md,
   },
-  optionList: {
-    marginTop: spacing.xl,
-    gap: spacing.sm,
-  },
   footer: {
     paddingBottom: spacing.xl,
+  },
+  optionList: {
+    gap: spacing.sm,
+    marginTop: spacing.xl,
   },
 });

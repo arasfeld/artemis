@@ -1,34 +1,34 @@
 import { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
-  ScreenContainer,
-  Text,
   Button,
-  ProgressIndicator,
   OptionCard,
+  ProgressIndicator,
+  ScreenContainer,
   spacing,
+  Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../hooks/useOnboardingFlow';
-import type { Gender, Seeking } from '../../types/onboarding';
+import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import type { Gender, Seeking } from '../../../types/onboarding';
 
-const GENDER_OPTIONS: { value: Gender; label: string }[] = [
-  { value: 'male', label: 'Man' },
-  { value: 'female', label: 'Woman' },
-  { value: 'non-binary', label: 'Non-binary' },
+const GENDER_OPTIONS: { label: string; value: Gender }[] = [
+  { label: 'Man', value: 'male' },
+  { label: 'Woman', value: 'female' },
+  { label: 'Non-binary', value: 'non-binary' },
 ];
 
-const SEEKING_OPTIONS: { value: Seeking; label: string }[] = [
-  { value: 'male', label: 'Men' },
-  { value: 'female', label: 'Women' },
-  { value: 'everyone', label: 'Everyone' },
+const SEEKING_OPTIONS: { label: string; value: Seeking }[] = [
+  { label: 'Men', value: 'male' },
+  { label: 'Women', value: 'female' },
+  { label: 'Everyone', value: 'everyone' },
 ];
 
 export default function GenderScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/onboarding/gender');
-  const { data, updateData, setCurrentStep, totalSteps } = useAppOnboarding();
+  const safeBack = useSafeBack('/(main)/onboarding/gender');
+  const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [gender, setGender] = useState<Gender | null>(data.gender);
   const [seeking, setSeeking] = useState<Seeking | null>(data.seeking);
 
@@ -39,7 +39,7 @@ export default function GenderScreen() {
 
     updateData({ gender, seeking });
     setCurrentStep(4);
-    router.push('/onboarding/date-of-birth');
+    router.push('/(main)/onboarding/date-of-birth');
   };
 
   return (
@@ -98,24 +98,24 @@ export default function GenderScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
+  footer: {
+    paddingBottom: spacing.xl,
+    paddingHorizontal: spacing.lg,
+  },
+  optionList: {
+    gap: spacing.sm,
   },
   scrollContent: {
-    paddingHorizontal: spacing.md,
     paddingBottom: spacing.lg,
+    paddingHorizontal: spacing.md,
+  },
+  scrollView: {
+    flex: 1,
   },
   section: {
     marginTop: spacing.xl,
   },
   sectionLabel: {
     marginBottom: spacing.sm,
-  },
-  optionList: {
-    gap: spacing.sm,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-    paddingHorizontal: spacing.lg,
   },
 });
