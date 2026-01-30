@@ -1,6 +1,6 @@
 import { Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { useAppAuth } from '../../hooks/useAppAuth';
+import { useAppAuth } from '@/hooks/useAppAuth';
 
 export default function MainLayout() {
   const router = useRouter();

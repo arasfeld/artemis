@@ -14,8 +14,8 @@ import {
   Text,
   TextInput,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
 
 const MIN_AGE = 18;
 const MAX_AGE = 99;

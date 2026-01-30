@@ -9,9 +9,9 @@ import {
   spacing,
   Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
-import type { Gender, Seeking } from '../../../types/onboarding';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
+import type { Gender, Seeking } from '@/types/onboarding';
 
 const GENDER_OPTIONS: { label: string; value: Gender }[] = [
   { label: 'Man', value: 'male' },

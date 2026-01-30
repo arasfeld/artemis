@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useRouter } from 'expo-router';
-import { useAppAuth } from './useAppAuth';
 import { useAppOnboarding } from './useAppOnboarding';
-import type { OnboardingData } from '../types/onboarding';
+import { useAppAuth } from './useAppAuth';
+import type { OnboardingData } from '@/types/onboarding';
 
 export type OnboardingRoute =
   | '/(auth)/welcome'
@@ -118,7 +118,7 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   const isLoading = authLoading || onboardingLoading;
 
   // Check server-side onboarding status first, fall back to local state
-  const isOnboardingComplete = user?.isOnboardingComplete ?? isComplete;
+  const isOnboardingComplete = user?.isOnboardingComplete ?? isComplete ?? false;
 
   // Find the first incomplete onboarding step
   const firstIncompleteStep = useMemo(() => {
@@ -199,9 +199,8 @@ export const TOTAL_ONBOARDING_STEPS = ONBOARDING_STEPS.length;
  * @param currentRoute - The current onboarding route
  * @returns A function to safely navigate back, or undefined if no back is possible
  */
-export function useSafeBack(currentRoute: OnboardingRoute): (() => void) | undefined {
+export function useOnboardingSafeBack(currentRoute: OnboardingRoute): (() => void) | undefined {
   const router = useRouter();
-
   const previousRoute = PREVIOUS_ROUTE_MAP[currentRoute];
 
   return useMemo(() => {

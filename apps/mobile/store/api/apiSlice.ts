@@ -1,16 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Platform } from 'react-native';
-import { getToken } from '../../lib/storage';
+import { API_BASE_URL } from '@/lib/api-config';
+import { getToken } from '@/lib/storage';
 import type {
-  UserProfile,
+  PhotoData,
   ProfileData,
   UpdateProfileData,
-  PhotoData,
-} from '../../lib/api';
-
-const API_HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
-const API_PORT = 4000;
-export const API_BASE_URL = `http://${API_HOST}:${API_PORT}`;
+  UserProfile,
+} from '@/types/api';
 
 export const apiSlice = createApi({
   reducerPath: 'api',

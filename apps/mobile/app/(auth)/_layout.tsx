@@ -1,7 +1,7 @@
 import { Href, Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { useAppAuth } from '../../hooks/useAppAuth';
-import { useOnboardingFlow } from '../../hooks/useOnboardingFlow';
+import { useAppAuth } from '@/hooks/useAppAuth';
+import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
 export default function AuthLayout() {
   const router = useRouter();

@@ -11,9 +11,9 @@ import {
   spacing,
   Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
-import { getCurrentLocation } from '../../../utils/location';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
+import { getCurrentLocation } from '@/lib/location';
 
 export default function LocationScreen() {
   const router = useRouter();

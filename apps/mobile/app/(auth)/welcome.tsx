@@ -9,10 +9,6 @@ export default function WelcomeScreen() {
     router.push('/(auth)/sign-in');
   };
 
-  const handleJoin = () => {
-    router.push('/(auth)/sign-in');
-  };
-
   return (
     <ScreenContainer centered>
       <View style={styles.content}>
@@ -25,7 +21,7 @@ export default function WelcomeScreen() {
       </View>
 
       <View style={styles.buttons}>
-        <Button onPress={handleJoin} fullWidth>
+        <Button onPress={handleSignIn} fullWidth>
           Join Artemis
         </Button>
         <View style={styles.spacer} />

@@ -19,8 +19,8 @@ export const store = configureStore({
     }).concat(apiSlice.middleware),
 });
 
-// Enable refetchOnFocus/refetchOnReconnect behaviors
-setupListeners(store.dispatch);
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// Enable refetchOnFocus/refetchOnReconnect behaviors
+setupListeners(store.dispatch);

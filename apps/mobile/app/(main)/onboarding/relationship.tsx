@@ -9,9 +9,9 @@ import {
   spacing,
   Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
-import type { RelationshipType } from '../../../types/onboarding';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
+import type { RelationshipType } from '@/types/onboarding';
 
 const RELATIONSHIP_OPTIONS: {
   label: string;

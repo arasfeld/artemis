@@ -11,7 +11,7 @@ import {
   setAuthError,
   selectAuthState,
 } from '../store/slices/authSlice';
-import type { UserProfile } from '../lib/api';
+import type { UserProfile } from '@/types/api';
 
 // Create selector outside component to avoid recreation
 const selectAuthProfile = apiSlice.endpoints.getAuthProfile.select(undefined);

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, ActivityIndicator, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useOnboardingFlow } from '../hooks/useOnboardingFlow';
+import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
 export default function Index() {
   const { isLoading, navigate, destination } = useOnboardingFlow();

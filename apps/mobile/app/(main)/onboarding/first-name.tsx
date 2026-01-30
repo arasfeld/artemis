@@ -9,8 +9,8 @@ import {
   Text,
   TextInput,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
 
 export default function FirstNameScreen() {
   const router = useRouter();

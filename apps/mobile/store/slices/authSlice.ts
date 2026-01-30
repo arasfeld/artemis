@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { makeRedirectUri } from 'expo-auth-session';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri } from 'expo-auth-session';
 import { Platform } from 'react-native';
-import { saveToken, getToken, deleteToken } from '../../lib/storage';
-import { apiSlice, API_BASE_URL } from '../api/apiSlice';
-import type { RootState, AppDispatch } from '../index';
+import { saveToken, deleteToken, getToken } from '@/lib/storage';
+import { API_BASE_URL } from '@/lib/api-config';
+import { apiSlice } from '../api/apiSlice';
+import type { AppDispatch, RootState } from '../index';
 
 // Ensure auth session can complete on web
 WebBrowser.maybeCompleteAuthSession();

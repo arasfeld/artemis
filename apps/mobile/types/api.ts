@@ -26,13 +26,9 @@ export interface LocationData {
   coordinates?: { lat: number; lng: number };
 }
 
-export interface PhotoData {
-  id: string;
-  url: string;
-  displayOrder: number;
-}
-
+// Profile data returned from API
 export interface ProfileData {
+  id: string;
   firstName?: string;
   dateOfBirth?: string;
   gender?: Gender;
@@ -40,18 +36,35 @@ export interface ProfileData {
   relationshipType?: RelationshipType;
   ageRangeMin: number;
   ageRangeMax: number;
-  location?: LocationData;
+  locationType?: LocationType;
+  locationCountry?: string;
+  locationZipCode?: string;
+  locationCoordinates?: { lat: number; lng: number };
+  location?: LocationData; // Combined location data for easier use
   photos: PhotoData[];
-  isOnboardingComplete: boolean;
+  isOnboardingComplete: boolean; // Required field
 }
 
-export interface UpdateProfileData {
-  firstName?: string;
-  dateOfBirth?: string;
-  gender?: Gender;
-  seeking?: Seeking;
-  relationshipType?: RelationshipType;
-  ageRangeMin?: number;
-  ageRangeMax?: number;
-  location?: LocationData;
+// Data for updating profile (partial updates allowed)
+export type UpdateProfileData = Partial<{
+  firstName: string;
+  dateOfBirth: string;
+  gender: Gender;
+  seeking: Seeking;
+  relationshipType: RelationshipType;
+  ageRangeMin: number;
+  ageRangeMax: number;
+  locationType: LocationType;
+  locationCountry: string;
+  locationZipCode: string;
+  locationCoordinates: { lat: number; lng: number };
+  location: LocationData;
+}>;
+
+// Photo data
+export interface PhotoData {
+  id: string;
+  url: string;
+  displayOrder: number;
+  createdAt: string;
 }

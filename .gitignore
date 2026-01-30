@@ -37,5 +37,8 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# Tunnel
+.tunnel-url
+
 # Docker volumes
 pgdata

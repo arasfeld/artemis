@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppAuth } from '../../../hooks/useAppAuth';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
+import { useAppAuth } from '@/hooks/useAppAuth';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 export default function ProfileScreen() {
   const { isLoading, signOut, user } = useAppAuth();

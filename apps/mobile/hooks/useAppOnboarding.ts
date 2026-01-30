@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useAddPhotoMutation,
   useDeletePhotoMutation,
   useReorderPhotosMutation,
-} from '../store/api/apiSlice';
+} from '@/store/api/apiSlice';
 import {
   setCurrentStep,
   setLocalEdit,
@@ -16,13 +16,13 @@ import {
   selectCurrentStep,
   selectLocalEdits,
   type LocalEdits,
-} from '../store/slices/onboardingSlice';
+} from '@/store/slices/onboardingSlice';
 import { useAppAuth } from './useAppAuth';
 import {
   type OnboardingData,
   TOTAL_ONBOARDING_STEPS,
-} from '../types/onboarding';
-import type { UpdateProfileData } from '../lib/api';
+} from '@/types/onboarding';
+import type { UpdateProfileData } from '@/types/api';
 
 const STORAGE_KEY = 'onboarding_local_edits';
 
@@ -190,7 +190,7 @@ export function useAppOnboarding() {
         await deletePhotoMutation(photoIdOrIndex).unwrap();
       } else {
         const photos = localEdits.photos || data.photos;
-        const newPhotos = photos.filter((_, i) => i !== photoIdOrIndex);
+        const newPhotos = photos.filter((_: any, i: string | number) => i !== photoIdOrIndex);
         dispatch(setLocalEdit({ photos: newPhotos }));
       }
     },

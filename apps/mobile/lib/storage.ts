@@ -19,6 +19,14 @@ export async function getToken(): Promise<string | null> {
   return SecureStore.getItemAsync(TOKEN_KEY);
 }
 
+export async function removeToken(): Promise<void> {
+  if (Platform.OS === 'web') {
+    localStorage.removeItem(TOKEN_KEY);
+  } else {
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
+  }
+}
+
 export async function deleteToken(): Promise<void> {
   if (Platform.OS === 'web') {
     localStorage.removeItem(TOKEN_KEY);

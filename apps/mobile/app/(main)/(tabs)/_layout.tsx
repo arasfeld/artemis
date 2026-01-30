@@ -2,7 +2,7 @@ import { Href, Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { colors } from '@artemis/ui';
-import { useOnboardingFlow } from '../../../hooks/useOnboardingFlow';
+import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
 export default function TabsLayout() {
   const router = useRouter();

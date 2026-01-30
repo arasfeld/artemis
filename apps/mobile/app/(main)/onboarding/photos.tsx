@@ -13,8 +13,8 @@ import {
   spacing,
   Text,
 } from '@artemis/ui';
-import { useAppOnboarding } from '../../../hooks/useAppOnboarding';
-import { useSafeBack } from '../../../hooks/useOnboardingFlow';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useSafeBack } from '@/hooks/useSafeBack';
 
 const MAX_PHOTOS = 6;
 const MIN_PHOTOS = 2;

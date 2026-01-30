@@ -2,8 +2,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { store } from '../store';
-import { useAppAuth } from '../hooks/useAppAuth';
+import { store } from '@/store';
+import { useAppAuth } from '@/hooks/useAppAuth';
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();

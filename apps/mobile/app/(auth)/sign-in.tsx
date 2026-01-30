@@ -1,7 +1,7 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
-import { useAppAuth } from '../../hooks/useAppAuth';
+import { useAppAuth } from '@/hooks/useAppAuth';
 
 export default function SignInScreen() {
   const { clearError, error, isLoading, signInWithGoogle } = useAppAuth();
