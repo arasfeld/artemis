@@ -12,12 +12,13 @@ import {
   Text,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 import { getCurrentLocation } from '@/lib/location';
 
 export default function LocationScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/location');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/first-name');
+  };
   const { setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,7 +80,7 @@ export default function LocationScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={2} totalSteps={totalSteps} />
 
       <View style={styles.content}>

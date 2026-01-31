@@ -10,7 +10,6 @@ import {
   Text,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 import type { Gender, Seeking } from '@/types/onboarding';
 
 const GENDER_OPTIONS: { label: string; value: Gender }[] = [
@@ -27,7 +26,9 @@ const SEEKING_OPTIONS: { label: string; value: Seeking }[] = [
 
 export default function GenderScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/gender');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/manual-location');
+  };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [gender, setGender] = useState<Gender | null>(data.gender);
   const [seeking, setSeeking] = useState<Seeking | null>(data.seeking);
@@ -43,7 +44,7 @@ export default function GenderScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={3} totalSteps={totalSteps} />
 
       <ScrollView

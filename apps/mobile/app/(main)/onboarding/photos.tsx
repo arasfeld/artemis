@@ -14,14 +14,15 @@ import {
   Text,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 
 const MAX_PHOTOS = 6;
 const MIN_PHOTOS = 2;
 
 export default function PhotosScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/photos');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/age-range');
+  };
   const { data, totalSteps, updateData } = useAppOnboarding();
   const [photos, setPhotos] = useState<string[]>(data.photos);
 
@@ -108,7 +109,7 @@ export default function PhotosScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={7} totalSteps={totalSteps} />
 
       <View style={styles.content}>

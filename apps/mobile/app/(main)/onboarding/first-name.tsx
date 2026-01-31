@@ -10,11 +10,9 @@ import {
   TextInput,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 
 export default function FirstNameScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/first-name');
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [firstName, setFirstName] = useState(data.firstName);
   const [error, setError] = useState('');
@@ -32,7 +30,7 @@ export default function FirstNameScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

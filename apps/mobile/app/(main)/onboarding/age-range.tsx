@@ -15,14 +15,15 @@ import {
   TextInput,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 
 const MIN_AGE = 18;
 const MAX_AGE = 99;
 
 export default function AgeRangeScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/age-range');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/relationship');
+  };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [minAge, setMinAge] = useState(data.ageRange.min.toString());
   const [maxAge, setMaxAge] = useState(data.ageRange.max.toString());
@@ -70,7 +71,7 @@ export default function AgeRangeScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={6} totalSteps={totalSteps} />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

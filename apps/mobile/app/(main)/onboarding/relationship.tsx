@@ -10,7 +10,6 @@ import {
   Text,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 import type { RelationshipType } from '@/types/onboarding';
 
 const RELATIONSHIP_OPTIONS: {
@@ -42,7 +41,9 @@ const RELATIONSHIP_OPTIONS: {
 
 export default function RelationshipScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/relationship');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/date-of-birth');
+  };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [relationshipType, setRelationshipType] =
     useState<RelationshipType | null>(data.relationshipType);
@@ -58,7 +59,7 @@ export default function RelationshipScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={5} totalSteps={totalSteps} />
 
       <View style={styles.content}>

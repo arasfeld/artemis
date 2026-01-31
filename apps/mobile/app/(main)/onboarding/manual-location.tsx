@@ -11,7 +11,6 @@ import {
   TextInput,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 
 const COUNTRY_OPTIONS = [
   { label: 'United States', value: 'US' },
@@ -42,7 +41,9 @@ const COUNTRY_OPTIONS = [
 
 export default function ManualLocationScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/manual-location');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/location');
+  };
   const { setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [zipCode, setZipCode] = useState('');
@@ -64,7 +65,7 @@ export default function ManualLocationScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

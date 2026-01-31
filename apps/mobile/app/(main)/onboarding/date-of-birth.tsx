@@ -16,11 +16,12 @@ import {
   TextInput,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import { useSafeBack } from '@/hooks/useSafeBack';
 
 export default function DateOfBirthScreen() {
   const router = useRouter();
-  const safeBack = useSafeBack('/(main)/onboarding/date-of-birth');
+  const handleBack = () => {
+    router.replace('/(main)/onboarding/gender');
+  };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
 
   const [month, setMonth] = useState('');
@@ -90,7 +91,7 @@ export default function DateOfBirthScreen() {
   };
 
   return (
-    <ScreenContainer onBack={safeBack}>
+    <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={4} totalSteps={totalSteps} />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
