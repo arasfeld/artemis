@@ -1,34 +1,31 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { RootState } from '../index';
-import type {
-  Gender,
-  Seeking,
-  RelationshipType,
-  LocationData,
-} from '../../types/onboarding';
+import type { LocationData, RelationshipType } from '@/types/onboarding';
 
-const STORAGE_KEY = 'onboarding_local_edits';
+// Use the same storage key as the hook to avoid duplication
+const STORAGE_KEY = 'onboarding_data';
 
-export interface LocalEdits {
+export interface OnboardingData {
+  ageRangeMax?: number;
+  ageRangeMin?: number;
+  dateOfBirth?: string;
   firstName?: string;
-  dateOfBirth?: string; // ISO string for serializability
-  gender?: Gender | null;
-  seeking?: Seeking | null;
-  relationshipType?: RelationshipType | null;
-  ageRange?: { min: number; max: number };
-  location?: LocationData | null;
-  photos?: string[]; // Local URIs before upload
+  genderIds?: string[];
+  location?: LocationData;
+  photos?: string[];
+  relationshipType?: RelationshipType;
+  seekingIds?: string[];
 }
 
 interface OnboardingState {
   currentStep: number;
-  localEdits: LocalEdits;
+  data: OnboardingData;
 }
 
 const initialState: OnboardingState = {
   currentStep: 0,
-  localEdits: {},
+  data: {},
 };
 
 const onboardingSlice = createSlice({
@@ -38,40 +35,40 @@ const onboardingSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
-    setLocalEdit: (state, action: PayloadAction<Partial<LocalEdits>>) => {
-      state.localEdits = { ...state.localEdits, ...action.payload };
+    updateOnboardingData: (state, action: PayloadAction<Partial<OnboardingData>>) => {
+      state.data = { ...state.data, ...action.payload };
       // Persist to AsyncStorage (fire and forget)
-      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state.localEdits)).catch(
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)).catch(
         () => {},
       );
     },
-    clearLocalEdits: (state) => {
-      state.localEdits = {};
+    clearOnboardingData: (state) => {
+      state.data = {};
       AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
     },
-    loadLocalEdits: (state, action: PayloadAction<LocalEdits>) => {
-      state.localEdits = action.payload;
+    loadOnboardingData: (state, action: PayloadAction<OnboardingData>) => {
+      state.data = action.payload;
     },
     resetOnboarding: (state) => {
       state.currentStep = 0;
-      state.localEdits = {};
+      state.data = {};
       AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
     },
   },
 });
 
 export const {
-  setCurrentStep,
-  setLocalEdit,
-  clearLocalEdits,
-  loadLocalEdits,
+  clearOnboardingData,
+  loadOnboardingData,
   resetOnboarding,
+  setCurrentStep,
+  updateOnboardingData,
 } = onboardingSlice.actions;
 
 // Selectors
 export const selectCurrentStep = (state: RootState) =>
   state.onboarding.currentStep;
-export const selectLocalEdits = (state: RootState) =>
-  state.onboarding.localEdits;
+export const selectOnboardingData = (state: RootState) =>
+  state.onboarding.data;
 
 export default onboardingSlice.reducer;

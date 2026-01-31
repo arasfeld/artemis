@@ -30,7 +30,7 @@ export default function DateOfBirthScreen() {
 
   // Initialize with existing data if available
   if (data.dateOfBirth && !month && !day && !year) {
-    const date = data.dateOfBirth;
+    const date = new Date(data.dateOfBirth);
     setMonth((date.getMonth() + 1).toString());
     setDay(date.getDate().toString());
     setYear(date.getFullYear().toString());
@@ -85,7 +85,7 @@ export default function DateOfBirthScreen() {
     const y = parseInt(year);
     const birthDate = new Date(y, m - 1, d);
 
-    updateData({ dateOfBirth: birthDate });
+    updateData({ dateOfBirth: birthDate.toISOString().split('T')[0] });
     setCurrentStep(5);
     router.push('/(main)/onboarding/relationship');
   };

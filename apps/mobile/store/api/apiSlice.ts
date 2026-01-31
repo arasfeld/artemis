@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/lib/api-config';
 import { getToken } from '@/lib/storage';
 import type {
+  GenderData,
   PhotoData,
   ProfileData,
   UpdateProfileData,
@@ -21,7 +22,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['User', 'Profile'],
+  tagTypes: ['Genders', 'Profile', 'User'],
   endpoints: (builder) => ({
     // Auth endpoints
     getAuthProfile: builder.query<UserProfile, void>({
@@ -34,6 +35,12 @@ export const apiSlice = createApi({
         method: 'POST',
       }),
       invalidatesTags: ['User', 'Profile'],
+    }),
+
+    // Genders endpoints
+    getGenders: builder.query<GenderData[], void>({
+      query: () => '/genders',
+      providesTags: ['Genders'],
     }),
 
     // Profile/Onboarding endpoints
@@ -50,7 +57,14 @@ export const apiSlice = createApi({
       async onQueryStarted(patch, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           apiSlice.util.updateQueryData('getProfile', undefined, (draft) => {
-            Object.assign(draft, patch);
+            // Handle scalar fields optimistically
+            // For genderIds and seekingIds, wait for server response
+            if (patch.firstName !== undefined) draft.firstName = patch.firstName;
+            if (patch.dateOfBirth !== undefined) draft.dateOfBirth = patch.dateOfBirth;
+            if (patch.relationshipType !== undefined) draft.relationshipType = patch.relationshipType;
+            if (patch.ageRangeMin !== undefined) draft.ageRangeMin = patch.ageRangeMin;
+            if (patch.ageRangeMax !== undefined) draft.ageRangeMax = patch.ageRangeMax;
+            if (patch.location !== undefined) draft.location = patch.location;
           }),
         );
         try {
@@ -120,11 +134,12 @@ export const apiSlice = createApi({
 });
 
 export const {
-  useGetAuthProfileQuery,
-  useLogoutMutation,
-  useGetProfileQuery,
-  useUpdateProfileMutation,
   useAddPhotoMutation,
   useDeletePhotoMutation,
+  useGetAuthProfileQuery,
+  useGetGendersQuery,
+  useGetProfileQuery,
+  useLogoutMutation,
   useReorderPhotosMutation,
+  useUpdateProfileMutation,
 } = apiSlice;

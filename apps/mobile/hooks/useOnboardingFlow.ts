@@ -52,31 +52,31 @@ const ONBOARDING_STEPS: {
 }[] = [
   {
     route: '/(main)/onboarding/first-name',
-    isComplete: (data) => data.firstName.length >= 2,
+    isComplete: (data) => (data.firstName?.length ?? 0) >= 2,
   },
   {
     route: '/(main)/onboarding/location',
-    isComplete: (data) => data.location !== null,
+    isComplete: (data) => data.location !== undefined,
   },
   {
     route: '/(main)/onboarding/gender',
-    isComplete: (data) => data.gender !== null && data.seeking !== null,
+    isComplete: (data) => (data.genderIds?.length ?? 0) > 0 && (data.seekingIds?.length ?? 0) > 0,
   },
   {
     route: '/(main)/onboarding/date-of-birth',
-    isComplete: (data) => data.dateOfBirth !== null,
+    isComplete: (data) => data.dateOfBirth !== undefined,
   },
   {
     route: '/(main)/onboarding/relationship',
-    isComplete: (data) => data.relationshipType !== null,
+    isComplete: (data) => data.relationshipType !== undefined,
   },
   {
     route: '/(main)/onboarding/age-range',
-    isComplete: (data) => data.ageRange.min >= 18 && data.ageRange.max >= data.ageRange.min,
+    isComplete: (data) => (data.ageRangeMin ?? 0) >= 18 && (data.ageRangeMax ?? 0) >= (data.ageRangeMin ?? 0),
   },
   {
     route: '/(main)/onboarding/photos',
-    isComplete: (data) => data.photos.length >= 2,
+    isComplete: (data) => (data.photos?.length ?? 0) >= 2,
   },
 ];
 

@@ -1,7 +1,12 @@
-export type Gender = 'male' | 'female' | 'non-binary';
-export type Seeking = 'male' | 'female' | 'everyone';
 export type RelationshipType = 'casual' | 'serious' | 'friendship' | 'unsure';
 export type LocationType = 'automatic' | 'manual';
+
+export interface GenderOption {
+  id: string;
+  name: string;
+  description?: string;
+  isPrimary: boolean;
+}
 
 export interface LocationData {
   type: LocationType;
@@ -13,46 +18,42 @@ export interface LocationData {
   };
 }
 
+// Use API format throughout for consistency
 export interface OnboardingData {
-  firstName: string;
-  location: LocationData | null;
-  gender: Gender | null;
-  seeking: Seeking | null;
-  dateOfBirth: Date | null;
-  relationshipType: RelationshipType | null;
-  ageRange: {
-    min: number;
-    max: number;
-  };
+  ageRangeMax: number;
+  ageRangeMin: number;
+  dateOfBirth?: string;
+  firstName?: string;
+  genderIds: string[];
+  location?: LocationData;
   photos: string[];
+  relationshipType?: RelationshipType;
+  seekingIds: string[];
 }
 
 export interface OnboardingContextType {
-  data: OnboardingData;
-  updateData: (partial: Partial<OnboardingData>) => void;
-  currentStep: number;
-  totalSteps: number;
-  setCurrentStep: (step: number) => void;
-  reset: () => void;
-  isComplete: boolean;
-  // API sync state
-  isSyncing: boolean;
-  syncError: string | null;
   clearSyncError: () => void;
+  currentStep: number;
+  data: OnboardingData;
+  isComplete: boolean;
+  isSyncing: boolean;
+  reset: () => void;
+  setCurrentStep: (step: number) => void;
+  syncError: string | null;
+  totalSteps: number;
+  updateData: (partial: Partial<OnboardingData>) => void;
 }
 
 export const TOTAL_ONBOARDING_STEPS = 7;
 
 export const initialOnboardingData: OnboardingData = {
+  ageRangeMax: 45,
+  ageRangeMin: 18,
+  dateOfBirth: undefined,
   firstName: '',
-  location: null,
-  gender: null,
-  seeking: null,
-  dateOfBirth: null,
-  relationshipType: null,
-  ageRange: {
-    min: 18,
-    max: 45,
-  },
+  genderIds: [],
+  location: undefined,
   photos: [],
+  relationshipType: undefined,
+  seekingIds: [],
 };

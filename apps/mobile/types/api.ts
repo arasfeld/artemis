@@ -13,9 +13,15 @@ export interface ApiError {
   statusCode: number;
 }
 
+// Gender types
+export interface GenderData {
+  id: string;
+  name: string;
+  description?: string;
+  isPrimary: boolean;
+}
+
 // Profile types for onboarding data
-export type Gender = 'male' | 'female' | 'non-binary';
-export type Seeking = 'male' | 'female' | 'everyone';
 export type RelationshipType = 'casual' | 'serious' | 'friendship' | 'unsure';
 export type LocationType = 'automatic' | 'manual';
 
@@ -28,43 +34,34 @@ export interface LocationData {
 
 // Profile data returned from API
 export interface ProfileData {
-  id: string;
-  firstName?: string;
-  dateOfBirth?: string;
-  gender?: Gender;
-  seeking?: Seeking;
-  relationshipType?: RelationshipType;
-  ageRangeMin: number;
   ageRangeMax: number;
-  locationType?: LocationType;
-  locationCountry?: string;
-  locationZipCode?: string;
-  locationCoordinates?: { lat: number; lng: number };
-  location?: LocationData; // Combined location data for easier use
+  ageRangeMin: number;
+  dateOfBirth?: string;
+  firstName?: string;
+  genders: GenderData[];
+  isOnboardingComplete: boolean;
+  location?: LocationData;
   photos: PhotoData[];
-  isOnboardingComplete: boolean; // Required field
+  relationshipType?: RelationshipType;
+  seeking: GenderData[];
 }
 
 // Data for updating profile (partial updates allowed)
-export type UpdateProfileData = Partial<{
-  firstName: string;
-  dateOfBirth: string;
-  gender: Gender;
-  seeking: Seeking;
-  relationshipType: RelationshipType;
-  ageRangeMin: number;
-  ageRangeMax: number;
-  locationType: LocationType;
-  locationCountry: string;
-  locationZipCode: string;
-  locationCoordinates: { lat: number; lng: number };
-  location: LocationData;
-}>;
+export interface UpdateProfileData {
+  ageRangeMax?: number;
+  ageRangeMin?: number;
+  dateOfBirth?: string;
+  firstName?: string;
+  genderIds?: string[];
+  location?: LocationData;
+  relationshipType?: RelationshipType;
+  seekingIds?: string[];
+}
 
 // Photo data
 export interface PhotoData {
+  createdAt: string;
+  displayOrder: number;
   id: string;
   url: string;
-  displayOrder: number;
-  createdAt: string;
 }

@@ -25,8 +25,8 @@ export default function AgeRangeScreen() {
     router.replace('/(main)/onboarding/relationship');
   };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
-  const [minAge, setMinAge] = useState(data.ageRange.min.toString());
-  const [maxAge, setMaxAge] = useState(data.ageRange.max.toString());
+  const [minAge, setMinAge] = useState(data.ageRangeMin.toString());
+  const [maxAge, setMaxAge] = useState(data.ageRangeMax.toString());
 
   const handleMinChange = (value: string) => {
     // Allow empty input
@@ -60,10 +60,11 @@ export default function AgeRangeScreen() {
     if (min >= max) {
       // You could show an alert here, but for now just swap them
       updateData({
-        ageRange: { max: Math.max(min, max), min: Math.min(min, max) },
+        ageRangeMin: Math.min(min, max),
+        ageRangeMax: Math.max(min, max),
       });
     } else {
-      updateData({ ageRange: { max, min } });
+      updateData({ ageRangeMin: min, ageRangeMax: max });
     }
 
     setCurrentStep(7);

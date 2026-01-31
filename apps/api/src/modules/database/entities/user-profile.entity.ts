@@ -3,24 +3,14 @@ import {
   Collection,
   Entity,
   Enum,
+  ManyToMany,
   OneToMany,
   OneToOne,
   Property,
 } from '@mikro-orm/core';
+import { Gender } from './gender.entity';
 import { User } from './user.entity';
 import { UserPhoto } from './user-photo.entity';
-
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-  NON_BINARY = 'non-binary',
-}
-
-export enum Seeking {
-  MALE = 'male',
-  FEMALE = 'female',
-  EVERYONE = 'everyone',
-}
 
 export enum RelationshipType {
   CASUAL = 'casual',
@@ -56,19 +46,21 @@ export class UserProfile {
   })
   public dateOfBirth?: Date;
 
-  @Enum({
-    items: () => Gender,
-    nullable: true,
-    comment: "User's gender identity.",
+  @ManyToMany({
+    entity: () => Gender,
+    pivotTable: 'user_profile_genders',
+    joinColumn: 'user_profile_user_id',
+    inverseJoinColumn: 'gender_id',
   })
-  public gender?: Gender;
+  public genders = new Collection<Gender>(this);
 
-  @Enum({
-    items: () => Seeking,
-    nullable: true,
-    comment: 'Gender(s) the user is seeking.',
+  @ManyToMany({
+    entity: () => Gender,
+    pivotTable: 'user_profile_seeking',
+    joinColumn: 'user_profile_user_id',
+    inverseJoinColumn: 'gender_id',
   })
-  public seeking?: Seeking;
+  public seeking = new Collection<Gender>(this);
 
   @Enum({
     items: () => RelationshipType,

@@ -1,21 +1,20 @@
-import { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
-  useGetProfileQuery,
-  useUpdateProfileMutation,
   useAddPhotoMutation,
   useDeletePhotoMutation,
+  useGetProfileQuery,
   useReorderPhotosMutation,
+  useUpdateProfileMutation,
 } from '@/store/api/apiSlice';
 import {
-  setCurrentStep,
-  setLocalEdit,
-  loadLocalEdits,
+  loadOnboardingData,
   resetOnboarding,
   selectCurrentStep,
-  selectLocalEdits,
-  type LocalEdits,
+  selectOnboardingData,
+  setCurrentStep,
+  updateOnboardingData,
 } from '@/store/slices/onboardingSlice';
 import { useAppAuth } from './useAppAuth';
 import {
@@ -24,14 +23,15 @@ import {
 } from '@/types/onboarding';
 import type { UpdateProfileData } from '@/types/api';
 
-const STORAGE_KEY = 'onboarding_local_edits';
+const STORAGE_KEY = 'onboarding_data';
 
 export function useAppOnboarding() {
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppAuth();
+  const { isAuthenticated, user } = useAppAuth();
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   const currentStep = useAppSelector(selectCurrentStep);
-  const localEdits = useAppSelector(selectLocalEdits);
+  const onboardingData = useAppSelector(selectOnboardingData);
 
   // RTK Query for profile data
   const {
@@ -53,7 +53,7 @@ export function useAppOnboarding() {
     AsyncStorage.getItem(STORAGE_KEY).then((stored) => {
       if (stored) {
         try {
-          dispatch(loadLocalEdits(JSON.parse(stored)));
+          dispatch(loadOnboardingData(JSON.parse(stored)));
         } catch {
           // Ignore parse errors
         }
@@ -61,110 +61,43 @@ export function useAppOnboarding() {
     });
   }, [dispatch]);
 
-  // Merge server data with local edits
+  // Merge server data with local data using API format
   const data: OnboardingData = useMemo(() => {
     const base: OnboardingData = {
+      ageRangeMax: serverProfile?.ageRangeMax ?? 45,
+      ageRangeMin: serverProfile?.ageRangeMin ?? 18,
+      dateOfBirth: serverProfile?.dateOfBirth,
       firstName: serverProfile?.firstName || '',
-      location: serverProfile?.location || null,
-      gender: serverProfile?.gender || null,
-      seeking: serverProfile?.seeking || null,
-      dateOfBirth: serverProfile?.dateOfBirth
-        ? new Date(serverProfile.dateOfBirth)
-        : null,
-      relationshipType: serverProfile?.relationshipType || null,
-      ageRange: {
-        min: serverProfile?.ageRangeMin ?? 18,
-        max: serverProfile?.ageRangeMax ?? 45,
-      },
+      genderIds: serverProfile?.genders?.map((g) => g.id) || [],
+      location: serverProfile?.location,
       photos: serverProfile?.photos?.map((p) => p.url) || [],
+      relationshipType: serverProfile?.relationshipType,
+      seekingIds: serverProfile?.seeking?.map((g) => g.id) || [],
     };
 
-    // Apply local edits on top
+    // Apply local data on top
     return {
       ...base,
-      ...(localEdits.firstName !== undefined && {
-        firstName: localEdits.firstName,
-      }),
-      ...(localEdits.location !== undefined && { location: localEdits.location }),
-      ...(localEdits.gender !== undefined && { gender: localEdits.gender }),
-      ...(localEdits.seeking !== undefined && { seeking: localEdits.seeking }),
-      ...(localEdits.dateOfBirth !== undefined && {
-        dateOfBirth: localEdits.dateOfBirth
-          ? new Date(localEdits.dateOfBirth)
-          : null,
-      }),
-      ...(localEdits.relationshipType !== undefined && {
-        relationshipType: localEdits.relationshipType,
-      }),
-      ...(localEdits.ageRange !== undefined && { ageRange: localEdits.ageRange }),
-      ...(localEdits.photos !== undefined && { photos: localEdits.photos }),
+      ...onboardingData,
     };
-  }, [serverProfile, localEdits]);
+  }, [serverProfile, onboardingData]);
 
   // Update data (local + sync to server)
   const updateData = useCallback(
     async (partial: Partial<OnboardingData>) => {
-      // Convert Date to string for local edits
-      const editPayload: LocalEdits = {};
-      if (partial.firstName !== undefined) {
-        editPayload.firstName = partial.firstName;
-      }
-      if (partial.dateOfBirth !== undefined) {
-        editPayload.dateOfBirth = partial.dateOfBirth?.toISOString();
-      }
-      if (partial.gender !== undefined) {
-        editPayload.gender = partial.gender;
-      }
-      if (partial.seeking !== undefined) {
-        editPayload.seeking = partial.seeking;
-      }
-      if (partial.relationshipType !== undefined) {
-        editPayload.relationshipType = partial.relationshipType;
-      }
-      if (partial.ageRange !== undefined) {
-        editPayload.ageRange = partial.ageRange;
-      }
-      if (partial.location !== undefined) {
-        editPayload.location = partial.location;
-      }
-      if (partial.photos !== undefined) {
-        editPayload.photos = partial.photos;
-      }
-
-      dispatch(setLocalEdit(editPayload));
+      setSyncError(null);
+      
+      // Update local state immediately (API format is already storage-compatible)
+      dispatch(updateOnboardingData(partial));
 
       // Sync to server if authenticated
-      if (isAuthenticated) {
-        const apiUpdate: UpdateProfileData = {};
-        if (partial.firstName !== undefined) {
-          apiUpdate.firstName = partial.firstName;
-        }
-        if (partial.dateOfBirth !== undefined && partial.dateOfBirth) {
-          apiUpdate.dateOfBirth = partial.dateOfBirth.toISOString().split('T')[0];
-        }
-        if (partial.gender !== undefined) {
-          apiUpdate.gender = partial.gender || undefined;
-        }
-        if (partial.seeking !== undefined) {
-          apiUpdate.seeking = partial.seeking || undefined;
-        }
-        if (partial.relationshipType !== undefined) {
-          apiUpdate.relationshipType = partial.relationshipType || undefined;
-        }
-        if (partial.ageRange !== undefined) {
-          apiUpdate.ageRangeMin = partial.ageRange.min;
-          apiUpdate.ageRangeMax = partial.ageRange.max;
-        }
-        if (partial.location !== undefined && partial.location) {
-          apiUpdate.location = partial.location;
-        }
-
-        if (Object.keys(apiUpdate).length > 0) {
-          try {
-            await updateProfile(apiUpdate).unwrap();
-          } catch (error) {
-            console.error('Failed to sync profile:', error);
-          }
+      if (isAuthenticated && Object.keys(partial).length > 0) {
+        try {
+          await updateProfile(partial as UpdateProfileData).unwrap();
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to sync profile';
+          setSyncError(errorMessage);
+          console.error('Failed to sync profile:', error);
         }
       }
     },
@@ -174,27 +107,38 @@ export function useAppOnboarding() {
   // Photo operations
   const addPhoto = useCallback(
     async (url: string, displayOrder?: number) => {
-      if (isAuthenticated) {
-        await addPhotoMutation({ url, displayOrder }).unwrap();
-      } else {
-        const newPhotos = [...(localEdits.photos || data.photos), url];
-        dispatch(setLocalEdit({ photos: newPhotos }));
+      try {
+        if (isAuthenticated) {
+          await addPhotoMutation({ url, displayOrder }).unwrap();
+        } else {
+          const newPhotos = [...(data.photos || []), url];
+          dispatch(updateOnboardingData({ photos: newPhotos }));
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to add photo';
+        setSyncError(errorMessage);
+        console.error('Failed to add photo:', error);
       }
     },
-    [isAuthenticated, addPhotoMutation, localEdits.photos, data.photos, dispatch],
+    [isAuthenticated, addPhotoMutation, data.photos, dispatch],
   );
 
   const deletePhoto = useCallback(
     async (photoIdOrIndex: string | number) => {
-      if (isAuthenticated && typeof photoIdOrIndex === 'string') {
-        await deletePhotoMutation(photoIdOrIndex).unwrap();
-      } else {
-        const photos = localEdits.photos || data.photos;
-        const newPhotos = photos.filter((_: any, i: string | number) => i !== photoIdOrIndex);
-        dispatch(setLocalEdit({ photos: newPhotos }));
+      try {
+        if (isAuthenticated && typeof photoIdOrIndex === 'string') {
+          await deletePhotoMutation(photoIdOrIndex).unwrap();
+        } else if (typeof photoIdOrIndex === 'number') {
+          const newPhotos = data.photos.filter((_: string, i: number) => i !== photoIdOrIndex);
+          dispatch(updateOnboardingData({ photos: newPhotos }));
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to delete photo';
+        setSyncError(errorMessage);
+        console.error('Failed to delete photo:', error);
       }
     },
-    [isAuthenticated, deletePhotoMutation, localEdits.photos, data.photos, dispatch],
+    [isAuthenticated, deletePhotoMutation, data.photos, dispatch],
   );
 
   const reorderPhotos = useCallback(
@@ -219,15 +163,17 @@ export function useAppOnboarding() {
   );
 
   // Calculate isComplete
-  const isComplete = serverProfile
-    ? serverProfile.isOnboardingComplete
-    : data.firstName.length >= 2 &&
-      data.location !== null &&
-      data.gender !== null &&
-      data.seeking !== null &&
-      data.dateOfBirth !== null &&
-      data.relationshipType !== null &&
-      data.photos.length >= 2;
+  const isComplete = useMemo(() => {
+    return user?.isOnboardingComplete ?? (
+      (data.firstName?.length ?? 0) >= 2 &&
+      data.location !== undefined &&
+      (data.genderIds?.length ?? 0) > 0 &&
+      (data.seekingIds?.length ?? 0) > 0 &&
+      data.dateOfBirth !== undefined &&
+      data.relationshipType !== undefined &&
+      (data.photos?.length ?? 0) >= 2
+    );
+  }, [user?.isOnboardingComplete, data]);
 
   return {
     // Data
