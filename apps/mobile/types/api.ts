@@ -65,3 +65,44 @@ export interface PhotoData {
   id: string;
   url: string;
 }
+
+// Discover types
+export interface DiscoverProfile {
+  age: number;
+  firstName: string;
+  genders: {
+    id: string;
+    name: string;
+  }[];
+  id: string;
+  location?: string;
+  photos: {
+    displayOrder: number;
+    id: string;
+    url: string;
+  }[];
+  relationshipType?: RelationshipType;
+}
+
+export type SwipeAction = 'like' | 'pass';
+
+export interface SwipeRequest {
+  action: SwipeAction;
+  userId: string;
+}
+
+export interface MatchedUser {
+  firstName: string;
+  id: string;
+  photo: string | null;
+}
+
+export interface SwipeResponse {
+  match: { id: string; user: MatchedUser } | null;
+}
+
+export interface MatchData {
+  createdAt: string;
+  id: string;
+  user: MatchedUser;
+}

@@ -1,6 +1,6 @@
-import { Migration } from '@mikro-orm/migrations';
+import { Migration } from "@mikro-orm/migrations";
 
-export class GendersTable extends Migration {
+export class Genders extends Migration {
   async up(): Promise<void> {
     // Create genders table
     this.addSql(`
@@ -16,7 +16,9 @@ export class GendersTable extends Migration {
       );
     `);
 
-    this.addSql(`comment on column "genders"."name" is 'Display name for the gender.';`);
+    this.addSql(
+      `comment on column "genders"."name" is 'Display name for the gender.';`,
+    );
     this.addSql(
       `comment on column "genders"."description" is 'Description explaining this gender identity.';`,
     );
@@ -174,12 +176,20 @@ export class GendersTable extends Migration {
 
   async down(): Promise<void> {
     // Recreate enum types
-    this.addSql(`create type "gender_enum" as enum ('male', 'female', 'non-binary');`);
-    this.addSql(`create type "seeking_enum" as enum ('male', 'female', 'everyone');`);
+    this.addSql(
+      `create type "gender_enum" as enum ('male', 'female', 'non-binary');`,
+    );
+    this.addSql(
+      `create type "seeking_enum" as enum ('male', 'female', 'everyone');`,
+    );
 
     // Add back old enum columns
-    this.addSql(`alter table "user_profiles" add column "gender" gender_enum null;`);
-    this.addSql(`alter table "user_profiles" add column "seeking" seeking_enum null;`);
+    this.addSql(
+      `alter table "user_profiles" add column "gender" gender_enum null;`,
+    );
+    this.addSql(
+      `alter table "user_profiles" add column "seeking" seeking_enum null;`,
+    );
 
     // Migrate data back from new structure to old enums (take first gender from join table)
     this.addSql(`

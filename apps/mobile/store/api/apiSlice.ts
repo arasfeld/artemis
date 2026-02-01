@@ -2,9 +2,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/lib/api-config';
 import { getToken } from '@/lib/storage';
 import type {
+  DiscoverProfile,
   GenderData,
+  MatchData,
   PhotoData,
   ProfileData,
+  SwipeRequest,
+  SwipeResponse,
   UpdateProfileData,
   UserProfile,
 } from '@/types/api';
@@ -22,7 +26,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Genders', 'Profile', 'User'],
+  tagTypes: ['Discover', 'Genders', 'Matches', 'Profile', 'User'],
   endpoints: (builder) => ({
     // Auth endpoints
     getAuthProfile: builder.query<UserProfile, void>({
@@ -130,6 +134,24 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['Profile'],
     }),
+
+    // Discover endpoints
+    getDiscoverFeed: builder.query<DiscoverProfile[], void>({
+      query: () => '/discover',
+      providesTags: ['Discover'],
+    }),
+    getMatches: builder.query<MatchData[], void>({
+      query: () => '/discover/matches',
+      providesTags: ['Matches'],
+    }),
+    recordSwipe: builder.mutation<SwipeResponse, SwipeRequest>({
+      query: (data) => ({
+        url: '/discover/swipe',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Discover', 'Matches'],
+    }),
   }),
 });
 
@@ -137,9 +159,12 @@ export const {
   useAddPhotoMutation,
   useDeletePhotoMutation,
   useGetAuthProfileQuery,
+  useGetDiscoverFeedQuery,
   useGetGendersQuery,
+  useGetMatchesQuery,
   useGetProfileQuery,
   useLogoutMutation,
+  useRecordSwipeMutation,
   useReorderPhotosMutation,
   useUpdateProfileMutation,
 } = apiSlice;
