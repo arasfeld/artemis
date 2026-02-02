@@ -53,7 +53,7 @@ export class User {
 
   @OneToMany(
     () => UserAuthentication,
-    (userAuthentication) => userAuthentication.user,
+    (userAuthentication) => userAuthentication.user
   )
   public userAuthentications = new Collection<UserAuthentication>(this);
 

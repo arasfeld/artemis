@@ -29,7 +29,7 @@ export interface RelationshipTypeData {
 }
 
 // Profile types for onboarding data
-export type LocationType = "automatic" | "manual";
+export type LocationType = 'automatic' | 'manual';
 
 export interface LocationData {
   type: LocationType;
@@ -90,7 +90,7 @@ export interface DiscoverProfile {
   relationshipTypes?: RelationshipTypeData[];
 }
 
-export type SwipeAction = "like" | "pass";
+export type SwipeAction = 'like' | 'pass';
 
 export interface SwipeRequest {
   action: SwipeAction;

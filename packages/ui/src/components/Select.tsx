@@ -65,11 +65,7 @@ export function Select({
         >
           {selectedOption?.label || placeholder}
         </Text>
-        <Ionicons
-          name="chevron-down"
-          size={20}
-          color={colors.text.secondary}
-        />
+        <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
       </TouchableOpacity>
 
       <Modal

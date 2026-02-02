@@ -10,7 +10,7 @@ export class GendersService {
     return this.em.find(
       Gender,
       { isActive: true },
-      { orderBy: { displayOrder: 'ASC' } },
+      { orderBy: { displayOrder: 'ASC' } }
     );
   }
 

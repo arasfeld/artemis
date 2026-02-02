@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   useAddPhotoMutation,
   useDeletePhotoMutation,
   useGetProfileQuery,
   useReorderPhotosMutation,
   useUpdateProfileMutation,
-} from "@/store/api/apiSlice";
+} from '@/store/api/apiSlice';
 import {
   loadOnboardingData,
   resetOnboarding,
@@ -15,14 +15,14 @@ import {
   selectOnboardingData,
   setCurrentStep,
   updateOnboardingData,
-} from "@/store/slices/onboardingSlice";
-import { useAppAuth } from "./useAppAuth";
+} from '@/store/slices/onboardingSlice';
+import { useAppAuth } from './useAppAuth';
 import {
   type OnboardingData,
   TOTAL_ONBOARDING_STEPS,
-} from "@/types/onboarding";
+} from '@/types/onboarding';
 
-const STORAGE_KEY = "onboarding_data";
+const STORAGE_KEY = 'onboarding_data';
 
 export function useAppOnboarding() {
   const dispatch = useAppDispatch();
@@ -37,7 +37,7 @@ export function useAppOnboarding() {
     ageRangeMax: sp?.ageRangeMax ?? 45,
     ageRangeMin: sp?.ageRangeMin ?? 18,
     dateOfBirth: sp?.dateOfBirth,
-    firstName: sp?.firstName || "",
+    firstName: sp?.firstName || '',
     genderIds: sp?.genders?.map((g: any) => g.id) || [],
     location: sp?.location,
     photos: sp?.photos?.map((p: any) => p.url) || [],
@@ -84,7 +84,7 @@ export function useAppOnboarding() {
     // Replace redux state and persist to AsyncStorage
     dispatch(loadOnboardingData(serverData));
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(serverData)).catch(
-      () => {},
+      () => {}
     );
   }, [serverProfile, dispatch]);
 
@@ -118,13 +118,13 @@ export function useAppOnboarding() {
           await updateProfile(payload).unwrap();
         } catch (error) {
           const errorMessage =
-            error instanceof Error ? error.message : "Failed to sync profile";
+            error instanceof Error ? error.message : 'Failed to sync profile';
           setSyncError(errorMessage);
-          console.error("Failed to sync profile:", error);
+          console.error('Failed to sync profile:', error);
         }
       }
     },
-    [dispatch, isAuthenticated, updateProfile],
+    [dispatch, isAuthenticated, updateProfile]
   );
 
   // Photo operations
@@ -139,33 +139,33 @@ export function useAppOnboarding() {
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Failed to add photo";
+          error instanceof Error ? error.message : 'Failed to add photo';
         setSyncError(errorMessage);
-        console.error("Failed to add photo:", error);
+        console.error('Failed to add photo:', error);
       }
     },
-    [isAuthenticated, addPhotoMutation, data.photos, dispatch],
+    [isAuthenticated, addPhotoMutation, data.photos, dispatch]
   );
 
   const deletePhoto = useCallback(
     async (photoIdOrIndex: string | number) => {
       try {
-        if (isAuthenticated && typeof photoIdOrIndex === "string") {
+        if (isAuthenticated && typeof photoIdOrIndex === 'string') {
           await deletePhotoMutation(photoIdOrIndex).unwrap();
-        } else if (typeof photoIdOrIndex === "number") {
+        } else if (typeof photoIdOrIndex === 'number') {
           const newPhotos = data.photos.filter(
-            (_: string, i: number) => i !== photoIdOrIndex,
+            (_: string, i: number) => i !== photoIdOrIndex
           );
           dispatch(updateOnboardingData({ photos: newPhotos }));
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Failed to delete photo";
+          error instanceof Error ? error.message : 'Failed to delete photo';
         setSyncError(errorMessage);
-        console.error("Failed to delete photo:", error);
+        console.error('Failed to delete photo:', error);
       }
     },
-    [isAuthenticated, deletePhotoMutation, data.photos, dispatch],
+    [isAuthenticated, deletePhotoMutation, data.photos, dispatch]
   );
 
   const reorderPhotos = useCallback(
@@ -174,7 +174,7 @@ export function useAppOnboarding() {
         await reorderPhotosMutation(photoIds).unwrap();
       }
     },
-    [isAuthenticated, reorderPhotosMutation],
+    [isAuthenticated, reorderPhotosMutation]
   );
 
   // Reset all onboarding state
@@ -186,7 +186,7 @@ export function useAppOnboarding() {
     (step: number) => {
       dispatch(setCurrentStep(step));
     },
-    [dispatch],
+    [dispatch]
   );
 
   // Calculate isComplete

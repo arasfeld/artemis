@@ -38,10 +38,7 @@ export function MatchModal({
           </Text>
 
           {matchedUser.photo && (
-            <Image
-              source={{ uri: matchedUser.photo }}
-              style={styles.photo}
-            />
+            <Image source={{ uri: matchedUser.photo }} style={styles.photo} />
           )}
 
           <View style={styles.buttons}>

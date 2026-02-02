@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import {
   Button,
   OptionCard,
@@ -8,15 +8,15 @@ import {
   ScreenContainer,
   spacing,
   Text,
-} from "@artemis/ui";
-import { useAppOnboarding } from "@/hooks/useAppOnboarding";
-import { useGetRelationshipTypesQuery } from "@/store/api/apiSlice";
-import { RelationshipTypeData } from "@/types/api";
+} from '@artemis/ui';
+import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useGetRelationshipTypesQuery } from '@/store/api/apiSlice';
+import { RelationshipTypeData } from '@/types/api';
 
 export default function RelationshipScreen() {
   const router = useRouter();
   const handleBack = () => {
-    router.replace("/(main)/onboarding/date-of-birth");
+    router.replace('/(main)/onboarding/date-of-birth');
   };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
   const [relationshipTypes, setRelationshipTypes] = useState<
@@ -32,7 +32,7 @@ export default function RelationshipScreen() {
 
     updateData({ relationshipTypes });
     setCurrentStep(6);
-    router.push("/(main)/onboarding/age-range");
+    router.push('/(main)/onboarding/age-range');
   };
 
   return (

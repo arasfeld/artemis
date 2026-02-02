@@ -18,7 +18,7 @@ export class DatabaseModule {
             configService.get<number>('POSTGRES_PORT'),
             configService.get<string>('POSTGRES_DB'),
             configService.get<string>('POSTGRES_USER'),
-            configService.get<string>('POSTGRES_PASSWORD'),
+            configService.get<string>('POSTGRES_PASSWORD')
           ),
         };
       },

@@ -1,4 +1,4 @@
-import { Migration } from "@mikro-orm/migrations";
+import { Migration } from '@mikro-orm/migrations';
 
 export class Genders extends Migration {
   async up(): Promise<void> {
@@ -17,19 +17,19 @@ export class Genders extends Migration {
     `);
 
     this.addSql(
-      `comment on column "genders"."name" is 'Display name for the gender.';`,
+      `comment on column "genders"."name" is 'Display name for the gender.';`
     );
     this.addSql(
-      `comment on column "genders"."description" is 'Description explaining this gender identity.';`,
+      `comment on column "genders"."description" is 'Description explaining this gender identity.';`
     );
     this.addSql(
-      `comment on column "genders"."display_order" is 'Order in which to display this gender in lists.';`,
+      `comment on column "genders"."display_order" is 'Order in which to display this gender in lists.';`
     );
     this.addSql(
-      `comment on column "genders"."is_primary" is 'Whether this is a primary gender shown by default (e.g., Man, Woman).';`,
+      `comment on column "genders"."is_primary" is 'Whether this is a primary gender shown by default (e.g., Man, Woman).';`
     );
     this.addSql(
-      `comment on column "genders"."is_active" is 'Whether this gender is active and selectable.';`,
+      `comment on column "genders"."is_active" is 'Whether this gender is active and selectable.';`
     );
 
     // Seed genders data
@@ -69,7 +69,7 @@ export class Genders extends Migration {
     `);
 
     this.addSql(
-      `comment on table "user_profile_seeking" is 'Join table for user profiles and genders they are seeking.';`,
+      `comment on table "user_profile_seeking" is 'Join table for user profiles and genders they are seeking.';`
     );
 
     // Add foreign keys for join table
@@ -97,7 +97,7 @@ export class Genders extends Migration {
     `);
 
     this.addSql(
-      `comment on table "user_profile_genders" is 'Join table for user profiles and their gender identities (up to 5).';`,
+      `comment on table "user_profile_genders" is 'Join table for user profiles and their gender identities (up to 5).';`
     );
 
     // Add foreign keys for user_profile_genders join table
@@ -177,18 +177,18 @@ export class Genders extends Migration {
   async down(): Promise<void> {
     // Recreate enum types
     this.addSql(
-      `create type "gender_enum" as enum ('male', 'female', 'non-binary');`,
+      `create type "gender_enum" as enum ('male', 'female', 'non-binary');`
     );
     this.addSql(
-      `create type "seeking_enum" as enum ('male', 'female', 'everyone');`,
+      `create type "seeking_enum" as enum ('male', 'female', 'everyone');`
     );
 
     // Add back old enum columns
     this.addSql(
-      `alter table "user_profiles" add column "gender" gender_enum null;`,
+      `alter table "user_profiles" add column "gender" gender_enum null;`
     );
     this.addSql(
-      `alter table "user_profiles" add column "seeking" seeking_enum null;`,
+      `alter table "user_profiles" add column "seeking" seeking_enum null;`
     );
 
     // Migrate data back from new structure to old enums (take first gender from join table)

@@ -10,7 +10,8 @@ export default function TabsLayout() {
 
   // Redirect to onboarding if not complete
   // Only redirect if destination is actually an onboarding screen (not tabs)
-  const shouldRedirect = !isOnboardingComplete && destination !== '/(main)/(tabs)';
+  const shouldRedirect =
+    !isOnboardingComplete && destination !== '/(main)/(tabs)';
 
   useEffect(() => {
     if (isLoading) return;

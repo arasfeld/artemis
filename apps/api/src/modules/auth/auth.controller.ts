@@ -32,7 +32,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly googleStrategy: GoogleStrategy,
+    private readonly googleStrategy: GoogleStrategy
   ) {}
 
   @Get('google')
@@ -47,7 +47,7 @@ export class AuthController {
   async googleAuthCallback(
     @Req() req: AuthenticatedRequest,
     @Res() res: Response,
-    @Query('state') state?: string,
+    @Query('state') state?: string
   ) {
     try {
       const { user } = req;
@@ -67,7 +67,7 @@ export class AuthController {
     } catch (error) {
       return this.redirectWithError(
         res,
-        error instanceof Error ? error.message : 'Authentication failed',
+        error instanceof Error ? error.message : 'Authentication failed'
       );
     }
   }
@@ -99,7 +99,7 @@ export class AuthController {
     // Default to artemis:// scheme for mobile app
     return this.configService.get<string>(
       'MOBILE_REDIRECT_URI',
-      'artemis://auth',
+      'artemis://auth'
     );
   }
 
@@ -120,7 +120,7 @@ export class AuthController {
   private redirectWithError(
     res: Response,
     message: string,
-    redirectUri?: string,
+    redirectUri?: string
   ) {
     const uri = this.getValidatedRedirectUri(redirectUri);
     const encodedError = encodeURIComponent(message);

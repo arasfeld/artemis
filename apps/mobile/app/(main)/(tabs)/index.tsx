@@ -69,7 +69,7 @@ export default function DiscoverScreen() {
         console.error('Failed to record swipe:', error);
       }
     },
-    [likeOpacity, nopeOpacity, recordSwipe, translateX, translateY],
+    [likeOpacity, nopeOpacity, recordSwipe, translateX, translateY]
   );
 
   const handleSwipeComplete = useCallback(
@@ -79,7 +79,7 @@ export default function DiscoverScreen() {
       const action: SwipeAction = direction === 'right' ? 'like' : 'pass';
       handleSwipe(action, currentProfile.id);
     },
-    [currentProfile, handleSwipe],
+    [currentProfile, handleSwipe]
   );
 
   // Pan gesture
@@ -115,7 +115,7 @@ export default function DiscoverScreen() {
           { damping: 15, stiffness: 100 },
           () => {
             runOnJS(handleSwipeComplete)('right');
-          },
+          }
         );
       } else if (shouldSwipeLeft) {
         translateX.value = withSpring(
@@ -123,7 +123,7 @@ export default function DiscoverScreen() {
           { damping: 15, stiffness: 100 },
           () => {
             runOnJS(handleSwipeComplete)('left');
-          },
+          }
         );
       } else {
         // Spring back to center
@@ -139,7 +139,7 @@ export default function DiscoverScreen() {
     const rotate = interpolate(
       translateX.value,
       [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
-      [-15, 0, 15],
+      [-15, 0, 15]
     );
 
     return {
@@ -155,7 +155,7 @@ export default function DiscoverScreen() {
     const scale = interpolate(
       translateX.value,
       [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
-      [0.9, 0.95, 0.9],
+      [0.9, 0.95, 0.9]
     );
 
     return {
@@ -173,10 +173,10 @@ export default function DiscoverScreen() {
         { damping: 15 },
         () => {
           runOnJS(handleSwipeComplete)(action === 'like' ? 'right' : 'left');
-        },
+        }
       );
     },
-    [currentProfile, handleSwipeComplete, translateX],
+    [currentProfile, handleSwipeComplete, translateX]
   );
 
   const handleCardPress = useCallback(() => {
@@ -226,7 +226,11 @@ export default function DiscoverScreen() {
     return (
       <ScreenContainer withGradient={false}>
         <View style={styles.centerContainer}>
-          <Ionicons color={colors.text.muted} name="compass-outline" size={64} />
+          <Ionicons
+            color={colors.text.muted}
+            name="compass-outline"
+            size={64}
+          />
           <Text color="dark" style={styles.emptyTitle} variant="title">
             No more profiles
           </Text>
@@ -249,7 +253,9 @@ export default function DiscoverScreen() {
         <View style={styles.cardContainer}>
           {/* Next card (behind current) */}
           {nextProfile && (
-            <Animated.View style={[styles.card, styles.nextCard, nextCardStyle]}>
+            <Animated.View
+              style={[styles.card, styles.nextCard, nextCardStyle]}
+            >
               <ProfileCard profile={nextProfile} />
             </Animated.View>
           )}
@@ -257,8 +263,14 @@ export default function DiscoverScreen() {
           {/* Current card */}
           <GestureDetector gesture={panGesture}>
             <Animated.View style={[styles.card, cardStyle]}>
-              <SwipeOverlay likeOpacity={likeOpacity} nopeOpacity={nopeOpacity} />
-              <Pressable onPress={handleCardPress} style={styles.profileCardWrapper}>
+              <SwipeOverlay
+                likeOpacity={likeOpacity}
+                nopeOpacity={nopeOpacity}
+              />
+              <Pressable
+                onPress={handleCardPress}
+                style={styles.profileCardWrapper}
+              >
                 <ProfileCard profile={currentProfile} />
               </Pressable>
             </Animated.View>

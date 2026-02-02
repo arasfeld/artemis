@@ -9,11 +9,7 @@ interface DividerProps {
   variant?: 'light' | 'dark';
 }
 
-export function Divider({
-  style,
-  color,
-  variant = 'light',
-}: DividerProps) {
+export function Divider({ style, color, variant = 'light' }: DividerProps) {
   const defaultColor =
     variant === 'light' ? colors.border.onDark : colors.border.light;
 

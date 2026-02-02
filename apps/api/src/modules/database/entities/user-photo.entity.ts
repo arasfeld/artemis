@@ -5,16 +5,16 @@ import {
   ManyToOne,
   PrimaryKey,
   Property,
-} from "@mikro-orm/core";
-import { v4 } from "uuid";
-import { UserProfile } from "./user-profile.entity";
+} from '@mikro-orm/core';
+import { v4 } from 'uuid';
+import { UserProfile } from './user-profile.entity';
 
 @Entity({
-  tableName: "user_photos",
-  comment: "Photos uploaded by users for their profile.",
+  tableName: 'user_photos',
+  comment: 'Photos uploaded by users for their profile.',
 })
 export class UserPhoto {
-  @PrimaryKey({ type: "uuid" })
+  @PrimaryKey({ type: 'uuid' })
   public id: string = v4();
 
   @Index()
@@ -23,14 +23,14 @@ export class UserPhoto {
 
   @Property({
     length: 500,
-    comment: "URL to the photo.",
+    comment: 'URL to the photo.',
   })
   public url!: string;
 
   @Property({
-    columnType: "int",
+    columnType: 'int',
     default: 0,
-    comment: "Display order (0 = primary photo).",
+    comment: 'Display order (0 = primary photo).',
   })
   public displayOrder: number = 0;
 

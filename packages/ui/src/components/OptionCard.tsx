@@ -29,11 +29,7 @@ export function OptionCard({
 }: OptionCardProps) {
   return (
     <TouchableOpacity
-      style={[
-        styles.container,
-        selected && styles.containerSelected,
-        style,
-      ]}
+      style={[styles.container, selected && styles.containerSelected, style]}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -42,9 +38,7 @@ export function OptionCard({
         <Text style={[styles.title, selected && styles.titleSelected]}>
           {title}
         </Text>
-        {subtitle && (
-          <Text style={styles.subtitle}>{subtitle}</Text>
-        )}
+        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
       <View style={[styles.radio, selected && styles.radioSelected]}>
         {selected && <View style={styles.radioInner} />}

@@ -1,4 +1,4 @@
-import { Migration } from "@mikro-orm/migrations";
+import { Migration } from '@mikro-orm/migrations';
 
 export class Migration1738400000000 extends Migration {
   async up(): Promise<void> {
@@ -15,7 +15,7 @@ export class Migration1738400000000 extends Migration {
       );
     `);
     this.addSql(
-      `comment on table "relationship_types" is 'Predefined relationship types users can select for their profile.'`,
+      `comment on table "relationship_types" is 'Predefined relationship types users can select for their profile.'`
     );
 
     // Create pivot table for user profile relationships

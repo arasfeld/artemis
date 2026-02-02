@@ -21,7 +21,7 @@ export interface UserProfile {
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly em: EntityManager,
+    private readonly em: EntityManager
   ) {}
 
   async validateUser(profile: {
@@ -108,7 +108,7 @@ export class AuthService {
     const auth = await this.em.findOne(
       UserAuthentication,
       { service: 'google', identifier: googleId },
-      { populate: ['user'] },
+      { populate: ['user'] }
     );
     return auth?.user ?? null;
   }
@@ -117,7 +117,7 @@ export class AuthService {
     const userEmail = await this.em.findOne(
       UserEmail,
       { email },
-      { populate: ['user'] },
+      { populate: ['user'] }
     );
     return userEmail?.user ?? null;
   }

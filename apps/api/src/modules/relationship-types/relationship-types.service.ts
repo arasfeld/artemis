@@ -7,7 +7,11 @@ export class RelationshipTypesService {
   constructor(private readonly em: EntityManager) {}
 
   async findAll(): Promise<RelationshipType[]> {
-    return this.em.find(RelationshipType, { isActive: true }, { orderBy: { displayOrder: 'ASC' } });
+    return this.em.find(
+      RelationshipType,
+      { isActive: true },
+      { orderBy: { displayOrder: 'ASC' } }
+    );
   }
 
   async findByIds(ids: string[]): Promise<RelationshipType[]> {

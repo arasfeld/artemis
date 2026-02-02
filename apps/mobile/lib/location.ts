@@ -56,7 +56,7 @@ export async function getCurrentLocation(): Promise<LocationResult | null> {
     });
 
     const firstResult = geocodeResults[0];
-    
+
     return {
       coordinates: {
         lat: latitude,

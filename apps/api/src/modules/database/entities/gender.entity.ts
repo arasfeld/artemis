@@ -9,7 +9,10 @@ export class Gender {
   @PrimaryKey({ type: 'uuid' })
   public id: string = v4();
 
-  @Property({ length: 100, comment: 'Display name for the gender (e.g., "Man", "Non-binary").' })
+  @Property({
+    length: 100,
+    comment: 'Display name for the gender (e.g., "Man", "Non-binary").',
+  })
   public name!: string;
 
   @Property({
@@ -27,7 +30,8 @@ export class Gender {
 
   @Property({
     default: false,
-    comment: 'Whether this is a primary gender shown by default (e.g., Man, Woman).',
+    comment:
+      'Whether this is a primary gender shown by default (e.g., Man, Woman).',
   })
   public isPrimary: boolean = false;
 

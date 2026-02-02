@@ -52,7 +52,7 @@ export class UserEmail {
   @OneToOne(
     () => UserEmailSecrets,
     (userEmailSecret) => userEmailSecret.userEmail,
-    { hidden: true },
+    { hidden: true }
   )
   public userEmailSecrets?: UserEmailSecrets;
 

@@ -9,7 +9,9 @@ export default function SignInScreen() {
   // Show error alerts
   useEffect(() => {
     if (error) {
-      Alert.alert('Sign In Error', error, [{ text: 'OK', onPress: clearError }]);
+      Alert.alert('Sign In Error', error, [
+        { text: 'OK', onPress: clearError },
+      ]);
     }
   }, [clearError, error]);
 

@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { EntityManager } from "@mikro-orm/core";
-import { Match } from "../database/entities/match.entity";
+import { Injectable } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/core';
+import { Match } from '../database/entities/match.entity';
 import {
   Interaction,
   InteractionType,
-} from "../database/entities/interaction.entity";
-import { User } from "../database/entities/user.entity";
-import { UserPhoto } from "../database/entities/user-photo.entity";
-import { UserProfile } from "../database/entities/user-profile.entity";
+} from '../database/entities/interaction.entity';
+import { User } from '../database/entities/user.entity';
+import { UserPhoto } from '../database/entities/user-photo.entity';
+import { UserProfile } from '../database/entities/user-profile.entity';
 
 export interface DiscoverProfile {
   age: number;
@@ -48,7 +48,7 @@ export class DiscoverService {
 
   async getDiscoveryFeed(
     userId: string,
-    limit: number = 10,
+    limit: number = 10
   ): Promise<DiscoverProfile[]> {
     // Complex query to find potential matches:
     // 1. Completed profiles only (has firstName, dateOfBirth, genders, seeking, photos)
@@ -124,7 +124,7 @@ export class DiscoverService {
       order by random()
       limit ?
     `,
-      [userId, userId, userId, limit],
+      [userId, userId, userId, limit]
     );
 
     // Fetch photos for each candidate
@@ -139,8 +139,8 @@ export class DiscoverService {
         userProfile: { user: { id: { $in: userIds } } },
       },
       {
-        orderBy: { displayOrder: "ASC" },
-      },
+        orderBy: { displayOrder: 'ASC' },
+      }
     );
 
     const photosByUser = new Map<
@@ -179,7 +179,7 @@ export class DiscoverService {
       where upg.user_profile_user_id = any(?)
       order by g.display_order
     `,
-      [userIds],
+      [userIds]
     );
 
     const gendersByUser = new Map<
@@ -213,7 +213,7 @@ export class DiscoverService {
         join relationship_types rt on rt.id = upr.relationship_type_id
         where upr.user_profile_user_id = any(?)
       `,
-      [userIds],
+      [userIds]
     );
 
     const relByUser = new Map<string, Array<{ id: string; name: string }>>();
@@ -238,7 +238,7 @@ export class DiscoverService {
   async recordInteraction(
     userId: string,
     targetUserId: string,
-    interactionType: InteractionType,
+    interactionType: InteractionType
   ): Promise<InteractionResult> {
     const user = await this.em.findOneOrFail(User, { id: userId });
     const targetUser = await this.em.findOneOrFail(User, { id: targetUserId });
@@ -290,8 +290,8 @@ export class DiscoverService {
               user: targetUser,
             },
             {
-              populate: ["photos"],
-            },
+              populate: ['photos'],
+            }
           );
 
           const primaryPhoto = matchedProfile?.photos
@@ -302,7 +302,7 @@ export class DiscoverService {
             match: {
               id: match.id,
               user: {
-                firstName: matchedProfile?.firstName || "",
+                firstName: matchedProfile?.firstName || '',
                 id: targetUserId,
                 photo: primaryPhoto?.url || null,
               },
@@ -325,9 +325,9 @@ export class DiscoverService {
         $or: [{ user1: user }, { user2: user }],
       },
       {
-        orderBy: { createdAt: "DESC" },
-        populate: ["user1", "user2"],
-      },
+        orderBy: { createdAt: 'DESC' },
+        populate: ['user1', 'user2'],
+      }
     );
 
     // Get profiles for matched users
@@ -342,8 +342,8 @@ export class DiscoverService {
           user: matchedUser,
         },
         {
-          populate: ["photos"],
-        },
+          populate: ['photos'],
+        }
       );
 
       const primaryPhoto = profile?.photos
@@ -354,7 +354,7 @@ export class DiscoverService {
         createdAt: match.createdAt,
         id: match.id,
         user: {
-          firstName: profile?.firstName || "",
+          firstName: profile?.firstName || '',
           id: matchedUser.id,
           photo: primaryPhoto?.url || null,
         },

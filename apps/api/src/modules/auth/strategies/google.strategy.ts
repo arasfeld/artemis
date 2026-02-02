@@ -22,7 +22,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     const options: StrategyOptions = {
       clientID: configService.get<string>('GOOGLE_CLIENT_ID')!,
@@ -84,7 +84,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     _accessToken: string,
     _refreshToken: string,
     profile: GoogleProfile,
-    done: VerifyCallback,
+    done: VerifyCallback
   ) {
     try {
       const user = await this.authService.validateUser(profile);

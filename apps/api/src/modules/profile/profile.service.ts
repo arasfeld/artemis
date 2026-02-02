@@ -1,13 +1,13 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { EntityManager } from "@mikro-orm/core";
-import { Gender } from "../database/entities/gender.entity";
-import { User } from "../database/entities/user.entity";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { EntityManager } from '@mikro-orm/core';
+import { Gender } from '../database/entities/gender.entity';
+import { User } from '../database/entities/user.entity';
 import {
   LocationType,
   UserProfile,
-} from "../database/entities/user-profile.entity";
-import { RelationshipType } from "../database/entities/relationship-type.entity";
-import { UserPhoto } from "../database/entities/user-photo.entity";
+} from '../database/entities/user-profile.entity';
+import { RelationshipType } from '../database/entities/relationship-type.entity';
+import { UserPhoto } from '../database/entities/user-photo.entity';
 
 export interface UpdateProfileDto {
   firstName?: string;
@@ -42,7 +42,7 @@ export class ProfileService {
     const existing = await this.em.findOne(
       UserProfile,
       { user: userId },
-      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
+      { populate: ['photos', 'genders', 'seeking', 'relationshipTypes'] }
     );
 
     if (existing) {
@@ -58,13 +58,13 @@ export class ProfileService {
     return this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
+      { populate: ['photos', 'genders', 'seeking', 'relationshipTypes'] }
     );
   }
 
   async updateProfile(
     userId: string,
-    dto: UpdateProfileDto,
+    dto: UpdateProfileDto
   ): Promise<UserProfile> {
     const profile = await this.findOrCreateProfile(userId);
 
@@ -145,7 +145,7 @@ export class ProfileService {
 
     // Refresh to get updated photos
     await this.em.refresh(profile, {
-      populate: ["photos", "genders", "seeking", "relationshipTypes"],
+      populate: ['photos', 'genders', 'seeking', 'relationshipTypes'],
     });
     return profile;
   }
@@ -157,7 +157,7 @@ export class ProfileService {
     });
 
     if (!photo) {
-      throw new NotFoundException("Photo not found");
+      throw new NotFoundException('Photo not found');
     }
 
     await this.em.removeAndFlush(photo);
@@ -165,7 +165,7 @@ export class ProfileService {
     const profile = await this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
+      { populate: ['photos', 'genders', 'seeking', 'relationshipTypes'] }
     );
 
     return profile;
@@ -173,12 +173,12 @@ export class ProfileService {
 
   async reorderPhotos(
     userId: string,
-    photoIds: string[],
+    photoIds: string[]
   ): Promise<UserProfile> {
     const profile = await this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
+      { populate: ['photos', 'genders', 'seeking', 'relationshipTypes'] }
     );
 
     // Update display order for each photo

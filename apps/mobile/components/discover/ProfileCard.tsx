@@ -12,8 +12,11 @@ interface ProfileCardProps {
   profile: DiscoverProfile;
 }
 
-export const ProfileCard = memo(function ProfileCard({ profile }: ProfileCardProps) {
-  const primaryPhoto = profile.photos.find((p) => p.displayOrder === 0) || profile.photos[0];
+export const ProfileCard = memo(function ProfileCard({
+  profile,
+}: ProfileCardProps) {
+  const primaryPhoto =
+    profile.photos.find((p) => p.displayOrder === 0) || profile.photos[0];
 
   return (
     <View style={styles.card}>

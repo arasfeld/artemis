@@ -1,4 +1,4 @@
-import { Migration } from "@mikro-orm/migrations";
+import { Migration } from '@mikro-orm/migrations';
 
 export class Matches extends Migration {
   override async up(): Promise<void> {
@@ -18,10 +18,10 @@ export class Matches extends Migration {
 
     // Create indexes for faster lookups
     this.addSql(
-      `create index "matches_user1_id_index" on "matches" ("user1_id");`,
+      `create index "matches_user1_id_index" on "matches" ("user1_id");`
     );
     this.addSql(
-      `create index "matches_user2_id_index" on "matches" ("user2_id");`,
+      `create index "matches_user2_id_index" on "matches" ("user2_id");`
     );
   }
 

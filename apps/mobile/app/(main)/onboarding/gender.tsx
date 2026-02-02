@@ -26,13 +26,13 @@ export default function GenderScreen() {
   // Separate primary and non-primary genders
   const primaryGenders = useMemo(
     () => genders.filter((g) => g.isPrimary),
-    [genders],
+    [genders]
   );
 
   // Find selected gender objects for display
   const selectedGenders = useMemo(
     () => genders.filter((g) => data.genderIds.includes(g.id)),
-    [genders, data.genderIds],
+    [genders, data.genderIds]
   );
 
   // Check if any selected gender is non-primary
@@ -64,7 +64,7 @@ export default function GenderScreen() {
       // Replace all selections with just this one
       updateData({ genderIds: [genderId] });
     },
-    [data.genderIds, updateData],
+    [data.genderIds, updateData]
   );
 
   const handleSeekingToggle = useCallback(
@@ -74,7 +74,7 @@ export default function GenderScreen() {
         : [...data.seekingIds, genderId];
       updateData({ seekingIds: newSeekingIds });
     },
-    [data.seekingIds, updateData],
+    [data.seekingIds, updateData]
   );
 
   const handleViewMoreGender = useCallback(() => {
@@ -132,16 +132,19 @@ export default function GenderScreen() {
             ))}
 
             {/* Show non-primary selected genders or multi-selection summary */}
-            {(nonPrimarySelectedGenders.length > 0 || data.genderIds.length > 1) && (
+            {(nonPrimarySelectedGenders.length > 0 ||
+              data.genderIds.length > 1) && (
               <TouchableOpacity
                 style={[styles.summaryCard, styles.summaryCardSelected]}
                 onPress={handleViewMoreGender}
                 activeOpacity={0.8}
               >
-                <Text style={styles.summaryLabel}>
-                  {genderLabels}
-                </Text>
-                <Ionicons name="chevron-forward" size={20} color={colors.primary} />
+                <Text style={styles.summaryLabel}>{genderLabels}</Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color={colors.primary}
+                />
               </TouchableOpacity>
             )}
 
@@ -150,11 +153,7 @@ export default function GenderScreen() {
               onPress={handleViewMoreGender}
             >
               <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={colors.white}
-              />
+              <Ionicons name="chevron-forward" size={18} color={colors.white} />
             </TouchableOpacity>
           </View>
         </View>
@@ -193,7 +192,11 @@ export default function GenderScreen() {
                     ]}
                   >
                     {isSelected && (
-                      <Ionicons name="checkmark" size={16} color={colors.white} />
+                      <Ionicons
+                        name="checkmark"
+                        size={16}
+                        color={colors.white}
+                      />
                     )}
                   </View>
                 </TouchableOpacity>
@@ -202,17 +205,19 @@ export default function GenderScreen() {
 
             {/* Show summary of other selected genders */}
             {data.seekingIds.some(
-              (id) => !primaryGenders.find((g) => g.id === id),
+              (id) => !primaryGenders.find((g) => g.id === id)
             ) && (
               <TouchableOpacity
                 style={[styles.summaryCard, styles.summaryCardSelected]}
                 onPress={handleViewMoreSeeking}
                 activeOpacity={0.8}
               >
-                <Text style={styles.summaryLabel}>
-                  {seekingLabels}
-                </Text>
-                <Ionicons name="chevron-forward" size={20} color={colors.white} />
+                <Text style={styles.summaryLabel}>{seekingLabels}</Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color={colors.white}
+                />
               </TouchableOpacity>
             )}
 
@@ -221,11 +226,7 @@ export default function GenderScreen() {
               onPress={handleViewMoreSeeking}
             >
               <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={colors.white}
-              />
+              <Ionicons name="chevron-forward" size={18} color={colors.white} />
             </TouchableOpacity>
           </View>
         </View>

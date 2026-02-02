@@ -21,9 +21,17 @@ export class DiscoverController {
   }
 
   @Post('swipe')
-  async recordInteraction(@CurrentUser() user: User, @Body() dto: InteractionDto) {
-    const interactionType = dto.action === 'like' ? InteractionType.LIKE : InteractionType.PASS;
-    return this.discoverService.recordInteraction(user.id, dto.userId, interactionType);
+  async recordInteraction(
+    @CurrentUser() user: User,
+    @Body() dto: InteractionDto
+  ) {
+    const interactionType =
+      dto.action === 'like' ? InteractionType.LIKE : InteractionType.PASS;
+    return this.discoverService.recordInteraction(
+      user.id,
+      dto.userId,
+      interactionType
+    );
   }
 
   @Get('matches')

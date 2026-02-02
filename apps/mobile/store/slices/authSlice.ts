@@ -98,7 +98,7 @@ export const signOut = createAsyncThunk<void, void, { dispatch: AppDispatch }>(
     }
     await deleteToken();
     dispatch(apiSlice.util.resetApiState());
-  },
+  }
 );
 
 const authSlice = createSlice({
@@ -160,7 +160,8 @@ export const { clearError, setAuthError } = authSlice.actions;
 
 // Selectors
 export const selectAuthState = (state: RootState) => state.auth;
-export const selectIsInitialized = (state: RootState) => state.auth.isInitialized;
+export const selectIsInitialized = (state: RootState) =>
+  state.auth.isInitialized;
 export const selectIsAuthenticating = (state: RootState) =>
   state.auth.isAuthenticating;
 export const selectAuthError = (state: RootState) => state.auth.error;

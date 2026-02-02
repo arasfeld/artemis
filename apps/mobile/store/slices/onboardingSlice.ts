@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { RootState } from "../index";
-import type { LocationData } from "@/types/onboarding";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { RootState } from '../index';
+import type { LocationData } from '@/types/onboarding';
 
 // Use the same storage key as the hook to avoid duplication
-const STORAGE_KEY = "onboarding_data";
+const STORAGE_KEY = 'onboarding_data';
 
 export interface OnboardingData {
   ageRangeMax?: number;
@@ -29,7 +29,7 @@ const initialState: OnboardingState = {
 };
 
 const onboardingSlice = createSlice({
-  name: "onboarding",
+  name: 'onboarding',
   initialState,
   reducers: {
     setCurrentStep: (state, action: PayloadAction<number>) => {
@@ -37,12 +37,12 @@ const onboardingSlice = createSlice({
     },
     updateOnboardingData: (
       state,
-      action: PayloadAction<Partial<OnboardingData>>,
+      action: PayloadAction<Partial<OnboardingData>>
     ) => {
       state.data = { ...state.data, ...action.payload };
       // Persist to AsyncStorage (fire and forget)
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)).catch(
-        () => {},
+        () => {}
       );
     },
     clearOnboardingData: (state) => {

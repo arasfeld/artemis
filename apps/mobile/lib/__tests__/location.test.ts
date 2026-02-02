@@ -44,11 +44,11 @@ describe('Location Utils', () => {
     ];
 
     const mockedLocation = jest.mocked(Location);
-    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({ 
+    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
       status: Location.PermissionStatus.GRANTED,
       expires: 'never',
       granted: true,
-      canAskAgain: true
+      canAskAgain: true,
     });
     mockedLocation.getCurrentPositionAsync.mockResolvedValue(mockLocation);
     mockedLocation.reverseGeocodeAsync.mockResolvedValue(mockGeocode);
@@ -67,11 +67,11 @@ describe('Location Utils', () => {
 
   it('should return null when permission is denied', async () => {
     const mockedLocation = jest.mocked(Location);
-    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({ 
+    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
       status: Location.PermissionStatus.DENIED,
       expires: 'never',
       granted: false,
-      canAskAgain: true
+      canAskAgain: true,
     });
 
     const result = await getCurrentLocation();

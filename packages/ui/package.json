@@ -11,6 +11,8 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "clean": "rm -rf dist node_modules",
+    "format": "prettier --ignore-path ../../.prettierignore --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --ignore-path ../../.prettierignore --check \"**/*.{ts,tsx,md}\"",
     "generate:component": "turbo gen react-component",
     "lint": "eslint . --max-warnings 0"
   },

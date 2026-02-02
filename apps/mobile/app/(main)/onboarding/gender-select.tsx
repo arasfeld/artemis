@@ -1,10 +1,5 @@
 import { useCallback, useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, Text } from '@artemis/ui';
@@ -23,7 +18,8 @@ export default function GenderSelectScreen() {
   const { data: onboardingData, updateData } = useAppOnboarding();
 
   const mode: SelectMode = params.mode === 'seeking' ? 'seeking' : 'gender';
-  const title = params.title || (mode === 'gender' ? 'I am a...' : 'Seeking...');
+  const title =
+    params.title || (mode === 'gender' ? 'I am a...' : 'Seeking...');
 
   // Initialize from onboarding data
   const [selectedIds, setSelectedIds] = useState<string[]>(
@@ -32,19 +28,22 @@ export default function GenderSelectScreen() {
 
   const { data: genders = [], isLoading } = useGetGendersQuery();
 
-  const handleSelect = useCallback((gender: GenderData) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(gender.id)) {
-        // Always allow deselection
-        return prev.filter((id) => id !== gender.id);
-      }
-      // For gender mode, enforce max limit
-      if (mode === 'gender' && prev.length >= MAX_GENDERS) {
-        return prev; // Don't add more
-      }
-      return [...prev, gender.id];
-    });
-  }, [mode]);
+  const handleSelect = useCallback(
+    (gender: GenderData) => {
+      setSelectedIds((prev) => {
+        if (prev.includes(gender.id)) {
+          // Always allow deselection
+          return prev.filter((id) => id !== gender.id);
+        }
+        // For gender mode, enforce max limit
+        if (mode === 'gender' && prev.length >= MAX_GENDERS) {
+          return prev; // Don't add more
+        }
+        return [...prev, gender.id];
+      });
+    },
+    [mode]
+  );
 
   const handleDone = useCallback(() => {
     if (mode === 'gender') {
@@ -55,60 +54,73 @@ export default function GenderSelectScreen() {
     router.back();
   }, [mode, router, selectedIds, updateData]);
 
-  const isSelected = useCallback((id: string) => {
-    return selectedIds.includes(id);
-  }, [selectedIds]);
+  const isSelected = useCallback(
+    (id: string) => {
+      return selectedIds.includes(id);
+    },
+    [selectedIds]
+  );
 
   const canSubmit = selectedIds.length > 0;
   const atMaxGenders = mode === 'gender' && selectedIds.length >= MAX_GENDERS;
 
-  const renderItem = useCallback(({ item }: { item: GenderData }) => {
-    const selected = isSelected(item.id);
-    // Use plural for seeking, singular for gender
-    const displayName = mode === 'seeking' ? pluralizeGender(item.name) : item.name;
-    // Disable if at max and not already selected
-    const disabled = atMaxGenders && !selected;
+  const renderItem = useCallback(
+    ({ item }: { item: GenderData }) => {
+      const selected = isSelected(item.id);
+      // Use plural for seeking, singular for gender
+      const displayName =
+        mode === 'seeking' ? pluralizeGender(item.name) : item.name;
+      // Disable if at max and not already selected
+      const disabled = atMaxGenders && !selected;
 
-    return (
-      <TouchableOpacity
-        style={[
-          styles.item,
-          selected && styles.itemSelected,
-          disabled && styles.itemDisabled,
-        ]}
-        onPress={() => handleSelect(item)}
-        activeOpacity={0.7}
-        disabled={disabled}
-      >
-        <View style={styles.itemContent}>
-          <Text style={[
-            styles.itemLabel,
-            selected && styles.itemLabelSelected,
-            disabled && styles.itemLabelDisabled,
-          ]}>
-            {displayName}
-          </Text>
-          {item.description && (
-            <Text style={[
-              styles.itemDescription,
-              disabled && styles.itemDescriptionDisabled,
-            ]}>
-              {item.description}
+      return (
+        <TouchableOpacity
+          style={[
+            styles.item,
+            selected && styles.itemSelected,
+            disabled && styles.itemDisabled,
+          ]}
+          onPress={() => handleSelect(item)}
+          activeOpacity={0.7}
+          disabled={disabled}
+        >
+          <View style={styles.itemContent}>
+            <Text
+              style={[
+                styles.itemLabel,
+                selected && styles.itemLabelSelected,
+                disabled && styles.itemLabelDisabled,
+              ]}
+            >
+              {displayName}
             </Text>
-          )}
-        </View>
-        <View style={[
-          styles.checkbox,
-          selected && styles.checkboxSelected,
-          disabled && styles.checkboxDisabled,
-        ]}>
-          {selected && (
-            <Ionicons name="checkmark" size={16} color={colors.white} />
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }, [atMaxGenders, handleSelect, isSelected, mode]);
+            {item.description && (
+              <Text
+                style={[
+                  styles.itemDescription,
+                  disabled && styles.itemDescriptionDisabled,
+                ]}
+              >
+                {item.description}
+              </Text>
+            )}
+          </View>
+          <View
+            style={[
+              styles.checkbox,
+              selected && styles.checkboxSelected,
+              disabled && styles.checkboxDisabled,
+            ]}
+          >
+            {selected && (
+              <Ionicons name="checkmark" size={16} color={colors.white} />
+            )}
+          </View>
+        </TouchableOpacity>
+      );
+    },
+    [atMaxGenders, handleSelect, isSelected, mode]
+  );
 
   if (isLoading) {
     return (
@@ -128,7 +140,10 @@ export default function GenderSelectScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.closeButton}
+        >
           <Ionicons name="close" size={24} color={colors.text.primary} />
         </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
@@ -137,7 +152,9 @@ export default function GenderSelectScreen() {
           disabled={!canSubmit}
           style={[styles.doneButton, !canSubmit && styles.doneButtonDisabled]}
         >
-          <Text style={[styles.doneText, !canSubmit && styles.doneTextDisabled]}>
+          <Text
+            style={[styles.doneText, !canSubmit && styles.doneTextDisabled]}
+          >
             Done
           </Text>
         </TouchableOpacity>

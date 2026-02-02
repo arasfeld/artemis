@@ -52,7 +52,7 @@ function getApiHost(): string {
       '[API Config] Running on physical device without EXPO_PUBLIC_API_URL set.\n' +
         'The app will not be able to connect to your local server.\n' +
         'Please start the tunnel: pnpm dev:tunnel\n' +
-        'Then set EXPO_PUBLIC_API_URL in apps/mobile/.env',
+        'Then set EXPO_PUBLIC_API_URL in apps/mobile/.env'
     );
   }
 
@@ -77,7 +77,9 @@ export const API_BASE_URL = getApiHost();
  * Useful for debugging and conditional behavior
  */
 export function isTunnelUrl(): boolean {
-  return API_BASE_URL.startsWith('https://') && !API_BASE_URL.includes('localhost');
+  return (
+    API_BASE_URL.startsWith('https://') && !API_BASE_URL.includes('localhost')
+  );
 }
 
 /**

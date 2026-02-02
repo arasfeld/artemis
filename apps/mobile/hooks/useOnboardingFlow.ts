@@ -1,45 +1,45 @@
-import { useCallback, useMemo } from "react";
-import { useRouter } from "expo-router";
-import { useAppOnboarding } from "./useAppOnboarding";
-import { useAppAuth } from "./useAppAuth";
-import type { OnboardingData } from "@/types/onboarding";
+import { useCallback, useMemo } from 'react';
+import { useRouter } from 'expo-router';
+import { useAppOnboarding } from './useAppOnboarding';
+import { useAppAuth } from './useAppAuth';
+import type { OnboardingData } from '@/types/onboarding';
 
 export type OnboardingRoute =
-  | "/(auth)/welcome"
-  | "/(main)/onboarding/first-name"
-  | "/(main)/onboarding/location"
-  | "/(main)/onboarding/manual-location"
-  | "/(main)/onboarding/gender"
-  | "/(main)/onboarding/date-of-birth"
-  | "/(main)/onboarding/relationship"
-  | "/(main)/onboarding/age-range"
-  | "/(main)/onboarding/photos";
+  | '/(auth)/welcome'
+  | '/(main)/onboarding/first-name'
+  | '/(main)/onboarding/location'
+  | '/(main)/onboarding/manual-location'
+  | '/(main)/onboarding/gender'
+  | '/(main)/onboarding/date-of-birth'
+  | '/(main)/onboarding/relationship'
+  | '/(main)/onboarding/age-range'
+  | '/(main)/onboarding/photos';
 
 export type FlowDestination =
-  | "/(auth)/welcome"
-  | "/(main)/onboarding/first-name"
-  | "/(main)/onboarding/location"
-  | "/(main)/onboarding/gender"
-  | "/(main)/onboarding/date-of-birth"
-  | "/(main)/onboarding/relationship"
-  | "/(main)/onboarding/age-range"
-  | "/(main)/onboarding/photos"
-  | "/(main)/(tabs)";
+  | '/(auth)/welcome'
+  | '/(main)/onboarding/first-name'
+  | '/(main)/onboarding/location'
+  | '/(main)/onboarding/gender'
+  | '/(main)/onboarding/date-of-birth'
+  | '/(main)/onboarding/relationship'
+  | '/(main)/onboarding/age-range'
+  | '/(main)/onboarding/photos'
+  | '/(main)/(tabs)';
 
 /**
  * Map of onboarding routes to their previous route.
  * Used for safe back navigation when there's no navigation history.
  */
 const PREVIOUS_ROUTE_MAP: Record<OnboardingRoute, OnboardingRoute | null> = {
-  "/(auth)/welcome": null,
-  "/(main)/onboarding/first-name": null, // No back from first onboarding step (user is authenticated)
-  "/(main)/onboarding/location": "/(main)/onboarding/first-name",
-  "/(main)/onboarding/manual-location": "/(main)/onboarding/location",
-  "/(main)/onboarding/gender": "/(main)/onboarding/location",
-  "/(main)/onboarding/date-of-birth": "/(main)/onboarding/gender",
-  "/(main)/onboarding/relationship": "/(main)/onboarding/date-of-birth",
-  "/(main)/onboarding/age-range": "/(main)/onboarding/relationship",
-  "/(main)/onboarding/photos": "/(main)/onboarding/age-range",
+  '/(auth)/welcome': null,
+  '/(main)/onboarding/first-name': null, // No back from first onboarding step (user is authenticated)
+  '/(main)/onboarding/location': '/(main)/onboarding/first-name',
+  '/(main)/onboarding/manual-location': '/(main)/onboarding/location',
+  '/(main)/onboarding/gender': '/(main)/onboarding/location',
+  '/(main)/onboarding/date-of-birth': '/(main)/onboarding/gender',
+  '/(main)/onboarding/relationship': '/(main)/onboarding/date-of-birth',
+  '/(main)/onboarding/age-range': '/(main)/onboarding/relationship',
+  '/(main)/onboarding/photos': '/(main)/onboarding/age-range',
 };
 
 /**
@@ -51,36 +51,36 @@ const ONBOARDING_STEPS: {
   isComplete: (data: OnboardingData) => boolean;
 }[] = [
   {
-    route: "/(main)/onboarding/first-name",
+    route: '/(main)/onboarding/first-name',
     isComplete: (data) => (data.firstName?.length ?? 0) >= 2,
   },
   {
-    route: "/(main)/onboarding/location",
+    route: '/(main)/onboarding/location',
     isComplete: (data) => data.location !== undefined,
   },
   {
-    route: "/(main)/onboarding/gender",
+    route: '/(main)/onboarding/gender',
     isComplete: (data) =>
       (data.genderIds?.length ?? 0) > 0 && (data.seekingIds?.length ?? 0) > 0,
   },
   {
-    route: "/(main)/onboarding/date-of-birth",
+    route: '/(main)/onboarding/date-of-birth',
     isComplete: (data) => data.dateOfBirth !== undefined,
   },
   {
-    route: "/(main)/onboarding/relationship",
+    route: '/(main)/onboarding/relationship',
     isComplete: (data) =>
       data.relationshipTypes !== undefined &&
       (data.relationshipTypes?.length ?? 0) > 0,
   },
   {
-    route: "/(main)/onboarding/age-range",
+    route: '/(main)/onboarding/age-range',
     isComplete: (data) =>
       (data.ageRangeMin ?? 0) >= 18 &&
       (data.ageRangeMax ?? 0) >= (data.ageRangeMin ?? 0),
   },
   {
-    route: "/(main)/onboarding/photos",
+    route: '/(main)/onboarding/photos',
     isComplete: (data) => (data.photos?.length ?? 0) >= 2,
   },
 ];
@@ -139,7 +139,7 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   // Determine the destination based on current state
   const destination = useMemo((): FlowDestination => {
     if (!isAuthenticated) {
-      return "/(auth)/welcome";
+      return '/(auth)/welcome';
     }
 
     if (
@@ -149,7 +149,7 @@ export function useOnboardingFlow(): OnboardingFlowResult {
       return ONBOARDING_STEPS[firstIncompleteStep].route;
     }
 
-    return "/(main)/(tabs)";
+    return '/(main)/(tabs)';
   }, [isAuthenticated, isOnboardingComplete, firstIncompleteStep]);
 
   // Navigate to the determined destination
@@ -160,7 +160,7 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   // Calculate current step based on destination
   const currentStep = useMemo(() => {
     const index = ONBOARDING_STEPS.findIndex(
-      (step) => step.route === destination,
+      (step) => step.route === destination
     );
     return index >= 0 ? index : 0;
   }, [destination]);
@@ -211,7 +211,7 @@ export const TOTAL_ONBOARDING_STEPS = ONBOARDING_STEPS.length;
  * @returns A function to safely navigate back, or undefined if no back is possible
  */
 export function useOnboardingSafeBack(
-  currentRoute: OnboardingRoute,
+  currentRoute: OnboardingRoute
 ): (() => void) | undefined {
   const router = useRouter();
   const previousRoute = PREVIOUS_ROUTE_MAP[currentRoute];

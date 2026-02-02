@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -9,12 +9,12 @@ import {
   StyleSheet,
   View,
   ViewToken,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Text, colors } from "@artemis/ui";
-import type { DiscoverProfile } from "@/types/api";
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Text, colors } from '@artemis/ui';
+import type { DiscoverProfile } from '@/types/api';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const PHOTO_HEIGHT = SCREEN_HEIGHT * 0.55;
 
 interface ProfileDetailModalProps {
@@ -41,7 +41,7 @@ export function ProfileDetailModal({
         setCurrentPhotoIndex(viewableItems[0].index);
       }
     },
-    [],
+    []
   );
 
   const viewabilityConfig = useRef({
@@ -51,13 +51,13 @@ export function ProfileDetailModal({
   if (!profile) return null;
 
   const sortedPhotos = [...profile.photos].sort(
-    (a, b) => a.displayOrder - b.displayOrder,
+    (a, b) => a.displayOrder - b.displayOrder
   );
 
-  const genderText = profile.genders.map((g) => g.name).join(", ");
+  const genderText = profile.genders.map((g) => g.name).join(', ');
   const lookingForText =
     profile.relationshipTypes && profile.relationshipTypes.length > 0
-      ? profile.relationshipTypes.map((r: any) => r.name).join(", ")
+      ? profile.relationshipTypes.map((r: any) => r.name).join(', ')
       : null;
 
   return (
@@ -183,12 +183,12 @@ export function ProfileDetailModal({
 
 const styles = StyleSheet.create({
   actionButton: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.white,
     borderRadius: 35,
     elevation: 5,
     height: 70,
-    justifyContent: "center",
+    justifyContent: 'center',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -196,21 +196,21 @@ const styles = StyleSheet.create({
     width: 70,
   },
   buttonContainer: {
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: 30,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingBottom: 20,
     paddingTop: 16,
   },
   closeButton: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.background.card,
     borderRadius: 20,
     elevation: 2,
     height: 40,
-    justifyContent: "center",
-    position: "absolute",
+    justifyContent: 'center',
+    position: 'absolute',
     right: 16,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
@@ -230,8 +230,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   infoRow: {
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: 12,
     marginTop: 12,
   },
@@ -245,19 +245,19 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   pagination: {
     bottom: 16,
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 8,
-    justifyContent: "center",
+    justifyContent: 'center',
     left: 0,
-    position: "absolute",
+    position: 'absolute',
     right: 0,
   },
   paginationDot: {
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 4,
     height: 8,
     width: 8,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   photoContainer: {
     height: PHOTO_HEIGHT,
-    position: "relative",
+    position: 'relative',
   },
   placeholderPhoto: {
     backgroundColor: colors.border.light,

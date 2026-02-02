@@ -14,7 +14,10 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore non-serializable values in API slice actions
-        ignoredActions: ['api/executeQuery/fulfilled', 'api/executeMutation/fulfilled'],
+        ignoredActions: [
+          'api/executeQuery/fulfilled',
+          'api/executeMutation/fulfilled',
+        ],
       },
     }).concat(apiSlice.middleware),
 });

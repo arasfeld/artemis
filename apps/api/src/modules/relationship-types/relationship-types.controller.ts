@@ -1,10 +1,10 @@
-import { Controller, Get } from "@nestjs/common";
-import { RelationshipTypesService } from "./relationship-types.service";
+import { Controller, Get } from '@nestjs/common';
+import { RelationshipTypesService } from './relationship-types.service';
 
-@Controller("relationship-types")
+@Controller('relationship-types')
 export class RelationshipTypesController {
   constructor(
-    private readonly relationshipTypesService: RelationshipTypesService,
+    private readonly relationshipTypesService: RelationshipTypesService
   ) {}
 
   @Get()

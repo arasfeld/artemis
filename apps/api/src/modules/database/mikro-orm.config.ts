@@ -6,7 +6,7 @@ export function buildDatabaseConfig(
   port: number | undefined,
   dbName: string | undefined,
   user: string | undefined,
-  password: string | undefined,
+  password: string | undefined
 ) {
   // load from env file if not passed in
   if (!host || !port || !dbName || !user || !password) {
@@ -45,5 +45,5 @@ export default buildDatabaseConfig(
   undefined,
   undefined,
   undefined,
-  undefined,
+  undefined
 );

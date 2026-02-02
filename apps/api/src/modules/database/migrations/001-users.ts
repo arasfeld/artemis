@@ -10,16 +10,16 @@ export class Users extends Migration {
         "updated_at" timestamptz(0) not null,
         constraint "users_pkey" primary key ("id"),
         constraint users_username_check check (length(username) >= 2 and length(username) <= 24 and username ~ '^[a-zA-Z]([_]?[a-zA-Z0-9])+$')
-      );`,
+      );`
     );
     this.addSql(
-      'comment on table "users" is \'A user who can log in to the application.\';',
+      'comment on table "users" is \'A user who can log in to the application.\';'
     );
     this.addSql(
-      "comment on column \"users\".\"username\" is 'Public-facing username (or ''handle'') of the user.';",
+      "comment on column \"users\".\"username\" is 'Public-facing username (or ''handle'') of the user.';"
     );
     this.addSql(
-      'alter table "users" add constraint "users_username_unique" unique ("username");',
+      'alter table "users" add constraint "users_username_unique" unique ("username");'
     );
   }
 
