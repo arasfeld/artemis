@@ -1,20 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/core';
-import { Gender } from '../database/entities/gender.entity';
-import { User } from '../database/entities/user.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { EntityManager } from "@mikro-orm/core";
+import { Gender } from "../database/entities/gender.entity";
+import { User } from "../database/entities/user.entity";
 import {
-  UserProfile,
-  RelationshipType,
   LocationType,
-} from '../database/entities/user-profile.entity';
-import { UserPhoto } from '../database/entities/user-photo.entity';
+  UserProfile,
+} from "../database/entities/user-profile.entity";
+import { RelationshipType } from "../database/entities/relationship-type.entity";
+import { UserPhoto } from "../database/entities/user-photo.entity";
 
 export interface UpdateProfileDto {
   firstName?: string;
   dateOfBirth?: string;
   genderIds?: string[];
   seekingIds?: string[];
-  relationshipType?: RelationshipType;
+  relationshipIds?: string[];
   ageRangeMin?: number;
   ageRangeMax?: number;
   location?: {
@@ -42,7 +42,7 @@ export class ProfileService {
     const existing = await this.em.findOne(
       UserProfile,
       { user: userId },
-      { populate: ['photos', 'genders', 'seeking'] },
+      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
     );
 
     if (existing) {
@@ -58,7 +58,7 @@ export class ProfileService {
     return this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ['photos', 'genders', 'seeking'] },
+      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
     );
   }
 
@@ -72,8 +72,16 @@ export class ProfileService {
     if (dto.firstName !== undefined) profile.firstName = dto.firstName;
     if (dto.dateOfBirth !== undefined)
       profile.dateOfBirth = new Date(dto.dateOfBirth);
-    if (dto.relationshipType !== undefined)
-      profile.relationshipType = dto.relationshipType;
+    if (dto.relationshipIds !== undefined) {
+      profile.relationshipTypes.removeAll();
+
+      if (dto.relationshipIds.length > 0) {
+        const options = await this.em.find(RelationshipType, {
+          id: { $in: dto.relationshipIds },
+        });
+        options.forEach((opt) => profile.relationshipTypes.add(opt));
+      }
+    }
     if (dto.ageRangeMin !== undefined) profile.ageRangeMin = dto.ageRangeMin;
     if (dto.ageRangeMax !== undefined) profile.ageRangeMax = dto.ageRangeMax;
 
@@ -136,7 +144,9 @@ export class ProfileService {
     await this.em.flush();
 
     // Refresh to get updated photos
-    await this.em.refresh(profile, { populate: ['photos', 'genders', 'seeking'] });
+    await this.em.refresh(profile, {
+      populate: ["photos", "genders", "seeking", "relationshipTypes"],
+    });
     return profile;
   }
 
@@ -147,7 +157,7 @@ export class ProfileService {
     });
 
     if (!photo) {
-      throw new NotFoundException('Photo not found');
+      throw new NotFoundException("Photo not found");
     }
 
     await this.em.removeAndFlush(photo);
@@ -155,7 +165,7 @@ export class ProfileService {
     const profile = await this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ['photos', 'genders', 'seeking'] },
+      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
     );
 
     return profile;
@@ -168,7 +178,7 @@ export class ProfileService {
     const profile = await this.em.findOneOrFail(
       UserProfile,
       { user: userId },
-      { populate: ['photos', 'genders', 'seeking'] },
+      { populate: ["photos", "genders", "seeking", "relationshipTypes"] },
     );
 
     // Update display order for each photo
@@ -183,9 +193,7 @@ export class ProfileService {
     return profile;
   }
 
-  private calculateOnboardingComplete(
-    profile: UserProfile,
-  ): boolean {
+  private calculateOnboardingComplete(profile: UserProfile): boolean {
     const photoCount = profile.photos.length;
     return (
       !!profile.firstName &&
@@ -193,7 +201,7 @@ export class ProfileService {
       !!profile.dateOfBirth &&
       profile.genders.length > 0 &&
       profile.seeking.length > 0 &&
-      !!profile.relationshipType &&
+      profile.relationshipTypes.length > 0 &&
       !!profile.locationType &&
       photoCount >= 2
     );

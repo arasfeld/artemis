@@ -1,5 +1,5 @@
-export type RelationshipType = 'casual' | 'serious' | 'friendship' | 'unsure';
-export type LocationType = 'automatic' | 'manual';
+export type RelationshipType = string;
+export type LocationType = "automatic" | "manual";
 
 export interface GenderOption {
   id: string;
@@ -27,7 +27,7 @@ export interface OnboardingData {
   genderIds: string[];
   location?: LocationData;
   photos: string[];
-  relationshipType?: RelationshipType;
+  relationshipTypes?: RelationshipType[];
   seekingIds: string[];
 }
 
@@ -50,10 +50,10 @@ export const initialOnboardingData: OnboardingData = {
   ageRangeMax: 45,
   ageRangeMin: 18,
   dateOfBirth: undefined,
-  firstName: '',
+  firstName: "",
   genderIds: [],
   location: undefined,
   photos: [],
-  relationshipType: undefined,
+  relationshipTypes: undefined,
   seekingIds: [],
 };

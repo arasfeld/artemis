@@ -2,6 +2,7 @@ export * from './gender.entity';
 export * from './interaction.entity';
 export * from './match.entity';
 export * from './permission.entity';
+export * from './relationship-type.entity';
 export * from './role.entity';
 export * from './user-authentication.entity';
 export * from './user-email.entity';

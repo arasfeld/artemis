@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { RootState } from '../index';
-import type { LocationData, RelationshipType } from '@/types/onboarding';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { RootState } from "../index";
+import type { LocationData } from "@/types/onboarding";
 
 // Use the same storage key as the hook to avoid duplication
-const STORAGE_KEY = 'onboarding_data';
+const STORAGE_KEY = "onboarding_data";
 
 export interface OnboardingData {
   ageRangeMax?: number;
@@ -14,7 +14,7 @@ export interface OnboardingData {
   genderIds?: string[];
   location?: LocationData;
   photos?: string[];
-  relationshipType?: RelationshipType;
+  relationshipTypes?: string[];
   seekingIds?: string[];
 }
 
@@ -29,13 +29,16 @@ const initialState: OnboardingState = {
 };
 
 const onboardingSlice = createSlice({
-  name: 'onboarding',
+  name: "onboarding",
   initialState,
   reducers: {
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
-    updateOnboardingData: (state, action: PayloadAction<Partial<OnboardingData>>) => {
+    updateOnboardingData: (
+      state,
+      action: PayloadAction<Partial<OnboardingData>>,
+    ) => {
       state.data = { ...state.data, ...action.payload };
       // Persist to AsyncStorage (fire and forget)
       AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state.data)).catch(
@@ -68,7 +71,6 @@ export const {
 // Selectors
 export const selectCurrentStep = (state: RootState) =>
   state.onboarding.currentStep;
-export const selectOnboardingData = (state: RootState) =>
-  state.onboarding.data;
+export const selectOnboardingData = (state: RootState) => state.onboarding.data;
 
 export default onboardingSlice.reducer;

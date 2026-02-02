@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/core';
-import { Match } from '../database/entities/match.entity';
-import { Interaction, InteractionType } from '../database/entities/interaction.entity';
-import { User } from '../database/entities/user.entity';
-import { UserPhoto } from '../database/entities/user-photo.entity';
-import { UserProfile } from '../database/entities/user-profile.entity';
+import { Injectable } from "@nestjs/common";
+import { EntityManager } from "@mikro-orm/core";
+import { Match } from "../database/entities/match.entity";
+import {
+  Interaction,
+  InteractionType,
+} from "../database/entities/interaction.entity";
+import { User } from "../database/entities/user.entity";
+import { UserPhoto } from "../database/entities/user-photo.entity";
+import { UserProfile } from "../database/entities/user-profile.entity";
 
 export interface DiscoverProfile {
   age: number;
@@ -20,7 +23,7 @@ export interface DiscoverProfile {
     id: string;
     url: string;
   }>;
-  relationshipType?: string;
+  relationshipTypes?: { id: string; name: string }[];
 }
 
 export interface MatchedUser {
@@ -43,7 +46,10 @@ export interface MatchResult {
 export class DiscoverService {
   constructor(private readonly em: EntityManager) {}
 
-  async getDiscoveryFeed(userId: string, limit: number = 10): Promise<DiscoverProfile[]> {
+  async getDiscoveryFeed(
+    userId: string,
+    limit: number = 10,
+  ): Promise<DiscoverProfile[]> {
     // Complex query to find potential matches:
     // 1. Completed profiles only (has firstName, dateOfBirth, genders, seeking, photos)
     // 2. Mutual gender preferences (user's seeking includes candidate's genders AND vice versa)
@@ -51,13 +57,15 @@ export class DiscoverService {
     // 4. Exclude users already interacted with (liked/passed)
     // 5. Exclude self
 
-    const results = await this.em.getConnection().execute<Array<{
-      age: number;
-      first_name: string;
-      location_country: string | null;
-      relationship_type: string | null;
-      user_id: string;
-    }>>(`
+    const results = await this.em.getConnection().execute<
+      Array<{
+        age: number;
+        first_name: string;
+        location_country: string | null;
+        user_id: string;
+      }>
+    >(
+      `
       with user_data as (
         select
           up.user_id,
@@ -77,7 +85,6 @@ export class DiscoverService {
           up.user_id,
           up.first_name,
           extract(year from age(up.date_of_birth))::int as age,
-          up.relationship_type,
           up.location_country,
           array_agg(distinct cpg.gender_id) as candidate_genders,
           array_agg(distinct cps.gender_id) as candidate_seeking
@@ -88,14 +95,13 @@ export class DiscoverService {
         where up.user_id != ?
           and up.first_name is not null
           and up.date_of_birth is not null
-        group by up.user_id, up.first_name, up.date_of_birth, up.relationship_type, up.location_country
+        group by up.user_id, up.first_name, up.date_of_birth, up.location_country
         having count(distinct uph.id) >= 1
       )
       select
         c.user_id,
         c.first_name,
         c.age,
-        c.relationship_type,
         c.location_country
       from candidates c
       cross join user_data u
@@ -117,7 +123,9 @@ export class DiscoverService {
         )
       order by random()
       limit ?
-    `, [userId, userId, userId, limit]);
+    `,
+      [userId, userId, userId, limit],
+    );
 
     // Fetch photos for each candidate
     const userIds = results.map((r) => r.user_id);
@@ -125,16 +133,24 @@ export class DiscoverService {
       return [];
     }
 
-    const photos = await this.em.find(UserPhoto, {
-      userProfile: { user: { id: { $in: userIds } } },
-    }, {
-      orderBy: { displayOrder: 'ASC' },
-    });
+    const photos = await this.em.find(
+      UserPhoto,
+      {
+        userProfile: { user: { id: { $in: userIds } } },
+      },
+      {
+        orderBy: { displayOrder: "ASC" },
+      },
+    );
 
-    const photosByUser = new Map<string, Array<{ displayOrder: number; id: string; url: string }>>();
+    const photosByUser = new Map<
+      string,
+      Array<{ displayOrder: number; id: string; url: string }>
+    >();
     for (const photo of photos) {
-      const uid = (photo.userProfile as unknown as { user: { id: string } }).user?.id
-        || (photo.userProfile as unknown as { user: string }).user;
+      const uid =
+        (photo.userProfile as unknown as { user: { id: string } }).user?.id ||
+        (photo.userProfile as unknown as { user: string }).user;
       if (!photosByUser.has(uid)) {
         photosByUser.set(uid, []);
       }
@@ -146,11 +162,14 @@ export class DiscoverService {
     }
 
     // Fetch genders for each candidate
-    const genderResults = await this.em.getConnection().execute<Array<{
-      gender_id: string;
-      gender_name: string;
-      user_id: string;
-    }>>(`
+    const genderResults = await this.em.getConnection().execute<
+      Array<{
+        gender_id: string;
+        gender_name: string;
+        user_id: string;
+      }>
+    >(
+      `
       select
         upg.user_profile_user_id as user_id,
         g.id as gender_id,
@@ -159,9 +178,14 @@ export class DiscoverService {
       join genders g on g.id = upg.gender_id
       where upg.user_profile_user_id = any(?)
       order by g.display_order
-    `, [userIds]);
+    `,
+      [userIds],
+    );
 
-    const gendersByUser = new Map<string, Array<{ id: string; name: string }>>();
+    const gendersByUser = new Map<
+      string,
+      Array<{ id: string; name: string }>
+    >();
     for (const row of genderResults) {
       if (!gendersByUser.has(row.user_id)) {
         gendersByUser.set(row.user_id, []);
@@ -172,6 +196,34 @@ export class DiscoverService {
       });
     }
 
+    // Fetch relationship options for each candidate
+    const relResults = await this.em.getConnection().execute<
+      Array<{
+        user_id: string;
+        relationship_type_id: string;
+        name: string;
+      }>
+    >(
+      `
+        select
+          upr.user_profile_user_id as user_id,
+          rt.id as relationship_type_id,
+          rt.name
+        from user_profile_relationship_types upr
+        join relationship_types rt on rt.id = upr.relationship_type_id
+        where upr.user_profile_user_id = any(?)
+      `,
+      [userIds],
+    );
+
+    const relByUser = new Map<string, Array<{ id: string; name: string }>>();
+    for (const row of relResults) {
+      if (!relByUser.has(row.user_id)) relByUser.set(row.user_id, []);
+      relByUser
+        .get(row.user_id)!
+        .push({ id: row.relationship_type_id, name: row.name });
+    }
+
     return results.map((r) => ({
       age: r.age,
       firstName: r.first_name,
@@ -179,11 +231,15 @@ export class DiscoverService {
       id: r.user_id,
       location: r.location_country || undefined,
       photos: photosByUser.get(r.user_id) || [],
-      relationshipType: r.relationship_type || undefined,
+      relationshipTypes: relByUser.get(r.user_id) || [],
     }));
   }
 
-  async recordInteraction(userId: string, targetUserId: string, interactionType: InteractionType): Promise<InteractionResult> {
+  async recordInteraction(
+    userId: string,
+    targetUserId: string,
+    interactionType: InteractionType,
+  ): Promise<InteractionResult> {
     const user = await this.em.findOneOrFail(User, { id: userId });
     const targetUser = await this.em.findOneOrFail(User, { id: targetUserId });
 
@@ -215,22 +271,28 @@ export class DiscoverService {
 
       if (reciprocalLike) {
         // Create match (ensure user1 < user2 for uniqueness)
-        const [matchUser1, matchUser2] = userId < targetUserId
-          ? [user, targetUser]
-          : [targetUser, user];
+        const [matchUser1, matchUser2] =
+          userId < targetUserId ? [user, targetUser] : [targetUser, user];
 
-        const existingMatch = await this.em.findOne(Match, { user1: matchUser1, user2: matchUser2 });
+        const existingMatch = await this.em.findOne(Match, {
+          user1: matchUser1,
+          user2: matchUser2,
+        });
         if (!existingMatch) {
           const match = new Match({ user1: matchUser1, user2: matchUser2 });
           this.em.persist(match);
           await this.em.flush();
 
           // Get matched user's profile info
-          const matchedProfile = await this.em.findOne(UserProfile, {
-            user: targetUser,
-          }, {
-            populate: ['photos'],
-          });
+          const matchedProfile = await this.em.findOne(
+            UserProfile,
+            {
+              user: targetUser,
+            },
+            {
+              populate: ["photos"],
+            },
+          );
 
           const primaryPhoto = matchedProfile?.photos
             .getItems()
@@ -240,7 +302,7 @@ export class DiscoverService {
             match: {
               id: match.id,
               user: {
-                firstName: matchedProfile?.firstName || '',
+                firstName: matchedProfile?.firstName || "",
                 id: targetUserId,
                 photo: primaryPhoto?.url || null,
               },
@@ -257,12 +319,16 @@ export class DiscoverService {
     const user = await this.em.findOneOrFail(User, { id: userId });
 
     // Find all matches where user is either user1 or user2
-    const matches = await this.em.find(Match, {
-      $or: [{ user1: user }, { user2: user }],
-    }, {
-      orderBy: { createdAt: 'DESC' },
-      populate: ['user1', 'user2'],
-    });
+    const matches = await this.em.find(
+      Match,
+      {
+        $or: [{ user1: user }, { user2: user }],
+      },
+      {
+        orderBy: { createdAt: "DESC" },
+        populate: ["user1", "user2"],
+      },
+    );
 
     // Get profiles for matched users
     const results: MatchResult[] = [];
@@ -270,11 +336,15 @@ export class DiscoverService {
     for (const match of matches) {
       const matchedUser = match.user1.id === userId ? match.user2 : match.user1;
 
-      const profile = await this.em.findOne(UserProfile, {
-        user: matchedUser,
-      }, {
-        populate: ['photos'],
-      });
+      const profile = await this.em.findOne(
+        UserProfile,
+        {
+          user: matchedUser,
+        },
+        {
+          populate: ["photos"],
+        },
+      );
 
       const primaryPhoto = profile?.photos
         .getItems()
@@ -284,7 +354,7 @@ export class DiscoverService {
         createdAt: match.createdAt,
         id: match.id,
         user: {
-          firstName: profile?.firstName || '',
+          firstName: profile?.firstName || "",
           id: matchedUser.id,
           photo: primaryPhoto?.url || null,
         },

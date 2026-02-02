@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
 import {
   Button,
   OptionCard,
@@ -8,54 +8,31 @@ import {
   ScreenContainer,
   spacing,
   Text,
-} from '@artemis/ui';
-import { useAppOnboarding } from '@/hooks/useAppOnboarding';
-import type { RelationshipType } from '@/types/onboarding';
-
-const RELATIONSHIP_OPTIONS: {
-  label: string;
-  subtitle: string;
-  value: RelationshipType;
-}[] = [
-  {
-    label: 'Something serious',
-    subtitle: 'Looking for a long-term relationship',
-    value: 'serious',
-  },
-  {
-    label: 'Something casual',
-    subtitle: 'Open to seeing where things go',
-    value: 'casual',
-  },
-  {
-    label: 'New friends',
-    subtitle: 'Just looking to meet new people',
-    value: 'friendship',
-  },
-  {
-    label: "I'm not sure yet",
-    subtitle: "Still figuring out what I'm looking for",
-    value: 'unsure',
-  },
-];
+} from "@artemis/ui";
+import { useAppOnboarding } from "@/hooks/useAppOnboarding";
+import { useGetRelationshipTypesQuery } from "@/store/api/apiSlice";
+import { RelationshipTypeData } from "@/types/api";
 
 export default function RelationshipScreen() {
   const router = useRouter();
   const handleBack = () => {
-    router.replace('/(main)/onboarding/date-of-birth');
+    router.replace("/(main)/onboarding/date-of-birth");
   };
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
-  const [relationshipType, setRelationshipType] =
-    useState<RelationshipType | null>(data.relationshipType);
+  const [relationshipTypes, setRelationshipTypes] = useState<
+    string[] | undefined
+  >(data.relationshipTypes);
 
-  const isValid = relationshipType !== null;
+  const { data: options = [] } = useGetRelationshipTypesQuery();
+
+  const isValid = (relationshipTypes && relationshipTypes.length > 0) ?? false;
 
   const handleContinue = () => {
     if (!isValid) return;
 
-    updateData({ relationshipType });
+    updateData({ relationshipTypes });
     setCurrentStep(6);
-    router.push('/(main)/onboarding/age-range');
+    router.push("/(main)/onboarding/age-range");
   };
 
   return (
@@ -71,15 +48,26 @@ export default function RelationshipScreen() {
         </Text>
 
         <View style={styles.optionList}>
-          {RELATIONSHIP_OPTIONS.map((option) => (
-            <OptionCard
-              key={option.value}
-              title={option.label}
-              subtitle={option.subtitle}
-              selected={relationshipType === option.value}
-              onPress={() => setRelationshipType(option.value)}
-            />
-          ))}
+          {options.map((option: RelationshipTypeData) => {
+            const selected = relationshipTypes?.includes(option.id) ?? false;
+            return (
+              <OptionCard
+                key={option.id}
+                title={option.name}
+                subtitle={option.description}
+                selected={selected}
+                onPress={() => {
+                  const next = new Set(relationshipTypes || []);
+                  if (next.has(option.id)) {
+                    next.delete(option.id);
+                  } else {
+                    next.add(option.id);
+                  }
+                  setRelationshipTypes(Array.from(next));
+                }}
+              />
+            );
+          })}
         </View>
       </View>
 

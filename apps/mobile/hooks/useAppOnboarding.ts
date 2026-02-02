@@ -41,7 +41,8 @@ export function useAppOnboarding() {
     genderIds: sp?.genders?.map((g: any) => g.id) || [],
     location: sp?.location,
     photos: sp?.photos?.map((p: any) => p.url) || [],
-    relationshipType: sp?.relationshipType,
+    relationshipTypes:
+      sp?.relationshipTypes?.map((r: any) => r.id) || sp?.relationshipTypes,
     seekingIds: sp?.seeking?.map((g: any) => g.id) || [],
   });
 
@@ -109,7 +110,12 @@ export function useAppOnboarding() {
       // Sync to server if authenticated
       if (isAuthenticated && Object.keys(partial).length > 0) {
         try {
-          await updateProfile(partial).unwrap();
+          const payload: any = { ...partial };
+          if ((partial as any).relationshipTypes !== undefined) {
+            payload.relationshipIds = (partial as any).relationshipTypes;
+            delete payload.relationshipTypes;
+          }
+          await updateProfile(payload).unwrap();
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : "Failed to sync profile";
@@ -192,7 +198,8 @@ export function useAppOnboarding() {
         (data.genderIds?.length ?? 0) > 0 &&
         (data.seekingIds?.length ?? 0) > 0 &&
         data.dateOfBirth !== undefined &&
-        data.relationshipType !== undefined &&
+        data.relationshipTypes !== undefined &&
+        (data.relationshipTypes?.length ?? 0) > 0 &&
         (data.photos?.length ?? 0) >= 2)
     );
   }, [user?.isOnboardingComplete, data]);

@@ -21,9 +21,15 @@ export interface GenderData {
   isPrimary: boolean;
 }
 
+// Relationship type returned from API
+export interface RelationshipTypeData {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 // Profile types for onboarding data
-export type RelationshipType = 'casual' | 'serious' | 'friendship' | 'unsure';
-export type LocationType = 'automatic' | 'manual';
+export type LocationType = "automatic" | "manual";
 
 export interface LocationData {
   type: LocationType;
@@ -42,7 +48,7 @@ export interface ProfileData {
   isOnboardingComplete: boolean;
   location?: LocationData;
   photos: PhotoData[];
-  relationshipType?: RelationshipType;
+  relationshipTypes?: RelationshipTypeData[];
   seeking: GenderData[];
 }
 
@@ -54,7 +60,7 @@ export interface UpdateProfileData {
   firstName?: string;
   genderIds?: string[];
   location?: LocationData;
-  relationshipType?: RelationshipType;
+  relationshipIds?: string[];
   seekingIds?: string[];
 }
 
@@ -81,10 +87,10 @@ export interface DiscoverProfile {
     id: string;
     url: string;
   }[];
-  relationshipType?: RelationshipType;
+  relationshipTypes?: RelationshipTypeData[];
 }
 
-export type SwipeAction = 'like' | 'pass';
+export type SwipeAction = "like" | "pass";
 
 export interface SwipeRequest {
   action: SwipeAction;
