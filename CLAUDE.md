@@ -66,29 +66,50 @@ This is a **Turborepo** monorepo using **pnpm workspaces**:
 
 Key modules in `apps/api/src/modules/`:
 
+- `auth/`: Google OAuth 2.0 + JWT authentication with Passport
+- `profile/`: User profile CRUD, photo management, preferences
+- `discover/`: Discovery feed with smart matching algorithm, swipe interactions, match detection
+- `genders/`: Database-backed gender options (~30+ predefined)
+- `relationship-types/`: Database-backed relationship type options
 - `database/`: MikroORM config, entities, and migrations
-- `auth/`: Authentication with Google OAuth strategy and JWT
 
-Database entities follow a user-centric model:
+Database entities:
 
-- `User` - core user record with roles/permissions
-- `UserSecrets` - sensitive auth data (password hashes, tokens)
-- `UserEmail` - user email addresses
-- `UserAuthentication` - OAuth provider linkages
-- `Role`/`Permission` - RBAC support
+- `User` - core user record with timestamps
+- `UserProfile` - onboarding data (name, DOB, genders, seeking, photos, location, age preferences)
+- `UserPhoto` - photos with display order (up to 6 per user)
+- `Gender` - predefined gender options with display order
+- `RelationshipType` - predefined relationship types
+- `Interaction` - tracks swipes (LIKE, PASS, VIEW, FAVORITE, MESSAGE_REQUEST)
+- `Match` - mutual matches between users (normalized: user1 < user2)
+- `UserEmail`, `UserAuthentication` - OAuth provider linkages
+- `Role`/`Permission` - RBAC support (not yet utilized)
 
 ### Mobile App (apps/mobile)
 
-- **Framework**: React Native with Expo (SDK 52)
+- **Framework**: React Native with Expo (SDK 54)
 - **Navigation**: expo-router (file-based routing in `app/` directory)
+- **State**: Redux Toolkit + RTK Query for API state management
 - **Auth Flow**: Opens browser for Google OAuth, receives JWT via deep link callback
 
-Key files:
+Key directories:
 
-- `app/_layout.tsx` - Root layout with AuthProvider
-- `context/AuthContext.tsx` - Auth state management
-- `lib/api.ts` - API client with JWT handling
-- `lib/storage.ts` - Secure token storage
+- `app/(auth)/` - Welcome screen, OAuth callback handling
+- `app/(main)/(tabs)/` - Main tab navigation (Discover, Likes, Messages, Profile)
+- `app/(main)/(onboarding)/` - 9-step onboarding flow
+- `store/` - Redux store, slices, and RTK Query API definitions
+- `components/` - Reusable UI components
+
+Main features implemented:
+
+- **Discover Tab**: Swipe cards with animated gestures, match modal, profile detail view
+- **Onboarding Flow**: First name, DOB, gender identity, gender preferences, relationship types, age range, location (auto/manual), photo upload
+- **Profile Tab**: Basic user info display, sign out
+
+Placeholder screens (not implemented):
+
+- **Likes Tab**: "See who likes you" UI only
+- **Messages Tab**: "Your conversations" UI only
 
 ### Environment Variables
 
@@ -97,6 +118,25 @@ Copy `apps/api/.env.example` to `apps/api/.env` and configure:
 - `POSTGRES_*` - Database connection
 - `JWT_SECRET` / `JWT_EXPIRES_IN` - Token signing
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - OAuth credentials
+
+## Current Development Status
+
+### Implemented Features
+- User authentication (Google OAuth)
+- Complete onboarding flow
+- Discover feed with smart matching
+- Swipe interactions (like/pass)
+- Match detection and notification
+- Profile creation during onboarding
+
+### Not Yet Implemented
+- **Messaging**: No chat functionality between matches
+- **View Likes**: Cannot see who has liked you
+- **Profile Editing**: Cannot modify profile after onboarding
+- **Photo Management**: No UI to delete/reorder photos post-onboarding
+- **User Blocking/Reporting**: No safety features
+- **Notifications**: No push notification system
+- **Web App**: `apps/web` exists but is not implemented
 
 ## Code Style Guidelines
 

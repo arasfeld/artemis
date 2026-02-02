@@ -33,18 +33,37 @@ export function useAppOnboarding() {
   const onboardingData = useAppSelector(selectOnboardingData);
 
   // Helper to map server profile shape to local OnboardingData
-  const mapServerProfileToOnboarding = (sp?: any): OnboardingData => ({
-    ageRangeMax: sp?.ageRangeMax ?? 45,
-    ageRangeMin: sp?.ageRangeMin ?? 18,
-    dateOfBirth: sp?.dateOfBirth,
-    firstName: sp?.firstName || '',
-    genderIds: sp?.genders?.map((g: any) => g.id) || [],
-    location: sp?.location,
-    photos: sp?.photos?.map((p: any) => p.url) || [],
-    relationshipTypes:
-      sp?.relationshipTypes?.map((r: any) => r.id) || sp?.relationshipTypes,
-    seekingIds: sp?.seeking?.map((g: any) => g.id) || [],
-  });
+  const mapServerProfileToOnboarding = (sp?: any): OnboardingData => {
+    // Map flat location fields from server to nested LocationData object
+    let location: OnboardingData['location'];
+    if (sp?.locationType) {
+      location = {
+        type: sp.locationType,
+        country: sp.locationCountry,
+        zipCode: sp.locationZipCode,
+        coordinates:
+          sp.locationLat && sp.locationLng
+            ? { lat: sp.locationLat, lng: sp.locationLng }
+            : undefined,
+      };
+    } else if (sp?.location) {
+      // Fallback for if server ever returns nested location
+      location = sp.location;
+    }
+
+    return {
+      ageRangeMax: sp?.ageRangeMax ?? 45,
+      ageRangeMin: sp?.ageRangeMin ?? 18,
+      dateOfBirth: sp?.dateOfBirth,
+      firstName: sp?.firstName || '',
+      genderIds: sp?.genders?.map((g: any) => g.id) || [],
+      location,
+      photos: sp?.photos?.map((p: any) => p.url) || [],
+      relationshipTypes:
+        sp?.relationshipTypes?.map((r: any) => r.id) || sp?.relationshipTypes,
+      seekingIds: sp?.seeking?.map((g: any) => g.id) || [],
+    };
+  };
 
   // RTK Query for profile data
   const {

@@ -1,6 +1,7 @@
 export * from './gender.entity';
 export * from './interaction.entity';
 export * from './match.entity';
+export * from './message.entity';
 export * from './permission.entity';
 export * from './relationship-type.entity';
 export * from './role.entity';

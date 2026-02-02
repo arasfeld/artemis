@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
+import { StyleSheet, Text as RNText, View } from 'react-native';
 import { Href, Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect } from 'react';
 import { colors } from '@artemis/ui';
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
+import { useGetUnreadCountQuery } from '@/store/api/apiSlice';
 
 export default function TabsLayout() {
   const router = useRouter();
   const { destination, isLoading, isOnboardingComplete } = useOnboardingFlow();
+  const { data: unreadData } = useGetUnreadCountQuery(undefined, {
+    pollingInterval: 30000, // Poll every 30 seconds
+  });
+  const unreadCount = unreadData?.count ?? 0;
 
   // Redirect to onboarding if not complete
   // Only redirect if destination is actually an onboarding screen (not tabs)
@@ -60,7 +66,16 @@ export default function TabsLayout() {
         options={{
           title: 'Messages',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-outline" size={size} color={color} />
+            <View>
+              <Ionicons color={color} name="chatbubble-outline" size={size} />
+              {unreadCount > 0 && (
+                <View style={styles.badge}>
+                  <RNText style={styles.badgeText}>
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </RNText>
+                </View>
+              )}
+            </View>
           ),
         }}
       />
@@ -76,3 +91,22 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: colors.error,
+    borderRadius: 10,
+    minWidth: 18,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    position: 'absolute',
+    right: -8,
+    top: -4,
+  },
+  badgeText: {
+    color: colors.white,
+    fontSize: 10,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+});

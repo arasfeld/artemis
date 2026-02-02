@@ -2,14 +2,18 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/lib/api-config';
 import { getToken } from '@/lib/storage';
 import type {
+  ConversationData,
   DiscoverProfile,
   GenderData,
   MatchData,
+  MessageData,
   PhotoData,
   ProfileData,
   RelationshipTypeData,
+  SendMessageRequest,
   SwipeRequest,
   SwipeResponse,
+  UnreadCountResponse,
   UpdateProfileData,
   UserProfile,
 } from '@/types/api';
@@ -28,11 +32,14 @@ export const apiSlice = createApi({
     },
   }),
   tagTypes: [
+    'Conversations',
     'Discover',
     'Genders',
     'Matches',
+    'Messages',
     'Profile',
     'RelationshipTypes',
+    'UnreadCount',
     'User',
   ],
   endpoints: (builder) => ({
@@ -178,7 +185,83 @@ export const apiSlice = createApi({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Discover', 'Matches'],
+      invalidatesTags: ['Conversations', 'Discover', 'Matches'],
+    }),
+
+    // Messaging endpoints
+    getConversations: builder.query<ConversationData[], void>({
+      query: () => '/messages/conversations',
+      providesTags: ['Conversations'],
+    }),
+    getUnreadCount: builder.query<UnreadCountResponse, void>({
+      query: () => '/messages/unread-count',
+      providesTags: ['UnreadCount'],
+    }),
+    getMessages: builder.query<
+      MessageData[],
+      { matchId: string; before?: string }
+    >({
+      query: ({ matchId, before }) => {
+        const params = new URLSearchParams();
+        if (before) params.set('before', before);
+        const queryString = params.toString();
+        return `/messages/${matchId}${queryString ? `?${queryString}` : ''}`;
+      },
+      providesTags: (_result, _error, { matchId }) => [
+        { type: 'Messages', id: matchId },
+      ],
+    }),
+    sendMessage: builder.mutation<MessageData, SendMessageRequest>({
+      query: ({ matchId, content }) => ({
+        url: `/messages/${matchId}`,
+        method: 'POST',
+        body: { content },
+      }),
+      async onQueryStarted({ matchId, content }, { dispatch, queryFulfilled }) {
+        // Optimistic update for messages list
+        const tempId = `temp-${Date.now()}`;
+        const optimisticMessage: MessageData = {
+          content,
+          createdAt: new Date().toISOString(),
+          id: tempId,
+          isFromMe: true,
+          readAt: null,
+        };
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData('getMessages', { matchId }, (draft) => {
+            draft.unshift(optimisticMessage);
+          })
+        );
+        try {
+          const { data: newMessage } = await queryFulfilled;
+          // Replace optimistic message with real one
+          dispatch(
+            apiSlice.util.updateQueryData(
+              'getMessages',
+              { matchId },
+              (draft) => {
+                const index = draft.findIndex((m) => m.id === tempId);
+                if (index !== -1) {
+                  draft[index] = newMessage;
+                }
+              }
+            )
+          );
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (_result, _error, { matchId }) => [
+        'Conversations',
+        { type: 'Messages', id: matchId },
+      ],
+    }),
+    markMessagesAsRead: builder.mutation<{ success: boolean }, string>({
+      query: (matchId) => ({
+        url: `/messages/${matchId}/read`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['Conversations', 'UnreadCount'],
     }),
   }),
 });
@@ -187,13 +270,18 @@ export const {
   useAddPhotoMutation,
   useDeletePhotoMutation,
   useGetAuthProfileQuery,
+  useGetConversationsQuery,
   useGetDiscoverFeedQuery,
   useGetGendersQuery,
-  useGetRelationshipTypesQuery,
   useGetMatchesQuery,
+  useGetMessagesQuery,
   useGetProfileQuery,
+  useGetRelationshipTypesQuery,
+  useGetUnreadCountQuery,
   useLogoutMutation,
+  useMarkMessagesAsReadMutation,
   useRecordSwipeMutation,
   useReorderPhotosMutation,
+  useSendMessageMutation,
   useUpdateProfileMutation,
 } = apiSlice;

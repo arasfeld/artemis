@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -28,7 +29,9 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
 export default function DiscoverScreen() {
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentMatchId, setCurrentMatchId] = useState<string | null>(null);
   const [matchedUser, setMatchedUser] = useState<MatchedUser | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
@@ -53,6 +56,7 @@ export default function DiscoverScreen() {
 
         // Check for match
         if (result.match) {
+          setCurrentMatchId(result.match.id);
           setMatchedUser(result.match.user);
           setShowMatchModal(true);
         }
@@ -188,6 +192,7 @@ export default function DiscoverScreen() {
   }, []);
 
   const handleCloseMatch = useCallback(() => {
+    setCurrentMatchId(null);
     setMatchedUser(null);
     setShowMatchModal(false);
   }, []);
@@ -203,10 +208,13 @@ export default function DiscoverScreen() {
   }, [handleButtonPress]);
 
   const handleSendMessage = useCallback(() => {
-    // TODO: Navigate to messages with matched user
+    if (currentMatchId) {
+      router.push(`/chat/${currentMatchId}`);
+    }
+    setCurrentMatchId(null);
     setMatchedUser(null);
     setShowMatchModal(false);
-  }, []);
+  }, [currentMatchId, router]);
 
   // Loading state
   if (isLoading) {

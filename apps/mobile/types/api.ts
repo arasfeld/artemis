@@ -112,3 +112,41 @@ export interface MatchData {
   id: string;
   user: MatchedUser;
 }
+
+// Messaging types
+export interface ConversationUser {
+  firstName: string;
+  id: string;
+  photo: string | null;
+}
+
+export interface LastMessage {
+  content: string;
+  createdAt: string;
+  isFromMe: boolean;
+}
+
+export interface ConversationData {
+  createdAt: string;
+  id: string;
+  lastMessage: LastMessage | null;
+  unreadCount: number;
+  user: ConversationUser;
+}
+
+export interface MessageData {
+  content: string;
+  createdAt: string;
+  id: string;
+  isFromMe: boolean;
+  readAt: string | null;
+}
+
+export interface SendMessageRequest {
+  content: string;
+  matchId: string;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}
