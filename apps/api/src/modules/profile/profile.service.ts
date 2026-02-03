@@ -22,8 +22,11 @@ export interface UpdateProfileDto {
   firstName?: string;
   genderIds?: string[];
   location?: {
+    city?: string;
     coordinates?: { lat: number; lng: number };
     country?: string;
+    isoCountryCode?: string;
+    region?: string;
     type: LocationType;
     zipCode?: string;
   };
@@ -137,7 +140,10 @@ export class ProfileService {
     // Update location fields
     if (dto.location !== undefined) {
       profile.locationType = dto.location.type;
+      profile.locationCity = dto.location.city;
       profile.locationCountry = dto.location.country;
+      profile.locationIsoCountryCode = dto.location.isoCountryCode;
+      profile.locationRegion = dto.location.region;
       profile.locationZipCode = dto.location.zipCode;
       profile.locationLat = dto.location.coordinates?.lat;
       profile.locationLng = dto.location.coordinates?.lng;
@@ -308,9 +314,12 @@ export class ProfileService {
       })),
       id: profile.user.id,
       isOnboardingComplete: this.calculateOnboardingComplete(profile),
+      locationCity: profile.locationCity,
       locationCountry: profile.locationCountry,
+      locationIsoCountryCode: profile.locationIsoCountryCode,
       locationLat: profile.locationLat,
       locationLng: profile.locationLng,
+      locationRegion: profile.locationRegion,
       locationType: profile.locationType,
       locationZipCode: profile.locationZipCode,
       photos,

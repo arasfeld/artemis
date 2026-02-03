@@ -32,10 +32,13 @@ export interface RelationshipTypeData {
 export type LocationType = 'automatic' | 'manual';
 
 export interface LocationData {
-  type: LocationType;
-  country?: string;
-  zipCode?: string;
+  city?: string;
   coordinates?: { lat: number; lng: number };
+  country?: string;
+  isoCountryCode?: string;
+  region?: string;
+  type: LocationType;
+  zipCode?: string;
 }
 
 // Profile data returned from API
@@ -46,7 +49,15 @@ export interface ProfileData {
   firstName?: string;
   genders: GenderData[];
   isOnboardingComplete: boolean;
-  location?: LocationData;
+  // Location is returned as flat fields from the API
+  locationCity?: string;
+  locationCountry?: string;
+  locationIsoCountryCode?: string;
+  locationLat?: number;
+  locationLng?: number;
+  locationRegion?: string;
+  locationType?: LocationType;
+  locationZipCode?: string;
   photos: PhotoData[];
   relationshipTypes?: RelationshipTypeData[];
   seeking: GenderData[];
@@ -70,6 +81,22 @@ export interface PhotoData {
   displayOrder: number;
   id: string;
   url: string;
+}
+
+// Photo upload types
+export interface GetUploadUrlRequest {
+  contentType: string;
+  filename: string;
+}
+
+export interface GetUploadUrlResponse {
+  key: string;
+  url: string;
+}
+
+export interface ConfirmPhotoUploadRequest {
+  displayOrder?: number;
+  key: string;
 }
 
 // Discover types

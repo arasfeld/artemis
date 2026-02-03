@@ -28,7 +28,10 @@ export class UserProfiles extends Migration {
         "age_range_min" int not null default 18,
         "age_range_max" int not null default 45,
         "location_type" location_type_enum null,
+        "location_city" varchar(100) null,
+        "location_region" varchar(100) null,
         "location_country" varchar(100) null,
+        "location_iso_country_code" varchar(10) null,
         "location_zip_code" varchar(20) null,
         "location_lat" double precision null,
         "location_lng" double precision null,
@@ -67,7 +70,16 @@ export class UserProfiles extends Migration {
       `comment on column "user_profiles"."location_type" is 'How location was determined.';`
     );
     this.addSql(
+      `comment on column "user_profiles"."location_city" is 'City name.';`
+    );
+    this.addSql(
+      `comment on column "user_profiles"."location_region" is 'State/Province/Region name.';`
+    );
+    this.addSql(
       `comment on column "user_profiles"."location_country" is 'Country name or code.';`
+    );
+    this.addSql(
+      `comment on column "user_profiles"."location_iso_country_code" is 'ISO country code (e.g., US, UK).';`
     );
     this.addSql(
       `comment on column "user_profiles"."location_zip_code" is 'Postal/ZIP code.';`

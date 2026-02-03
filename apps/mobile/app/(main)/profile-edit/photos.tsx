@@ -10,45 +10,32 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  borderRadius,
-  Button,
-  colors,
-  ProgressIndicator,
-  ScreenContainer,
-  shadow,
-  spacing,
-  Text,
-} from '@artemis/ui';
+import { borderRadius, colors, shadow, spacing, Text } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
+import { useGetProfileQuery } from '@/store/api/apiSlice';
 
 const MAX_PHOTOS = 6;
 const MIN_PHOTOS = 2;
 
-export default function PhotosScreen() {
+export default function EditPhotosScreen() {
   const router = useRouter();
-  const handleBack = () => {
-    router.replace('/(main)/onboarding/age-range');
-  };
-  const {
-    data,
-    deletePhoto,
-    isUploadingPhoto,
-    syncError,
-    totalSteps,
-    uploadAndAddPhoto,
-  } = useAppOnboarding();
+  const { deletePhoto, isUploadingPhoto, syncError, uploadAndAddPhoto } =
+    useAppOnboarding();
+  const { data: profile } = useGetProfileQuery();
 
-  // Track which slot is currently uploading
   const [uploadingSlot, setUploadingSlot] = useState<number | null>(null);
-  // Local preview URIs while upload is in progress
   const [localPreviews, setLocalPreviews] = useState<Record<number, string>>(
     {}
   );
 
-  // Merge server photos with local previews
-  const photos = data.photos || [];
-  const isValid = photos.length >= MIN_PHOTOS;
+  const photos = profile?.photos || [];
+  const sortedPhotos = [...photos].sort(
+    (a, b) => a.displayOrder - b.displayOrder
+  );
+
+  const handleCancel = () => {
+    router.back();
+  };
 
   const pickImage = useCallback(
     async (index: number) => {
@@ -73,14 +60,11 @@ export default function PhotosScreen() {
       if (!result.canceled && result.assets[0]) {
         const localUri = result.assets[0].uri;
 
-        // Show local preview immediately
         setLocalPreviews((prev) => ({ ...prev, [index]: localUri }));
         setUploadingSlot(index);
 
-        // Upload to S3
         const success = await uploadAndAddPhoto(localUri, index);
 
-        // Clear local preview state
         setUploadingSlot(null);
         if (success) {
           setLocalPreviews((prev) => {
@@ -89,7 +73,6 @@ export default function PhotosScreen() {
             return next;
           });
         } else {
-          // Keep preview if failed, show error
           Alert.alert('Upload Failed', syncError || 'Failed to upload photo');
         }
       }
@@ -99,7 +82,6 @@ export default function PhotosScreen() {
 
   const handleRemovePhoto = useCallback(
     async (index: number) => {
-      // If there's a local preview, just clear it
       if (localPreviews[index]) {
         setLocalPreviews((prev) => {
           const next = { ...prev };
@@ -109,22 +91,31 @@ export default function PhotosScreen() {
         return;
       }
 
-      // Delete from server
-      await deletePhoto(index);
+      const photo = sortedPhotos[index];
+      if (photo) {
+        Alert.alert(
+          'Delete Photo',
+          'Are you sure you want to delete this photo?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Delete',
+              style: 'destructive',
+              onPress: async () => {
+                await deletePhoto(photo.id);
+              },
+            },
+          ]
+        );
+      }
     },
-    [deletePhoto, localPreviews]
+    [deletePhoto, localPreviews, sortedPhotos]
   );
 
-  const handleFinish = () => {
-    if (!isValid) return;
-    // Photos are already uploaded, just navigate
-    router.replace('/(main)/(tabs)');
-  };
-
   const renderPhotoSlot = (index: number) => {
-    const serverPhoto = photos[index];
+    const serverPhoto = sortedPhotos[index];
     const localPreview = localPreviews[index];
-    const photo = localPreview || serverPhoto;
+    const photoUrl = localPreview || serverPhoto?.url;
     const isMainPhoto = index === 0;
     const isUploading = uploadingSlot === index;
 
@@ -136,12 +127,12 @@ export default function PhotosScreen() {
         activeOpacity={0.8}
         disabled={isUploadingPhoto}
       >
-        {photo && photo !== '' ? (
+        {photoUrl ? (
           <View style={styles.photoContainer}>
-            <Image source={{ uri: photo }} style={styles.photo} />
+            <Image source={{ uri: photoUrl }} style={styles.photo} />
             {isUploading && (
               <View style={styles.uploadingOverlay}>
-                <ActivityIndicator size="large" color={colors.white} />
+                <ActivityIndicator color={colors.white} size="large" />
               </View>
             )}
             {!isUploading && (
@@ -149,18 +140,14 @@ export default function PhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons name="close-circle" size={24} color={colors.error} />
+                <Ionicons color={colors.error} name="close-circle" size={24} />
               </TouchableOpacity>
             )}
           </View>
         ) : (
           <View style={styles.emptySlot}>
-            <Ionicons name="add" size={32} color={colors.text.muted} />
-            {isMainPhoto && (
-              <Text variant="muted" color="dark" style={styles.mainLabel}>
-                Main photo
-              </Text>
-            )}
+            <Ionicons color={colors.text.muted} name="add" size={32} />
+            {isMainPhoto && <Text style={styles.mainLabel}>Main photo</Text>}
           </View>
         )}
       </TouchableOpacity>
@@ -168,15 +155,18 @@ export default function PhotosScreen() {
   };
 
   return (
-    <ScreenContainer onBack={handleBack}>
-      <ProgressIndicator currentStep={7} totalSteps={totalSteps} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
+          <Ionicons color={colors.text.primary} name="close" size={24} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Edit Photos</Text>
+        <View style={styles.headerButton} />
+      </View>
 
       <View style={styles.content}>
-        <Text variant="title" center>
-          Add your photos
-        </Text>
-        <Text variant="subtitle" center>
-          Add at least {MIN_PHOTOS} photos to continue
+        <Text style={styles.subtitle}>
+          Add at least {MIN_PHOTOS} photos. Tap a photo to replace it.
         </Text>
 
         <View style={styles.grid}>
@@ -193,21 +183,17 @@ export default function PhotosScreen() {
           {renderPhotoSlot(5)}
         </View>
 
-        <Text variant="muted" center style={styles.photoCount}>
-          {photos.length} of {MAX_PHOTOS} photos added
+        <Text style={styles.photoCount}>
+          {sortedPhotos.length} of {MAX_PHOTOS} photos added
         </Text>
-      </View>
 
-      <View style={styles.footer}>
-        <Button
-          onPress={handleFinish}
-          disabled={!isValid || isUploadingPhoto}
-          fullWidth
-        >
-          {isUploadingPhoto ? 'Uploading...' : 'Finish'}
-        </Button>
+        {sortedPhotos.length < MIN_PHOTOS && (
+          <Text style={styles.warningText}>
+            You need at least {MIN_PHOTOS} photos for your profile to be visible
+          </Text>
+        )}
       </View>
-    </ScreenContainer>
+    </View>
   );
 }
 
@@ -217,27 +203,43 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.sm,
   },
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+  },
   content: {
     flex: 1,
     paddingHorizontal: spacing.md,
+    paddingTop: spacing.lg,
   },
   emptySlot: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
   },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
   grid: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
+  },
+  header: {
+    alignItems: 'center',
+    borderBottomColor: colors.border.light,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  headerButton: {
+    minWidth: 50,
+    padding: spacing.xs,
   },
   mainColumn: {
     flex: 2,
   },
   mainLabel: {
+    color: colors.text.muted,
     fontSize: 10,
     marginTop: spacing.xs,
   },
@@ -253,11 +255,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   photoCount: {
+    color: colors.text.muted,
+    fontSize: 14,
     marginTop: spacing.lg,
+    textAlign: 'center',
   },
   photoSlot: {
     aspectRatio: 3 / 4,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background.card,
     borderRadius: borderRadius.lg,
     flex: 1,
     overflow: 'hidden',
@@ -274,10 +279,25 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing.sm,
   },
+  subtitle: {
+    color: colors.text.secondary,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
   uploadingOverlay: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
+  },
+  warningText: {
+    color: colors.error,
+    fontSize: 13,
+    marginTop: spacing.sm,
+    textAlign: 'center',
   },
 });

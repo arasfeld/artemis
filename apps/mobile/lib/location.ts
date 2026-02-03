@@ -1,11 +1,14 @@
 import * as Location from 'expo-location';
 
 export interface LocationResult {
+  city?: string;
   coordinates: {
     lat: number;
     lng: number;
   };
   country?: string;
+  isoCountryCode?: string;
+  region?: string;
   zipCode?: string;
 }
 
@@ -58,11 +61,14 @@ export async function getCurrentLocation(): Promise<LocationResult | null> {
     const firstResult = geocodeResults[0];
 
     return {
+      city: firstResult?.city || undefined,
       coordinates: {
         lat: latitude,
         lng: longitude,
       },
-      country: firstResult?.country || firstResult?.isoCountryCode || undefined,
+      country: firstResult?.country || undefined,
+      isoCountryCode: firstResult?.isoCountryCode || undefined,
+      region: firstResult?.region || undefined,
       zipCode: firstResult?.postalCode || undefined,
     };
   } catch (error) {

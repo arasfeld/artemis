@@ -2,9 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/lib/api-config';
 import { getToken } from '@/lib/storage';
 import type {
+  ConfirmPhotoUploadRequest,
   ConversationData,
   DiscoverProfile,
   GenderData,
+  GetUploadUrlRequest,
+  GetUploadUrlResponse,
   MatchData,
   MessageData,
   PhotoData,
@@ -109,6 +112,27 @@ export const apiSlice = createApi({
     }),
 
     // Photo endpoints
+    getPhotoUploadUrl: builder.mutation<
+      GetUploadUrlResponse,
+      GetUploadUrlRequest
+    >({
+      query: (data) => ({
+        url: '/profile/photos/upload-url',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    confirmPhotoUpload: builder.mutation<
+      ProfileData,
+      ConfirmPhotoUploadRequest
+    >({
+      query: (data) => ({
+        url: '/profile/photos/confirm',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Profile'],
+    }),
     addPhoto: builder.mutation<
       ProfileData,
       { url: string; displayOrder?: number }
@@ -268,6 +292,7 @@ export const apiSlice = createApi({
 
 export const {
   useAddPhotoMutation,
+  useConfirmPhotoUploadMutation,
   useDeletePhotoMutation,
   useGetAuthProfileQuery,
   useGetConversationsQuery,
@@ -275,6 +300,7 @@ export const {
   useGetGendersQuery,
   useGetMatchesQuery,
   useGetMessagesQuery,
+  useGetPhotoUploadUrlMutation,
   useGetProfileQuery,
   useGetRelationshipTypesQuery,
   useGetUnreadCountQuery,

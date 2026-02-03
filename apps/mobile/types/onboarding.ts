@@ -9,13 +9,16 @@ export interface GenderOption {
 }
 
 export interface LocationData {
-  type: LocationType;
-  country?: string;
-  zipCode?: string;
+  city?: string;
   coordinates?: {
     lat: number;
     lng: number;
   };
+  country?: string;
+  isoCountryCode?: string;
+  region?: string;
+  type: LocationType;
+  zipCode?: string;
 }
 
 // Use API format throughout for consistency

@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { uploadPhoto } from '@/lib/photo-upload';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   useAddPhotoMutation,
+  useConfirmPhotoUploadMutation,
   useDeletePhotoMutation,
+  useGetPhotoUploadUrlMutation,
   useGetProfileQuery,
   useReorderPhotosMutation,
   useUpdateProfileMutation,
@@ -38,13 +41,16 @@ export function useAppOnboarding() {
     let location: OnboardingData['location'];
     if (sp?.locationType) {
       location = {
-        type: sp.locationType,
-        country: sp.locationCountry,
-        zipCode: sp.locationZipCode,
+        city: sp.locationCity,
         coordinates:
           sp.locationLat && sp.locationLng
             ? { lat: sp.locationLat, lng: sp.locationLng }
             : undefined,
+        country: sp.locationCountry,
+        isoCountryCode: sp.locationIsoCountryCode,
+        region: sp.locationRegion,
+        type: sp.locationType,
+        zipCode: sp.locationZipCode,
       };
     } else if (sp?.location) {
       // Fallback for if server ever returns nested location
@@ -77,8 +83,11 @@ export function useAppOnboarding() {
   // Mutations
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
   const [addPhotoMutation] = useAddPhotoMutation();
+  const [getPhotoUploadUrl] = useGetPhotoUploadUrlMutation();
+  const [confirmPhotoUpload] = useConfirmPhotoUploadMutation();
   const [deletePhotoMutation] = useDeletePhotoMutation();
   const [reorderPhotosMutation] = useReorderPhotosMutation();
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
   // Load local edits from AsyncStorage on mount
   useEffect(() => {
@@ -147,6 +156,49 @@ export function useAppOnboarding() {
   );
 
   // Photo operations
+
+  // Upload a photo using presigned URL flow (for production S3/LocalStack)
+  const uploadAndAddPhoto = useCallback(
+    async (localUri: string, displayOrder?: number): Promise<boolean> => {
+      setIsUploadingPhoto(true);
+      setSyncError(null);
+
+      try {
+        if (isAuthenticated) {
+          // Upload to S3 via presigned URL
+          const s3Key = await uploadPhoto(localUri, async (params) => {
+            return getPhotoUploadUrl(params).unwrap();
+          });
+
+          // Confirm the upload with our backend
+          await confirmPhotoUpload({ key: s3Key, displayOrder }).unwrap();
+        } else {
+          // Not authenticated - just store locally for now
+          // The photo will be uploaded when they complete onboarding
+          const newPhotos = [...(data.photos || []), localUri];
+          dispatch(updateOnboardingData({ photos: newPhotos }));
+        }
+        return true;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to upload photo';
+        setSyncError(errorMessage);
+        console.error('Failed to upload photo:', error);
+        return false;
+      } finally {
+        setIsUploadingPhoto(false);
+      }
+    },
+    [
+      isAuthenticated,
+      getPhotoUploadUrl,
+      confirmPhotoUpload,
+      data.photos,
+      dispatch,
+    ]
+  );
+
+  // Legacy addPhoto for backwards compatibility (uses old URL-based approach)
   const addPhoto = useCallback(
     async (url: string, displayOrder?: number) => {
       try {
@@ -233,6 +285,7 @@ export function useAppOnboarding() {
     isComplete,
     isSyncing: isUpdating || isFetching,
     isLoading: isProfileLoading,
+    isUploadingPhoto,
     syncError, // RTK Query handles errors differently
     clearSyncError: () => {}, // No-op for API compatibility
 
@@ -245,5 +298,6 @@ export function useAppOnboarding() {
     addPhoto,
     deletePhoto,
     reorderPhotos,
+    uploadAndAddPhoto,
   };
 }

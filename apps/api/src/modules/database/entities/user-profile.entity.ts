@@ -88,9 +88,30 @@ export class UserProfile {
   @Property({
     length: 100,
     nullable: true,
-    comment: 'Country name or code.',
+    comment: 'City name.',
+  })
+  public locationCity?: string;
+
+  @Property({
+    length: 100,
+    nullable: true,
+    comment: 'Country name.',
   })
   public locationCountry?: string;
+
+  @Property({
+    length: 10,
+    nullable: true,
+    comment: 'ISO country code (e.g., US, UK).',
+  })
+  public locationIsoCountryCode?: string;
+
+  @Property({
+    length: 100,
+    nullable: true,
+    comment: 'State/Province/Region name.',
+  })
+  public locationRegion?: string;
 
   @Property({
     length: 20,

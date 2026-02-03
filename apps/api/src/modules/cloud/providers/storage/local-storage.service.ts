@@ -42,6 +42,9 @@ export class LocalStorageService implements IStorageService {
         accessKeyId: 'test',
         secretAccessKey: 'test',
       },
+      // Disable request checksums for LocalStack compatibility
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
 
     this.logger.log(
@@ -94,9 +97,12 @@ export class LocalStorageService implements IStorageService {
       Key: key,
     });
 
-    return getSignedUrl(this.client, command, {
+    const url = await getSignedUrl(this.client, command, {
       expiresIn: options?.expiresIn ?? this.defaultExpiresIn,
     });
+
+    this.logger.debug(`Generated signed URL for key ${key}: ${url}`);
+    return url;
   }
 
   async delete(key: string): Promise<void> {

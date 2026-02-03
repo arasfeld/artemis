@@ -31,8 +31,11 @@ export default function LocationScreen() {
       if (locationResult) {
         updateData({
           location: {
+            city: locationResult.city,
             coordinates: locationResult.coordinates,
             country: locationResult.country,
+            isoCountryCode: locationResult.isoCountryCode,
+            region: locationResult.region,
             type: 'automatic',
             zipCode: locationResult.zipCode,
           },
