@@ -41,4 +41,5 @@ yarn-error.log*
 .tunnel-url
 
 # Docker volumes
-pgdata
+localstack-data
+postgres-data

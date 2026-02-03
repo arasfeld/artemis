@@ -1,38 +1,57 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { IStorageService, STORAGE_SERVICE } from '../cloud/interfaces';
 import { Gender } from '../database/entities/gender.entity';
-import { User } from '../database/entities/user.entity';
+import { RelationshipType } from '../database/entities/relationship-type.entity';
+import { UserPhoto } from '../database/entities/user-photo.entity';
 import {
   LocationType,
   UserProfile,
 } from '../database/entities/user-profile.entity';
-import { RelationshipType } from '../database/entities/relationship-type.entity';
-import { UserPhoto } from '../database/entities/user-photo.entity';
+import { User } from '../database/entities/user.entity';
 
 export interface UpdateProfileDto {
-  firstName?: string;
-  dateOfBirth?: string;
-  genderIds?: string[];
-  seekingIds?: string[];
-  relationshipIds?: string[];
-  ageRangeMin?: number;
   ageRangeMax?: number;
+  ageRangeMin?: number;
+  dateOfBirth?: string;
+  firstName?: string;
+  genderIds?: string[];
   location?: {
-    type: LocationType;
-    country?: string;
-    zipCode?: string;
     coordinates?: { lat: number; lng: number };
+    country?: string;
+    type: LocationType;
+    zipCode?: string;
   };
+  relationshipIds?: string[];
+  seekingIds?: string[];
 }
 
 export interface AddPhotoDto {
-  url: string;
   displayOrder?: number;
+  url: string;
+}
+
+export interface GetPhotoUploadUrlDto {
+  contentType: string;
+  filename: string;
+}
+
+export interface ConfirmPhotoUploadDto {
+  displayOrder?: number;
+  key: string;
 }
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly em: EntityManager) {}
+  constructor(
+    private readonly em: EntityManager,
+    @Inject(STORAGE_SERVICE) private readonly storage: IStorageService
+  ) {}
 
   async getProfile(userId: string): Promise<UserProfile> {
     return this.findOrCreateProfile(userId);
@@ -128,6 +147,47 @@ export class ProfileService {
     return profile;
   }
 
+  async getPhotoUploadUrl(
+    userId: string,
+    dto: GetPhotoUploadUrlDto
+  ): Promise<{ key: string; url: string }> {
+    const ext = dto.filename.split('.').pop() || 'jpg';
+    const key = `users/${userId}/photos/${Date.now()}.${ext}`;
+    return this.storage.getPresignedUploadUrl(key, dto.contentType);
+  }
+
+  async confirmPhotoUpload(
+    userId: string,
+    dto: ConfirmPhotoUploadDto
+  ): Promise<UserProfile> {
+    // Verify the file exists in storage
+    const exists = await this.storage.exists(dto.key);
+    if (!exists) {
+      throw new BadRequestException('Photo not found in storage');
+    }
+
+    const profile = await this.findOrCreateProfile(userId);
+
+    // Determine display order
+    const displayOrder = dto.displayOrder ?? profile.photos.length;
+
+    // Store the S3 key as the URL (we'll generate signed URLs on read)
+    const photo = new UserPhoto({
+      displayOrder,
+      url: dto.key,
+      userProfile: profile,
+    });
+
+    this.em.persist(photo);
+    await this.em.flush();
+
+    // Refresh to get updated photos
+    await this.em.refresh(profile, {
+      populate: ['photos', 'genders', 'seeking', 'relationshipTypes'],
+    });
+    return profile;
+  }
+
   async addPhoto(userId: string, dto: AddPhotoDto): Promise<UserProfile> {
     const profile = await this.findOrCreateProfile(userId);
 
@@ -135,9 +195,9 @@ export class ProfileService {
     const displayOrder = dto.displayOrder ?? profile.photos.length;
 
     const photo = new UserPhoto({
-      userProfile: profile,
-      url: dto.url,
       displayOrder,
+      url: dto.url,
+      userProfile: profile,
     });
 
     this.em.persist(photo);
@@ -158,6 +218,15 @@ export class ProfileService {
 
     if (!photo) {
       throw new NotFoundException('Photo not found');
+    }
+
+    // If the photo URL looks like an S3 key (starts with 'users/'), delete from storage
+    if (photo.url.startsWith('users/')) {
+      try {
+        await this.storage.delete(photo.url);
+      } catch {
+        // Log error but continue with database deletion
+      }
     }
 
     await this.em.removeAndFlush(photo);
@@ -191,6 +260,69 @@ export class ProfileService {
 
     await this.em.flush();
     return profile;
+  }
+
+  async getSignedPhotoUrl(key: string): Promise<string> {
+    return this.storage.getSignedUrl(key);
+  }
+
+  /**
+   * Check if a URL is an S3 key that needs to be converted to a signed URL
+   */
+  private isS3Key(url: string): boolean {
+    return url.startsWith('users/');
+  }
+
+  /**
+   * Transform a profile's photo URLs to signed URLs for viewing
+   */
+  async serializeProfileWithSignedUrls(
+    profile: UserProfile
+  ): Promise<Record<string, unknown>> {
+    const photos = await Promise.all(
+      profile.photos.getItems().map(async (photo) => {
+        let url = photo.url;
+        if (this.isS3Key(photo.url)) {
+          url = await this.storage.getSignedUrl(photo.url);
+        }
+        return {
+          createdAt: photo.createdAt,
+          displayOrder: photo.displayOrder,
+          id: photo.id,
+          url,
+        };
+      })
+    );
+
+    // Sort photos by display order
+    photos.sort((a, b) => a.displayOrder - b.displayOrder);
+
+    return {
+      ageRangeMax: profile.ageRangeMax,
+      ageRangeMin: profile.ageRangeMin,
+      dateOfBirth: profile.dateOfBirth?.toISOString().split('T')[0],
+      firstName: profile.firstName,
+      genders: profile.genders.getItems().map((g) => ({
+        id: g.id,
+        name: g.name,
+      })),
+      id: profile.user.id,
+      isOnboardingComplete: this.calculateOnboardingComplete(profile),
+      locationCountry: profile.locationCountry,
+      locationLat: profile.locationLat,
+      locationLng: profile.locationLng,
+      locationType: profile.locationType,
+      locationZipCode: profile.locationZipCode,
+      photos,
+      relationshipTypes: profile.relationshipTypes.getItems().map((r) => ({
+        id: r.id,
+        name: r.name,
+      })),
+      seeking: profile.seeking.getItems().map((g) => ({
+        id: g.id,
+        name: g.name,
+      })),
+    };
   }
 
   private calculateOnboardingComplete(profile: UserProfile): boolean {

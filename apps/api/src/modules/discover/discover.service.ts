@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { Match } from '../database/entities/match.entity';
+import { Inject, Injectable } from '@nestjs/common';
+import { IStorageService, STORAGE_SERVICE } from '../cloud/interfaces';
 import {
   Interaction,
   InteractionType,
 } from '../database/entities/interaction.entity';
-import { User } from '../database/entities/user.entity';
+import { Match } from '../database/entities/match.entity';
 import { UserPhoto } from '../database/entities/user-photo.entity';
 import { UserProfile } from '../database/entities/user-profile.entity';
+import { User } from '../database/entities/user.entity';
 
 export interface DiscoverProfile {
   age: number;
@@ -44,7 +45,21 @@ export interface MatchResult {
 
 @Injectable()
 export class DiscoverService {
-  constructor(private readonly em: EntityManager) {}
+  constructor(
+    private readonly em: EntityManager,
+    @Inject(STORAGE_SERVICE) private readonly storage: IStorageService
+  ) {}
+
+  private isS3Key(url: string): boolean {
+    return url.startsWith('users/');
+  }
+
+  private async getSignedPhotoUrl(url: string): Promise<string> {
+    if (this.isS3Key(url)) {
+      return this.storage.getSignedUrl(url);
+    }
+    return url;
+  }
 
   async getDiscoveryFeed(
     userId: string,
@@ -154,10 +169,11 @@ export class DiscoverService {
       if (!photosByUser.has(uid)) {
         photosByUser.set(uid, []);
       }
+      const signedUrl = await this.getSignedPhotoUrl(photo.url);
       photosByUser.get(uid)!.push({
         displayOrder: photo.displayOrder,
         id: photo.id,
-        url: photo.url,
+        url: signedUrl,
       });
     }
 
@@ -298,13 +314,17 @@ export class DiscoverService {
             .getItems()
             .find((p) => p.displayOrder === 0);
 
+          const photoUrl = primaryPhoto?.url
+            ? await this.getSignedPhotoUrl(primaryPhoto.url)
+            : null;
+
           return {
             match: {
               id: match.id,
               user: {
                 firstName: matchedProfile?.firstName || '',
                 id: targetUserId,
-                photo: primaryPhoto?.url || null,
+                photo: photoUrl,
               },
             },
           };
@@ -350,13 +370,17 @@ export class DiscoverService {
         .getItems()
         .find((p) => p.displayOrder === 0);
 
+      const photoUrl = primaryPhoto?.url
+        ? await this.getSignedPhotoUrl(primaryPhoto.url)
+        : null;
+
       results.push({
         createdAt: match.createdAt,
         id: match.id,
         user: {
           firstName: profile?.firstName || '',
           id: matchedUser.id,
-          photo: primaryPhoto?.url || null,
+          photo: photoUrl,
         },
       });
     }
