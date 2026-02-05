@@ -1,6 +1,5 @@
 import { Image, Modal, StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Button, Text, borderRadius, colors } from '@artemis/ui';
+import { Button, Text, colors } from '@artemis/ui';
 import type { MatchedUser } from '@/types/api';
 
 interface MatchModalProps {
@@ -26,38 +25,33 @@ export function MatchModal({
       visible={visible}
     >
       <View style={styles.overlay}>
-        <LinearGradient
-          colors={[colors.gradient.start, colors.gradient.end]}
-          style={styles.container}
-        >
-          <Text color="light" style={styles.title} variant="title">
-            It&apos;s a Match!
-          </Text>
-          <Text color="light" style={styles.subtitle} variant="subtitle">
-            You and {matchedUser.firstName} liked each other
-          </Text>
+        <Text color="light" style={styles.title} variant="title">
+          It&apos;s a Match!
+        </Text>
+        <Text color="light" style={styles.subtitle} variant="subtitle">
+          You and {matchedUser.firstName} liked each other
+        </Text>
 
-          {matchedUser.photo && (
-            <Image source={{ uri: matchedUser.photo }} style={styles.photo} />
-          )}
+        {matchedUser.photo && (
+          <Image source={{ uri: matchedUser.photo }} style={styles.photo} />
+        )}
 
-          <View style={styles.buttons}>
-            <Button
-              onPress={onSendMessage}
-              style={styles.messageButton}
-              variant="secondary"
-            >
-              Send Message
-            </Button>
-            <Button
-              onPress={onClose}
-              style={styles.keepSwipingButton}
-              variant="primary"
-            >
-              Keep Swiping
-            </Button>
-          </View>
-        </LinearGradient>
+        <View style={styles.buttons}>
+          <Button
+            onPress={onSendMessage}
+            style={styles.messageButton}
+            variant="secondary"
+          >
+            Send Message
+          </Button>
+          <Button
+            onPress={onClose}
+            style={styles.keepSwipingButton}
+            variant="primary"
+          >
+            Keep Swiping
+          </Button>
+        </View>
       </View>
     </Modal>
   );
@@ -68,14 +62,6 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 40,
     width: '100%',
-  },
-  container: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    marginHorizontal: 20,
-    paddingBottom: 40,
-    paddingHorizontal: 20,
-    paddingTop: 60,
   },
   keepSwipingButton: {
     width: '100%',

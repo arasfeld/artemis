@@ -1,10 +1,4 @@
 export const colors = {
-  // Primary gradient
-  gradient: {
-    start: '#83b59c',
-    end: '#4f685b',
-  },
-
   // Solid colors
   primary: '#4f685b',
   primaryLight: '#83b59c',
