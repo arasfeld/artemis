@@ -11,7 +11,8 @@ import {
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, colors, spacing } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
+
 import { ChatInput, MessageBubble } from '@/components/messages';
 import {
   useGetConversationsQuery,
@@ -23,6 +24,7 @@ import type { MessageData } from '@/types/api';
 
 export default function ChatScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const { matchId } = useLocalSearchParams<{ matchId: string }>();
 
@@ -83,10 +85,12 @@ export default function ChatScreen() {
 
   const keyExtractor = useCallback((item: MessageData) => item.id, []);
 
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   const ListEmptyComponent = useMemo(
     () => (
       <View style={styles.emptyContainer}>
-        <Text center color="dark" variant="body">
+        <Text center variant="body">
           No messages yet. Say hi!
         </Text>
       </View>
@@ -102,7 +106,7 @@ export default function ChatScreen() {
             <View style={[styles.header, { paddingTop: insets.top }]}>
               <Pressable onPress={handleBack} style={styles.backButton}>
                 <Ionicons
-                  color={colors.foreground}
+                  color={theme.colors.foreground}
                   name="chevron-back"
                   size={28}
                 />
@@ -116,13 +120,13 @@ export default function ChatScreen() {
                 ) : (
                   <View style={[styles.headerAvatar, styles.avatarPlaceholder]}>
                     <Ionicons
-                      color={colors.mutedForeground}
+                      color={theme.colors.mutedForeground}
                       name="person"
                       size={16}
                     />
                   </View>
                 )}
-                <Text color="dark" style={styles.headerName} variant="subtitle">
+                <Text style={styles.headerName} variant="subtitle">
                   {conversation?.user.firstName || 'Chat'}
                 </Text>
               </View>
@@ -152,54 +156,56 @@ export default function ChatScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  avatarPlaceholder: {
-    alignItems: 'center',
-    backgroundColor: colors.muted,
-    justifyContent: 'center',
-  },
-  backButton: {
-    padding: spacing.sm,
-  },
-  container: {
-    backgroundColor: colors.background,
-    flex: 1,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.xl,
-    transform: [{ scaleY: -1 }], // Flip because list is inverted
-  },
-  header: {
-    alignItems: 'center',
-    backgroundColor: colors.background,
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingBottom: spacing.sm,
-    paddingHorizontal: spacing.sm,
-  },
-  headerAvatar: {
-    borderRadius: 18,
-    height: 36,
-    marginRight: spacing.sm,
-    width: 36,
-  },
-  headerContent: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  headerName: {
-    fontWeight: '600',
-  },
-  headerSpacer: {
-    width: 44, // Match back button width for centering
-  },
-  messageList: {
-    flexGrow: 1,
-    paddingVertical: spacing.md,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    avatarPlaceholder: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.muted,
+      justifyContent: 'center',
+    },
+    backButton: {
+      padding: theme.spacing.sm,
+    },
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: theme.spacing.xl,
+      transform: [{ scaleY: -1 }], // Flip because list is inverted
+    },
+    header: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingBottom: theme.spacing.sm,
+      paddingHorizontal: theme.spacing.sm,
+    },
+    headerAvatar: {
+      borderRadius: 18,
+      height: 36,
+      marginRight: theme.spacing.sm,
+      width: 36,
+    },
+    headerContent: {
+      alignItems: 'center',
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    headerName: {
+      fontWeight: '600',
+    },
+    headerSpacer: {
+      width: 44, // Match back button width for centering
+    },
+    messageList: {
+      flexGrow: 1,
+      paddingVertical: theme.spacing.md,
+    },
+  });
+}

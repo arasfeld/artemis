@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   type TextStyle,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface LinkTextProps {
   children: string;
@@ -21,6 +22,9 @@ export function LinkText({
   style,
   color = 'light',
 }: LinkTextProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <Text
@@ -36,16 +40,18 @@ export function LinkText({
   );
 }
 
-const styles = StyleSheet.create({
-  text: {
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.medium,
-    textDecorationLine: 'underline',
-  },
-  light: {
-    color: colors.primaryForeground,
-  },
-  dark: {
-    color: colors.primary,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    dark: {
+      color: theme.colors.primary,
+    },
+    light: {
+      color: theme.colors.primaryForeground,
+    },
+    text: {
+      fontSize: theme.typography.fontSize.base,
+      fontWeight: theme.typography.fontWeight.medium,
+      textDecorationLine: 'underline',
+    },
+  });
+}

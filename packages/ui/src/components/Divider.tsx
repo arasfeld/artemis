@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, type ViewStyle } from 'react-native';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface DividerProps {
   style?: ViewStyle;
@@ -10,8 +11,10 @@ interface DividerProps {
 }
 
 export function Divider({ style, color, variant = 'light' }: DividerProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const defaultColor =
-    variant === 'light' ? colors.ringOnDark : colors.border;
+    variant === 'light' ? theme.colors.ringOnDark : theme.colors.border;
 
   return (
     <View
@@ -24,10 +27,12 @@ export function Divider({ style, color, variant = 'light' }: DividerProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    width: '100%',
-    marginVertical: spacing.md,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    divider: {
+      height: 1,
+      marginVertical: theme.spacing.md,
+      width: '100%',
+    },
+  });
+}

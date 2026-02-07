@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { pluralizeGender } from '@/lib/pluralize';
 import { useGetGendersQuery } from '@/store/api/apiSlice';
@@ -10,6 +10,8 @@ import type { GenderData } from '@/types/api';
 
 export default function EditSeekingScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { data: onboardingData, updateData } = useAppOnboarding();
   const [selectedIds, setSelectedIds] = useState<string[]>(
     onboardingData.seekingIds || []
@@ -68,7 +70,7 @@ export default function EditSeekingScreen() {
           </View>
           <View style={[styles.checkbox, selected && styles.checkboxSelected]}>
             {selected && (
-              <Ionicons color={colors.white} name="checkmark" size={16} />
+              <Ionicons color={theme.colors.white} name="checkmark" size={16} />
             )}
           </View>
         </TouchableOpacity>
@@ -96,7 +98,7 @@ export default function EditSeekingScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.foreground} name="close" size={24} />
+          <Ionicons color={theme.colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Interested In</Text>
         <TouchableOpacity
@@ -135,102 +137,104 @@ export default function EditSeekingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  checkbox: {
-    alignItems: 'center',
-    borderColor: colors.ring,
-    borderRadius: 4,
-    borderWidth: 2,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  checkboxSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  container: {
-    backgroundColor: colors.white,
-    flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  headerButton: {
-    minWidth: 50,
-    padding: spacing.xs,
-  },
-  headerButtonDisabled: {
-    opacity: 0.5,
-  },
-  item: {
-    alignItems: 'center',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  itemContent: {
-    flex: 1,
-    marginRight: spacing.md,
-  },
-  itemDescription: {
-    color: colors.mutedForeground,
-    fontSize: 13,
-    marginTop: 2,
-  },
-  itemLabel: {
-    color: colors.foreground,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  itemLabelSelected: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  itemSelected: {
-    backgroundColor: colors.accent,
-  },
-  listContent: {
-    paddingBottom: spacing.xl,
-  },
-  loadingContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  loadingText: {
-    color: colors.mutedForeground,
-    fontSize: 16,
-  },
-  saveText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'right',
-  },
-  saveTextDisabled: {
-    color: colors.mutedForeground,
-  },
-  subtitle: {
-    backgroundColor: colors.accent,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  subtitleText: {
-    color: colors.mutedForeground,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    checkbox: {
+      alignItems: 'center',
+      borderColor: theme.colors.ring,
+      borderRadius: 4,
+      borderWidth: 2,
+      height: 24,
+      justifyContent: 'center',
+      width: 24,
+    },
+    checkboxSelected: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+    },
+    container: {
+      backgroundColor: theme.colors.white,
+      flex: 1,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.md,
+    },
+    headerButton: {
+      minWidth: 50,
+      padding: theme.spacing.xs,
+    },
+    headerButtonDisabled: {
+      opacity: 0.5,
+    },
+    item: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    itemContent: {
+      flex: 1,
+      marginRight: theme.spacing.md,
+    },
+    itemDescription: {
+      color: theme.colors.mutedForeground,
+      fontSize: 13,
+      marginTop: 2,
+    },
+    itemLabel: {
+      color: theme.colors.foreground,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    itemLabelSelected: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    itemSelected: {
+      backgroundColor: theme.colors.accent,
+    },
+    listContent: {
+      paddingBottom: theme.spacing.xl,
+    },
+    loadingContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    loadingText: {
+      color: theme.colors.mutedForeground,
+      fontSize: 16,
+    },
+    saveText: {
+      color: theme.colors.primary,
+      fontSize: 16,
+      fontWeight: '600',
+      textAlign: 'right',
+    },
+    saveTextDisabled: {
+      color: theme.colors.mutedForeground,
+    },
+    subtitle: {
+      backgroundColor: theme.colors.accent,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.sm,
+    },
+    subtitleText: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: '600',
+    },
+  });
+}

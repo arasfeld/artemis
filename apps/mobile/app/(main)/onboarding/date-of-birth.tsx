@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -8,17 +8,19 @@ import {
 import { useRouter } from 'expo-router';
 import {
   Button,
-  colors,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
   TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 export default function DateOfBirthScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/gender');
   };
@@ -185,39 +187,41 @@ export default function DateOfBirthScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  ageText: {
-    marginTop: spacing.lg,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  dateInput: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  dateInputsContainer: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
-  },
-  errorText: {
-    color: colors.destructive,
-    marginTop: spacing.sm,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  inputContainer: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  inputLabel: {
-    fontSize: 12,
-    marginTop: spacing.xs,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    ageText: {
+      marginTop: theme.spacing.lg,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: theme.spacing.md,
+    },
+    dateInput: {
+      fontSize: 18,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    dateInputsContainer: {
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.xl,
+    },
+    errorText: {
+      color: theme.colors.destructive,
+      marginTop: theme.spacing.sm,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    inputContainer: {
+      alignItems: 'center',
+      flex: 1,
+    },
+    inputLabel: {
+      fontSize: 12,
+      marginTop: theme.spacing.xs,
+    },
+  });
+}

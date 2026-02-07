@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   TouchableOpacity,
   View,
@@ -6,9 +6,9 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
-import { borderRadius, shadow, spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface OptionCardProps {
   title: string;
@@ -27,6 +27,9 @@ export function OptionCard({
   onPress,
   style,
 }: OptionCardProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <TouchableOpacity
       style={[styles.container, selected && styles.containerSelected, style]}
@@ -47,56 +50,58 @@ export function OptionCard({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    ...shadow.sm,
-  },
-  containerSelected: {
-    borderColor: colors.primary,
-  },
-  iconContainer: {
-    marginRight: spacing.md,
-  },
-  content: {
-    flex: 1,
-  },
-  title: {
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.medium,
-    color: colors.foreground,
-  },
-  titleSelected: {
-    color: colors.primary,
-    fontWeight: typography.fontWeight.semibold,
-  },
-  subtitle: {
-    fontSize: typography.fontSize.sm,
-    color: colors.mutedForeground,
-    marginTop: 2,
-  },
-  radio: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: colors.ring,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioSelected: {
-    borderColor: colors.primary,
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.primary,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.card,
+      borderColor: 'transparent',
+      borderRadius: theme.borderRadius.lg,
+      borderWidth: 2,
+      flexDirection: 'row',
+      padding: theme.spacing.md,
+      ...theme.shadow.sm,
+    },
+    containerSelected: {
+      borderColor: theme.colors.primary,
+    },
+    content: {
+      flex: 1,
+    },
+    iconContainer: {
+      marginRight: theme.spacing.md,
+    },
+    radio: {
+      alignItems: 'center',
+      borderColor: theme.colors.ring,
+      borderRadius: 12,
+      borderWidth: 2,
+      height: 24,
+      justifyContent: 'center',
+      width: 24,
+    },
+    radioInner: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: 6,
+      height: 12,
+      width: 12,
+    },
+    radioSelected: {
+      borderColor: theme.colors.primary,
+    },
+    subtitle: {
+      color: theme.colors.mutedForeground,
+      fontSize: theme.typography.fontSize.sm,
+      marginTop: 2,
+    },
+    title: {
+      color: theme.colors.foreground,
+      fontSize: theme.typography.fontSize.base,
+      fontWeight: theme.typography.fontWeight.medium,
+    },
+    titleSelected: {
+      color: theme.colors.primary,
+      fontWeight: theme.typography.fontWeight.semibold,
+    },
+  });
+}

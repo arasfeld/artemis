@@ -5,10 +5,10 @@ export default function LikesScreen() {
   return (
     <ScreenContainer>
       <View style={styles.container}>
-        <Text variant="title" color="dark" center>
+        <Text center variant="title">
           Likes
         </Text>
-        <Text variant="subtitle" color="dark" center>
+        <Text center variant="subtitle">
           See who likes you
         </Text>
       </View>

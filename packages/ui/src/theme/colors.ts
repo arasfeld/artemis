@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   accent: '#f5f5f5',
   accentForeground: '#343434',
   background: '#ffffff',
@@ -38,3 +38,49 @@ export const colors = {
   overlay: 'rgba(0, 0, 0, 0.5)',
   ringOnDark: 'rgba(255, 255, 255, 0.3)',
 } as const;
+
+export const darkColors: Colors = {
+  accent: '#27272a',
+  accentForeground: '#fafafa',
+  background: '#09090b',
+  black: '#000000',
+  border: '#27272a',
+  card: '#18181b',
+  cardForeground: '#fafafa',
+  chart1: '#3b82f6',
+  chart2: '#14b8a6',
+  chart3: '#818cf8',
+  chart4: '#fb923c',
+  chart5: '#fbbf24',
+  destructive: '#ef4444',
+  destructiveForeground: '#fafafa',
+  foreground: '#fafafa',
+  input: '#27272a',
+  muted: '#27272a',
+  mutedForeground: '#a1a1aa',
+  popover: '#18181b',
+  popoverForeground: '#fafafa',
+  primary: '#fafafa',
+  primaryForeground: '#18181b',
+  ring: '#a1a1aa',
+  secondary: '#27272a',
+  secondaryForeground: '#fafafa',
+  sidebar: '#18181b',
+  sidebarAccent: '#27272a',
+  sidebarAccentForeground: '#fafafa',
+  sidebarBorder: '#27272a',
+  sidebarForeground: '#fafafa',
+  sidebarPrimary: '#fafafa',
+  sidebarPrimaryForeground: '#18181b',
+  sidebarRing: '#a1a1aa',
+  white: '#ffffff',
+
+  // RN-specific
+  overlay: 'rgba(0, 0, 0, 0.7)',
+  ringOnDark: 'rgba(255, 255, 255, 0.2)',
+} as const;
+
+export type Colors = { [K in keyof typeof lightColors]: string };
+
+// Backward compat — will be removed after migration
+export const colors = lightColors;

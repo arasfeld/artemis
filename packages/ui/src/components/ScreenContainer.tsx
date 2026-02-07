@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 import { BackButton } from './BackButton';
 
 interface ScreenContainerProps {
@@ -20,6 +21,9 @@ export function ScreenContainer({
   style,
   onBack,
 }: ScreenContainerProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   const content = (
     <SafeAreaView
       style={[
@@ -41,23 +45,25 @@ export function ScreenContainer({
   return <View style={[styles.container, style]}>{content}</View>;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  padding: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    marginBottom: spacing.sm,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    centered: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    header: {
+      marginBottom: theme.spacing.sm,
+    },
+    padding: {
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    safeArea: {
+      flex: 1,
+    },
+  });
+}

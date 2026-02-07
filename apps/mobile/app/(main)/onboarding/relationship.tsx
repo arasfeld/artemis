@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
@@ -6,8 +6,9 @@ import {
   OptionCard,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { useGetRelationshipTypesQuery } from '@/store/api/apiSlice';
@@ -15,6 +16,8 @@ import { RelationshipTypeData } from '@/types/api';
 
 export default function RelationshipScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/date-of-birth');
   };
@@ -85,16 +88,18 @@ export default function RelationshipScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  optionList: {
-    gap: spacing.sm,
-    marginTop: spacing.xl,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    optionList: {
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.xl,
+    },
+  });
+}

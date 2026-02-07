@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { Image, Modal, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Button, Text, borderRadius, colors } from '@artemis/ui';
+import { Button, Text, useTheme, type Theme } from '@artemis/ui';
+
 import type { MatchedUser } from '@/types/api';
 
 interface MatchModalProps {
@@ -16,6 +18,9 @@ export function MatchModal({
   onSendMessage,
   visible,
 }: MatchModalProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   if (!matchedUser) return null;
 
   return (
@@ -27,13 +32,13 @@ export function MatchModal({
     >
       <View style={styles.overlay}>
         <LinearGradient
-          colors={[colors.muted, colors.primary]}
+          colors={[theme.colors.muted, theme.colors.primary]}
           style={styles.container}
         >
-          <Text color="light" style={styles.title} variant="title">
+          <Text style={styles.title} variant="title">
             It&apos;s a Match!
           </Text>
-          <Text color="light" style={styles.subtitle} variant="subtitle">
+          <Text style={styles.subtitle} variant="subtitle">
             You and {matchedUser.firstName} liked each other
           </Text>
 
@@ -60,41 +65,43 @@ export function MatchModal({
   );
 }
 
-const styles = StyleSheet.create({
-  buttons: {
-    gap: 12,
-    paddingHorizontal: 40,
-    width: '100%',
-  },
-  container: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    marginHorizontal: 20,
-    paddingBottom: 40,
-    paddingHorizontal: 20,
-    paddingTop: 60,
-  },
-  overlay: {
-    alignItems: 'center',
-    backgroundColor: colors.overlay,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  photo: {
-    borderColor: colors.white,
-    borderRadius: 80,
-    borderWidth: 4,
-    height: 160,
-    marginBottom: 30,
-    width: 160,
-  },
-  subtitle: {
-    marginBottom: 30,
-    opacity: 0.9,
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 36,
-    marginBottom: 8,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    buttons: {
+      gap: 12,
+      paddingHorizontal: 40,
+      width: '100%',
+    },
+    container: {
+      alignItems: 'center',
+      borderRadius: theme.borderRadius.xl,
+      marginHorizontal: 20,
+      paddingBottom: 40,
+      paddingHorizontal: 20,
+      paddingTop: 60,
+    },
+    overlay: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.overlay,
+      flex: 1,
+      justifyContent: 'center',
+    },
+    photo: {
+      borderColor: theme.colors.white,
+      borderRadius: 80,
+      borderWidth: 4,
+      height: 160,
+      marginBottom: 30,
+      width: 160,
+    },
+    subtitle: {
+      marginBottom: 30,
+      opacity: 0.9,
+      textAlign: 'center',
+    },
+    title: {
+      fontSize: 36,
+      marginBottom: 8,
+    },
+  });
+}

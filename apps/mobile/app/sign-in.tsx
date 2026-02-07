@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, spacing, Text } from '@artemis/ui';
+import { Button, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppAuth } from '@/hooks/useAppAuth';
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
 export default function SignInScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { clearError, error, isLoading, isAuthenticated, signInWithGoogle } =
     useAppAuth();
   const { navigate, destination } = useOnboardingFlow();
@@ -49,14 +51,16 @@ export default function SignInScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: theme.spacing.md,
+    },
+    content: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+  });
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
@@ -6,9 +6,10 @@ import {
   ProgressIndicator,
   ScreenContainer,
   Select,
-  spacing,
   Text,
   TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
@@ -41,6 +42,8 @@ const COUNTRY_OPTIONS = [
 
 export default function ManualLocationScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/location');
   };
@@ -117,21 +120,23 @@ export default function ManualLocationScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  inputContainer: {
-    marginTop: spacing.xl,
-  },
-  selectContainer: {
-    marginTop: spacing.xl,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    inputContainer: {
+      marginTop: theme.spacing.xl,
+    },
+    selectContainer: {
+      marginTop: theme.spacing.xl,
+    },
+  });
+}

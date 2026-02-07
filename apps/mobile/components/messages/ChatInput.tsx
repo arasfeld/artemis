@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   type TextInputSubmitEditingEventData,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { borderRadius, colors, shadow, spacing } from '@artemis/ui';
+import { useTheme, type Theme } from '@artemis/ui';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -16,6 +16,8 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [text, setText] = useState('');
 
   const handleSend = useCallback(() => {
@@ -45,7 +47,7 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
           onChangeText={setText}
           onSubmitEditing={handleSubmitEditing}
           placeholder="Type a message..."
-          placeholderTextColor={colors.mutedForeground}
+          placeholderTextColor={theme.colors.mutedForeground}
           style={styles.input}
           value={text}
         />
@@ -55,7 +57,7 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
           style={[styles.sendButton, canSend && styles.sendButtonActive]}
         >
           <Ionicons
-            color={canSend ? colors.primaryForeground : colors.mutedForeground}
+            color={canSend ? theme.colors.primaryForeground : theme.colors.mutedForeground}
             name="send"
             size={20}
           />
@@ -65,41 +67,43 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
-    paddingBottom: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-  },
-  input: {
-    color: colors.foreground,
-    flex: 1,
-    fontSize: 16,
-    maxHeight: 100,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  inputContainer: {
-    alignItems: 'flex-end',
-    backgroundColor: colors.accent,
-    borderRadius: borderRadius.xl,
-    flexDirection: 'row',
-    ...shadow.sm,
-  },
-  sendButton: {
-    alignItems: 'center',
-    backgroundColor: colors.muted,
-    borderRadius: borderRadius.full,
-    height: 36,
-    justifyContent: 'center',
-    marginBottom: 4,
-    marginRight: 4,
-    width: 36,
-  },
-  sendButtonActive: {
-    backgroundColor: colors.primary,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.card,
+      borderTopColor: theme.colors.border,
+      borderTopWidth: 1,
+      paddingBottom: theme.spacing.md,
+      paddingHorizontal: theme.spacing.md,
+      paddingTop: theme.spacing.sm,
+    },
+    input: {
+      color: theme.colors.foreground,
+      flex: 1,
+      fontSize: 16,
+      maxHeight: 100,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.sm,
+    },
+    inputContainer: {
+      alignItems: 'flex-end',
+      backgroundColor: theme.colors.accent,
+      borderRadius: theme.borderRadius.xl,
+      flexDirection: 'row',
+      ...theme.shadow.sm,
+    },
+    sendButton: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.muted,
+      borderRadius: theme.borderRadius.full,
+      height: 36,
+      justifyContent: 'center',
+      marginBottom: 4,
+      marginRight: 4,
+      width: 36,
+    },
+    sendButtonActive: {
+      backgroundColor: theme.colors.primary,
+    },
+  });
+}

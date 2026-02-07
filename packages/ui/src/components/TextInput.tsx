@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   TextInput as RNTextInput,
@@ -7,9 +7,9 @@ import {
   type TextInputProps as RNTextInputProps,
   type ViewStyle,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
-import { borderRadius, shadow, spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface TextInputProps extends RNTextInputProps {
   label?: string;
@@ -24,13 +24,16 @@ export function TextInput({
   style,
   ...props
 }: TextInputProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <View style={[styles.inputWrapper, error && styles.inputError]}>
         <RNTextInput
           style={[styles.input, style]}
-          placeholderTextColor={colors.mutedForeground}
+          placeholderTextColor={theme.colors.mutedForeground}
           {...props}
         />
       </View>
@@ -39,34 +42,36 @@ export function TextInput({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  label: {
-    fontSize: typography.fontSize.sm,
-    fontWeight: typography.fontWeight.medium,
-    color: colors.primaryForeground,
-    marginBottom: spacing.sm,
-  },
-  inputWrapper: {
-    backgroundColor: colors.background,
-    borderRadius: borderRadius.lg,
-    ...shadow.sm,
-  },
-  input: {
-    paddingVertical: 16,
-    paddingHorizontal: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.foreground,
-  },
-  inputError: {
-    borderWidth: 2,
-    borderColor: colors.destructive,
-  },
-  error: {
-    fontSize: typography.fontSize.sm,
-    color: colors.destructive,
-    marginTop: spacing.xs,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      width: '100%',
+    },
+    error: {
+      color: theme.colors.destructive,
+      fontSize: theme.typography.fontSize.sm,
+      marginTop: theme.spacing.xs,
+    },
+    input: {
+      color: theme.colors.foreground,
+      fontSize: theme.typography.fontSize.base,
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: 16,
+    },
+    inputError: {
+      borderColor: theme.colors.destructive,
+      borderWidth: 2,
+    },
+    inputWrapper: {
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.lg,
+      ...theme.shadow.sm,
+    },
+    label: {
+      color: theme.colors.primaryForeground,
+      fontSize: theme.typography.fontSize.sm,
+      fontWeight: theme.typography.fontWeight.medium,
+      marginBottom: theme.spacing.sm,
+    },
+  });
+}

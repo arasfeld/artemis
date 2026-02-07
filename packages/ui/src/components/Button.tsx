@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -7,9 +7,9 @@ import {
   type TextStyle,
   type ViewStyle,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { borderRadius } from '../theme/spacing';
-import { typography } from '../theme/typography';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 const destructiveMuted = 'rgba(220, 38, 38, 0.1)';
 const destructiveMutedPressed = 'rgba(220, 38, 38, 0.2)';
@@ -44,91 +44,94 @@ export interface ButtonProps {
   variant?: ButtonVariant;
 }
 
-const sizeStyles: Record<
+function buildSizeStyles(theme: Theme): Record<
   ButtonSize,
   { container: ViewStyle; text: TextStyle; gap: number }
-> = {
-  default: {
-    container: {
-      height: 32,
-      paddingHorizontal: 10,
-      paddingVertical: 0,
+> {
+  const { typography } = theme;
+  return {
+    default: {
+      container: {
+        height: 32,
+        paddingHorizontal: 10,
+        paddingVertical: 0,
+        gap: 6,
+      },
+      text: { fontSize: typography.fontSize.sm },
       gap: 6,
     },
-    text: { fontSize: typography.fontSize.sm },
-    gap: 6,
-  },
-  xs: {
-    container: {
-      height: 24,
-      paddingHorizontal: 8,
-      paddingVertical: 0,
+    xs: {
+      container: {
+        height: 24,
+        paddingHorizontal: 8,
+        paddingVertical: 0,
+        gap: 4,
+      },
+      text: { fontSize: typography.fontSize.xs },
       gap: 4,
     },
-    text: { fontSize: typography.fontSize.xs },
-    gap: 4,
-  },
-  sm: {
-    container: {
-      height: 28,
-      paddingHorizontal: 10,
-      paddingVertical: 0,
+    sm: {
+      container: {
+        height: 28,
+        paddingHorizontal: 10,
+        paddingVertical: 0,
+        gap: 4,
+      },
+      text: { fontSize: 13 },
       gap: 4,
     },
-    text: { fontSize: 13 },
-    gap: 4,
-  },
-  lg: {
-    container: {
-      height: 36,
-      paddingHorizontal: 10,
-      paddingVertical: 0,
+    lg: {
+      container: {
+        height: 36,
+        paddingHorizontal: 10,
+        paddingVertical: 0,
+        gap: 6,
+      },
+      text: { fontSize: typography.fontSize.sm },
       gap: 6,
     },
-    text: { fontSize: typography.fontSize.sm },
-    gap: 6,
-  },
-  icon: {
-    container: {
-      width: 32,
-      height: 32,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+    icon: {
+      container: {
+        width: 32,
+        height: 32,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
     },
-    text: {},
-    gap: 0,
-  },
-  'icon-xs': {
-    container: {
-      width: 24,
-      height: 24,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+    'icon-xs': {
+      container: {
+        width: 24,
+        height: 24,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
     },
-    text: {},
-    gap: 0,
-  },
-  'icon-sm': {
-    container: {
-      width: 28,
-      height: 28,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+    'icon-sm': {
+      container: {
+        width: 28,
+        height: 28,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
     },
-    text: {},
-    gap: 0,
-  },
-  'icon-lg': {
-    container: {
-      width: 36,
-      height: 36,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+    'icon-lg': {
+      container: {
+        width: 36,
+        height: 36,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
     },
-    text: {},
-    gap: 0,
-  },
-};
+  };
+}
 
 export function Button({
   children,
@@ -141,6 +144,10 @@ export function Button({
   textStyle,
   variant = 'default',
 }: ButtonProps) {
+  const { theme } = useTheme();
+  const { colors } = theme;
+  const sizeStyles = useMemo(() => buildSizeStyles(theme), [theme]);
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const isDisabled = disabled || loading;
   const sizeConfig = sizeStyles[size];
   const isIconSize = size.startsWith('icon');
@@ -153,7 +160,7 @@ export function Button({
     const base: ViewStyle[] = [
       styles.base,
       sizeConfig.container,
-      { borderRadius: borderRadius.md },
+      { borderRadius: theme.borderRadius.md },
       ...(fullWidth ? [styles.fullWidth] : []),
       ...(isDisabled ? [styles.disabled] : []),
     ];
@@ -252,19 +259,21 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  textBase: {
-    fontWeight: typography.fontWeight.medium,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    base: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    fullWidth: {
+      width: '100%',
+    },
+    textBase: {
+      fontWeight: theme.typography.fontWeight.medium,
+    },
+  });
+}

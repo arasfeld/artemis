@@ -1,13 +1,16 @@
-import { useEffect } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, Text as RNText, View } from 'react-native';
 import { Href, Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@artemis/ui';
+import { useTheme } from '@artemis/ui';
+
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 import { useGetUnreadCountQuery } from '@/store/api/apiSlice';
+import { useEffect } from 'react';
 
 export default function TabsLayout() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { destination, isLoading, isOnboardingComplete } = useOnboardingFlow();
   const { data: unreadData } = useGetUnreadCountQuery(undefined, {
     pollingInterval: 30000, // Poll every 30 seconds
@@ -27,6 +30,29 @@ export default function TabsLayout() {
     }
   }, [destination, isLoading, router, shouldRedirect]);
 
+  const dynamicStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        badge: {
+          backgroundColor: theme.colors.destructive,
+          borderRadius: 10,
+          minWidth: 18,
+          paddingHorizontal: 4,
+          paddingVertical: 1,
+          position: 'absolute',
+          right: -8,
+          top: -4,
+        },
+        badgeText: {
+          color: theme.colors.white,
+          fontSize: 10,
+          fontWeight: '600',
+          textAlign: 'center',
+        },
+      }),
+    [theme.colorScheme],
+  );
+
   if (shouldRedirect) {
     return null;
   }
@@ -35,11 +61,11 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.mutedForeground,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.mutedForeground,
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopColor: colors.border,
+          backgroundColor: theme.colors.card,
+          borderTopColor: theme.colors.border,
         },
       }}
     >
@@ -69,8 +95,8 @@ export default function TabsLayout() {
             <View>
               <Ionicons color={color} name="chatbubble-outline" size={size} />
               {unreadCount > 0 && (
-                <View style={styles.badge}>
-                  <RNText style={styles.badgeText}>
+                <View style={dynamicStyles.badge}>
+                  <RNText style={dynamicStyles.badgeText}>
                     {unreadCount > 99 ? '99+' : unreadCount}
                   </RNText>
                 </View>
@@ -91,22 +117,3 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  badge: {
-    backgroundColor: colors.destructive,
-    borderRadius: 10,
-    minWidth: 18,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-    position: 'absolute',
-    right: -8,
-    top: -4,
-  },
-  badgeText: {
-    color: colors.white,
-    fontSize: 10,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-});

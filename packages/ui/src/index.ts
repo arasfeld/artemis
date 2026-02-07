@@ -1,5 +1,16 @@
 // Theme
-export { colors, typography, spacing, borderRadius, shadow } from './theme';
+export {
+  colors,
+  darkColors,
+  lightColors,
+  type Colors,
+  ThemeProvider,
+  useTheme,
+  type ColorScheme,
+  type ResolvedColorScheme,
+  type Theme,
+  type ThemeContextValue,
+} from './theme';
 
 // Components
 export { Text } from './components/Text';

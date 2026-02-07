@@ -4,12 +4,12 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Button,
-  colors,
   OptionCard,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { pluralizeGender } from '@/lib/pluralize';
@@ -17,6 +17,8 @@ import { useGetGendersQuery } from '@/store/api/apiSlice';
 
 export default function GenderScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/manual-location');
   };
@@ -143,7 +145,7 @@ export default function GenderScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={20}
-                  color={colors.primary}
+                  color={theme.colors.primary}
                 />
               </TouchableOpacity>
             )}
@@ -153,7 +155,7 @@ export default function GenderScreen() {
               onPress={handleViewMoreGender}
             >
               <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.white} />
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.white} />
             </TouchableOpacity>
           </View>
         </View>
@@ -195,7 +197,7 @@ export default function GenderScreen() {
                       <Ionicons
                         name="checkmark"
                         size={16}
-                        color={colors.white}
+                        color={theme.colors.white}
                       />
                     )}
                   </View>
@@ -216,7 +218,7 @@ export default function GenderScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={20}
-                  color={colors.white}
+                  color={theme.colors.white}
                 />
               </TouchableOpacity>
             )}
@@ -226,7 +228,7 @@ export default function GenderScreen() {
               onPress={handleViewMoreSeeking}
             >
               <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.white} />
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.white} />
             </TouchableOpacity>
           </View>
         </View>
@@ -246,108 +248,110 @@ export default function GenderScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  checkbox: {
-    alignItems: 'center',
-    borderColor: colors.ring,
-    borderRadius: 4,
-    borderWidth: 2,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  checkboxCard: {
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    borderColor: 'transparent',
-    borderRadius: 12,
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: spacing.md,
-    shadowColor: colors.black,
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-  },
-  checkboxCardSelected: {
-    borderColor: colors.primary,
-  },
-  checkboxLabel: {
-    color: colors.foreground,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  checkboxLabelSelected: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  checkboxSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-    paddingHorizontal: spacing.lg,
-  },
-  optionList: {
-    gap: spacing.sm,
-  },
-  otherSeekingContainer: {
-    backgroundColor: colors.accent,
-    borderRadius: 8,
-    padding: spacing.sm,
-  },
-  otherSeekingText: {
-    color: colors.white,
-    fontSize: 14,
-  },
-  scrollContent: {
-    paddingBottom: spacing.lg,
-    paddingHorizontal: spacing.md,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  section: {
-    marginTop: spacing.xl,
-  },
-  sectionLabel: {
-    marginBottom: spacing.sm,
-  },
-  summaryCard: {
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    borderColor: 'transparent',
-    borderRadius: 12,
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: spacing.md,
-    shadowColor: colors.black,
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-  },
-  summaryCardSelected: {
-    borderColor: colors.primary,
-  },
-  summaryLabel: {
-    color: colors.primary,
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  viewMoreButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: spacing.sm,
-  },
-  viewMoreText: {
-    color: colors.white,
-    fontSize: 15,
-    fontWeight: '500',
-    marginRight: spacing.xs,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    checkbox: {
+      alignItems: 'center',
+      borderColor: theme.colors.ring,
+      borderRadius: 4,
+      borderWidth: 2,
+      height: 24,
+      justifyContent: 'center',
+      width: 24,
+    },
+    checkboxCard: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.white,
+      borderColor: 'transparent',
+      borderRadius: 12,
+      borderWidth: 2,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.md,
+      shadowColor: theme.colors.black,
+      shadowOffset: { height: 1, width: 0 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+    },
+    checkboxCardSelected: {
+      borderColor: theme.colors.primary,
+    },
+    checkboxLabel: {
+      color: theme.colors.foreground,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    checkboxLabelSelected: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    checkboxSelected: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+      paddingHorizontal: theme.spacing.lg,
+    },
+    optionList: {
+      gap: theme.spacing.sm,
+    },
+    otherSeekingContainer: {
+      backgroundColor: theme.colors.accent,
+      borderRadius: 8,
+      padding: theme.spacing.sm,
+    },
+    otherSeekingText: {
+      color: theme.colors.white,
+      fontSize: 14,
+    },
+    scrollContent: {
+      paddingBottom: theme.spacing.lg,
+      paddingHorizontal: theme.spacing.md,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    section: {
+      marginTop: theme.spacing.xl,
+    },
+    sectionLabel: {
+      marginBottom: theme.spacing.sm,
+    },
+    summaryCard: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.white,
+      borderColor: 'transparent',
+      borderRadius: 12,
+      borderWidth: 2,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.md,
+      shadowColor: theme.colors.black,
+      shadowOffset: { height: 1, width: 0 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+    },
+    summaryCardSelected: {
+      borderColor: theme.colors.primary,
+    },
+    summaryLabel: {
+      color: theme.colors.primary,
+      flex: 1,
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    viewMoreButton: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingVertical: theme.spacing.sm,
+    },
+    viewMoreText: {
+      color: theme.colors.white,
+      fontSize: 15,
+      fontWeight: '500',
+      marginRight: theme.spacing.xs,
+    },
+  });
+}

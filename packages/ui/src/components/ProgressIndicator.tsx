@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, type ViewStyle } from 'react-native';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface ProgressIndicatorProps {
   totalSteps: number;
@@ -14,6 +15,9 @@ export function ProgressIndicator({
   currentStep,
   style,
 }: ProgressIndicatorProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <View style={[styles.container, style]}>
       {Array.from({ length: totalSteps }, (_, index) => (
@@ -26,21 +30,23 @@ export function ProgressIndicator({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.xl,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.ringOnDark,
-  },
-  dotActive: {
-    backgroundColor: colors.background,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      justifyContent: 'center',
+      marginBottom: theme.spacing.xl,
+    },
+    dot: {
+      backgroundColor: theme.colors.ringOnDark,
+      borderRadius: 4,
+      height: 8,
+      width: 8,
+    },
+    dotActive: {
+      backgroundColor: theme.colors.background,
+    },
+  });
+}

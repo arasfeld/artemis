@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Image,
   Pressable,
@@ -6,7 +7,8 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, borderRadius, colors, spacing } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
+
 import type { ConversationData } from '@/types/api';
 
 interface ConversationItemProps {
@@ -38,6 +40,8 @@ export function ConversationItem({
   conversation,
   onPress,
 }: ConversationItemProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { lastMessage, unreadCount, user } = conversation;
   const hasUnread = unreadCount > 0;
 
@@ -51,7 +55,7 @@ export function ConversationItem({
           <Image source={{ uri: user.photo }} style={styles.avatar} />
         ) : (
           <View style={[styles.avatar, styles.avatarPlaceholder]}>
-            <Ionicons color={colors.mutedForeground} name="person" size={24} />
+            <Ionicons color={theme.colors.mutedForeground} name="person" size={24} />
           </View>
         )}
         {hasUnread && <View style={styles.unreadBadge} />}
@@ -85,7 +89,7 @@ export function ConversationItem({
               {lastMessage.content}
             </Text>
           ) : (
-            <Text color="dark" style={styles.noMessages} variant="body">
+            <Text style={styles.noMessages} variant="body">
               No messages yet
             </Text>
           )}
@@ -102,85 +106,87 @@ export function ConversationItem({
   );
 }
 
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 28,
-    height: 56,
-    width: 56,
-  },
-  avatarContainer: {
-    position: 'relative',
-  },
-  avatarPlaceholder: {
-    alignItems: 'center',
-    backgroundColor: colors.muted,
-    justifyContent: 'center',
-  },
-  container: {
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  content: {
-    flex: 1,
-    marginLeft: spacing.md,
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 2,
-  },
-  message: {
-    color: colors.mutedForeground,
-    flex: 1,
-  },
-  messageRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  name: {
-    fontWeight: '600',
-  },
-  noMessages: {
-    color: colors.mutedForeground,
-    fontStyle: 'italic',
-  },
-  pressed: {
-    backgroundColor: colors.accent,
-  },
-  time: {
-    color: colors.mutedForeground,
-    fontSize: 12,
-  },
-  unreadBadge: {
-    backgroundColor: colors.primary,
-    borderColor: colors.white,
-    borderRadius: 6,
-    borderWidth: 2,
-    bottom: 2,
-    height: 12,
-    position: 'absolute',
-    right: 2,
-    width: 12,
-  },
-  unreadCountBadge: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.full,
-    marginLeft: spacing.sm,
-    minWidth: 20,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  },
-  unreadCountText: {
-    color: colors.white,
-    fontSize: 11,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  unreadText: {
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    avatar: {
+      borderRadius: 28,
+      height: 56,
+      width: 56,
+    },
+    avatarContainer: {
+      position: 'relative',
+    },
+    avatarPlaceholder: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.muted,
+      justifyContent: 'center',
+    },
+    container: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.card,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.sm,
+    },
+    content: {
+      flex: 1,
+      marginLeft: theme.spacing.md,
+    },
+    header: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 2,
+    },
+    message: {
+      color: theme.colors.mutedForeground,
+      flex: 1,
+    },
+    messageRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    name: {
+      fontWeight: '600',
+    },
+    noMessages: {
+      color: theme.colors.mutedForeground,
+      fontStyle: 'italic',
+    },
+    pressed: {
+      backgroundColor: theme.colors.accent,
+    },
+    time: {
+      color: theme.colors.mutedForeground,
+      fontSize: 12,
+    },
+    unreadBadge: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.card,
+      borderRadius: 6,
+      borderWidth: 2,
+      bottom: 2,
+      height: 12,
+      position: 'absolute',
+      right: 2,
+      width: 12,
+    },
+    unreadCountBadge: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: theme.borderRadius.full,
+      marginLeft: theme.spacing.sm,
+      minWidth: 20,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+    },
+    unreadCountText: {
+      color: theme.colors.primaryForeground,
+      fontSize: 11,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+    unreadText: {
+      fontWeight: '600',
+    },
+  });
+}

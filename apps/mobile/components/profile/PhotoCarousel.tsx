@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -9,7 +9,7 @@ import {
   ViewToken,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@artemis/ui';
+import { useTheme } from '@artemis/ui';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -32,6 +32,7 @@ export function PhotoCarousel({
   onEditPress,
   photos,
 }: PhotoCarouselProps) {
+  const { theme } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
@@ -51,6 +52,21 @@ export function PhotoCarousel({
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   }).current;
+
+  const dynamicStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        paginationDotActive: {
+          backgroundColor: theme.colors.white,
+        },
+        placeholderPhoto: {
+          alignItems: 'center',
+          backgroundColor: theme.colors.border,
+          justifyContent: 'center',
+        },
+      }),
+    [theme.colorScheme],
+  );
 
   return (
     <View style={[styles.container, { height }]}>
@@ -73,8 +89,8 @@ export function PhotoCarousel({
           viewabilityConfig={viewabilityConfig}
         />
       ) : (
-        <View style={[styles.photo, styles.placeholderPhoto, { height }]}>
-          <Ionicons color={colors.mutedForeground} name="person" size={64} />
+        <View style={[styles.photo, dynamicStyles.placeholderPhoto, { height }]}>
+          <Ionicons color={theme.colors.mutedForeground} name="person" size={64} />
         </View>
       )}
 
@@ -86,7 +102,7 @@ export function PhotoCarousel({
               key={index}
               style={[
                 styles.paginationDot,
-                index === currentIndex && styles.paginationDotActive,
+                index === currentIndex && dynamicStyles.paginationDotActive,
               ]}
             />
           ))}
@@ -96,7 +112,7 @@ export function PhotoCarousel({
       {/* Edit button overlay */}
       {editable && onEditPress && (
         <Pressable onPress={onEditPress} style={styles.editButton}>
-          <Ionicons color={colors.white} name="camera" size={20} />
+          <Ionicons color={theme.colors.white} name="camera" size={20} />
         </Pressable>
       )}
     </View>
@@ -134,15 +150,7 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
   },
-  paginationDotActive: {
-    backgroundColor: colors.white,
-  },
   photo: {
     width: SCREEN_WIDTH,
-  },
-  placeholderPhoto: {
-    alignItems: 'center',
-    backgroundColor: colors.border,
-    justifyContent: 'center',
   },
 });

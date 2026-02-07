@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { borderRadius, colors, shadow, spacing, Text } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { useGetProfileQuery } from '@/store/api/apiSlice';
 
@@ -19,6 +19,8 @@ const MIN_PHOTOS = 2;
 
 export default function EditPhotosScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { deletePhoto, isUploadingPhoto, syncError, uploadAndAddPhoto } =
     useAppOnboarding();
   const { data: profile } = useGetProfileQuery();
@@ -132,7 +134,7 @@ export default function EditPhotosScreen() {
             <Image source={{ uri: photoUrl }} style={styles.photo} />
             {isUploading && (
               <View style={styles.uploadingOverlay}>
-                <ActivityIndicator color={colors.white} size="large" />
+                <ActivityIndicator color={theme.colors.white} size="large" />
               </View>
             )}
             {!isUploading && (
@@ -140,13 +142,13 @@ export default function EditPhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons color={colors.destructive} name="close-circle" size={24} />
+                <Ionicons color={theme.colors.destructive} name="close-circle" size={24} />
               </TouchableOpacity>
             )}
           </View>
         ) : (
           <View style={styles.emptySlot}>
-            <Ionicons color={colors.mutedForeground} name="add" size={32} />
+            <Ionicons color={theme.colors.mutedForeground} name="add" size={32} />
             {isMainPhoto && <Text style={styles.mainLabel}>Main photo</Text>}
           </View>
         )}
@@ -158,7 +160,7 @@ export default function EditPhotosScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.foreground} name="close" size={24} />
+          <Ionicons color={theme.colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Photos</Text>
         <View style={styles.headerButton} />
@@ -197,107 +199,109 @@ export default function EditPhotosScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  bottomRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  container: {
-    backgroundColor: colors.background,
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.lg,
-  },
-  emptySlot: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  grid: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.lg,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  headerButton: {
-    minWidth: 50,
-    padding: spacing.xs,
-  },
-  mainColumn: {
-    flex: 2,
-  },
-  mainLabel: {
-    color: colors.mutedForeground,
-    fontSize: 10,
-    marginTop: spacing.xs,
-  },
-  mainPhotoSlot: {
-    aspectRatio: 3 / 4,
-  },
-  photo: {
-    height: '100%',
-    resizeMode: 'cover',
-    width: '100%',
-  },
-  photoContainer: {
-    flex: 1,
-  },
-  photoCount: {
-    color: colors.mutedForeground,
-    fontSize: 14,
-    marginTop: spacing.lg,
-    textAlign: 'center',
-  },
-  photoSlot: {
-    aspectRatio: 3 / 4,
-    backgroundColor: colors.card,
-    borderRadius: borderRadius.lg,
-    flex: 1,
-    overflow: 'hidden',
-    ...shadow.sm,
-  },
-  removeButton: {
-    backgroundColor: colors.background,
-    borderRadius: 12,
-    position: 'absolute',
-    right: spacing.xs,
-    top: spacing.xs,
-  },
-  sideColumn: {
-    flex: 1,
-    gap: spacing.sm,
-  },
-  subtitle: {
-    color: colors.mutedForeground,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  uploadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-  },
-  warningText: {
-    color: colors.destructive,
-    fontSize: 13,
-    marginTop: spacing.sm,
-    textAlign: 'center',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    bottomRow: {
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.sm,
+    },
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+      paddingTop: theme.spacing.lg,
+    },
+    emptySlot: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    grid: {
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      marginTop: theme.spacing.lg,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.md,
+    },
+    headerButton: {
+      minWidth: 50,
+      padding: theme.spacing.xs,
+    },
+    mainColumn: {
+      flex: 2,
+    },
+    mainLabel: {
+      color: theme.colors.mutedForeground,
+      fontSize: 10,
+      marginTop: theme.spacing.xs,
+    },
+    mainPhotoSlot: {
+      aspectRatio: 3 / 4,
+    },
+    photo: {
+      height: '100%',
+      resizeMode: 'cover',
+      width: '100%',
+    },
+    photoContainer: {
+      flex: 1,
+    },
+    photoCount: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      marginTop: theme.spacing.lg,
+      textAlign: 'center',
+    },
+    photoSlot: {
+      aspectRatio: 3 / 4,
+      backgroundColor: theme.colors.card,
+      borderRadius: theme.borderRadius.lg,
+      flex: 1,
+      overflow: 'hidden',
+      ...theme.shadow.sm,
+    },
+    removeButton: {
+      backgroundColor: theme.colors.background,
+      borderRadius: 12,
+      position: 'absolute',
+      right: theme.spacing.xs,
+      top: theme.spacing.xs,
+    },
+    sideColumn: {
+      flex: 1,
+      gap: theme.spacing.sm,
+    },
+    subtitle: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    uploadingOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+    },
+    warningText: {
+      color: theme.colors.destructive,
+      fontSize: 13,
+      marginTop: theme.spacing.sm,
+      textAlign: 'center',
+    },
+  });
+}

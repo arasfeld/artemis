@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
+
 import type { GenderData, PhotoData, RelationshipTypeData } from '@/types/api';
 import { PhotoCarousel } from './PhotoCarousel';
 import { ProfileSection } from './ProfileSection';
@@ -43,6 +45,9 @@ export function ProfileView({
   relationshipTypes,
   seeking,
 }: ProfileViewProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   const genderText =
     genders.length > 0
       ? genders.map((g) => g.name).join(', ')
@@ -89,7 +94,7 @@ export function ProfileView({
       <ProfileSection title="About Me" onPress={() => onEditSection('gender')}>
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.mutedForeground}
+            color={theme.colors.mutedForeground}
             name="person-outline"
             size={18}
           />
@@ -105,7 +110,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.mutedForeground}
+            color={theme.colors.mutedForeground}
             name="heart-outline"
             size={18}
           />
@@ -121,7 +126,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.mutedForeground}
+            color={theme.colors.mutedForeground}
             name="people-outline"
             size={18}
           />
@@ -137,7 +142,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.mutedForeground}
+            color={theme.colors.mutedForeground}
             name="calendar-outline"
             size={18}
           />
@@ -152,7 +157,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.mutedForeground}
+            color={theme.colors.mutedForeground}
             name="location-outline"
             size={18}
           />
@@ -193,38 +198,40 @@ function calculateAge(dateOfBirth: string): number {
 
 export { calculateAge };
 
-const styles = StyleSheet.create({
-  bottomPadding: {
-    height: spacing.xl,
-  },
-  container: {
-    backgroundColor: colors.background,
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
-  infoLabel: {
-    color: colors.mutedForeground,
-    fontSize: 14,
-    marginLeft: spacing.sm,
-  },
-  infoRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  infoValue: {
-    color: colors.foreground,
-    flex: 1,
-    fontSize: 14,
-  },
-  sectionHint: {
-    color: colors.mutedForeground,
-    fontSize: 13,
-  },
-  signOutHint: {
-    color: colors.destructive,
-    fontSize: 13,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    bottomPadding: {
+      height: theme.spacing.xl,
+    },
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    contentContainer: {
+      flexGrow: 1,
+    },
+    infoLabel: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      marginLeft: theme.spacing.sm,
+    },
+    infoRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.xs,
+    },
+    infoValue: {
+      color: theme.colors.foreground,
+      flex: 1,
+      fontSize: 14,
+    },
+    sectionHint: {
+      color: theme.colors.mutedForeground,
+      fontSize: 13,
+    },
+    signOutHint: {
+      color: theme.colors.destructive,
+      fontSize: 13,
+    },
+  });
+}

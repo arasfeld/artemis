@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text, TextInput } from '@artemis/ui';
+import { Text, TextInput, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 export default function EditNameScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { data, updateData } = useAppOnboarding();
   const [firstName, setFirstName] = useState(data.firstName || '');
   const [error, setError] = useState('');
@@ -37,7 +39,7 @@ export default function EditNameScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.foreground} name="close" size={24} />
+          <Ionicons color={theme.colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Name</Text>
         <TouchableOpacity
@@ -83,54 +85,56 @@ export default function EditNameScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  headerButton: {
-    minWidth: 50,
-    padding: spacing.xs,
-  },
-  headerButtonDisabled: {
-    opacity: 0.5,
-  },
-  hint: {
-    color: colors.mutedForeground,
-    fontSize: 13,
-    marginTop: spacing.sm,
-  },
-  label: {
-    color: colors.mutedForeground,
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: spacing.sm,
-  },
-  saveText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'right',
-  },
-  saveTextDisabled: {
-    color: colors.mutedForeground,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.white,
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.lg,
+      paddingTop: theme.spacing.xl,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.md,
+    },
+    headerButton: {
+      minWidth: 50,
+      padding: theme.spacing.xs,
+    },
+    headerButtonDisabled: {
+      opacity: 0.5,
+    },
+    hint: {
+      color: theme.colors.mutedForeground,
+      fontSize: 13,
+      marginTop: theme.spacing.sm,
+    },
+    label: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      fontWeight: '500',
+      marginBottom: theme.spacing.sm,
+    },
+    saveText: {
+      color: theme.colors.primary,
+      fontSize: 16,
+      fontWeight: '600',
+      textAlign: 'right',
+    },
+    saveTextDisabled: {
+      color: theme.colors.mutedForeground,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: '600',
+    },
+  });
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -10,9 +10,10 @@ import {
   Button,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
   TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
@@ -21,6 +22,8 @@ const MAX_AGE = 99;
 
 export default function AgeRangeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/relationship');
   };
@@ -136,35 +139,37 @@ export default function AgeRangeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  ageInput: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: spacing.sm,
-    textAlign: 'center',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  inputWrapper: {
-    flex: 1,
-  },
-  inputsContainer: {
-    flexDirection: 'row',
-    gap: spacing.lg,
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
-  },
-  rangeDisplay: {
-    marginBottom: spacing.xl,
-    marginTop: spacing['2xl'],
-  },
-  rangeText: {
-    fontSize: 56,
-    marginBottom: 0,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    ageInput: {
+      fontSize: 18,
+      fontWeight: '600',
+      marginTop: theme.spacing.sm,
+      textAlign: 'center',
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    inputWrapper: {
+      flex: 1,
+    },
+    inputsContainer: {
+      flexDirection: 'row',
+      gap: theme.spacing.lg,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.xl,
+    },
+    rangeDisplay: {
+      marginBottom: theme.spacing.xl,
+      marginTop: theme.spacing['2xl'],
+    },
+    rangeText: {
+      fontSize: 56,
+      marginBottom: 0,
+    },
+  });
+}
