@@ -10,13 +10,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Select,
-  Text,
-  TextInput,
-  useTheme,
-  type Theme,
-} from '@artemis/ui';
+import { Select, Text, TextInput, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { getCurrentLocation } from '@/lib/location';
 
