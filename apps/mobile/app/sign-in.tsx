@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { useEffect, useMemo } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -31,6 +32,11 @@ export default function SignInScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
+        <Image
+          contentFit="contain"
+          source={require('@/assets/images/sign-in-hero.png')}
+          style={styles.heroImage}
+        />
         <Text variant="title" center>
           Artemis
         </Text>
@@ -61,6 +67,11 @@ function createStyles(theme: Theme) {
       alignItems: 'center',
       flex: 1,
       justifyContent: 'center',
+    },
+    heroImage: {
+      alignSelf: 'center',
+      height: 360,
+      width: '100%',
     },
   });
 }
