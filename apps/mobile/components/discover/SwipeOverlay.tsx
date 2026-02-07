@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   likeOverlay: {
-    borderColor: colors.success,
+    borderColor: colors.chart2,
     left: 20,
     transform: [{ rotate: '-15deg' }],
   },
   nopeOverlay: {
-    borderColor: colors.error,
+    borderColor: colors.destructive,
     right: 20,
     transform: [{ rotate: '15deg' }],
   },

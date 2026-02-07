@@ -21,7 +21,7 @@ export function ProfileSection({
         <Text style={styles.title}>{title}</Text>
         {showChevron && (
           <Ionicons
-            color={colors.text.muted}
+            color={colors.mutedForeground}
             name="chevron-forward"
             size={20}
           />
@@ -47,8 +47,8 @@ export function ProfileSection({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
-    borderBottomColor: colors.border.light,
+    backgroundColor: colors.background,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   pressed: {
-    backgroundColor: colors.background.card,
+    backgroundColor: colors.card,
   },
   title: {
-    color: colors.text.primary,
+    color: colors.foreground,
     fontSize: 16,
     fontWeight: '600',
   },

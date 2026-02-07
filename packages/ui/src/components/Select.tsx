@@ -65,7 +65,7 @@ export function Select({
         >
           {selectedOption?.label || placeholder}
         </Text>
-        <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
+        <Ionicons name="chevron-down" size={20} color={colors.mutedForeground} />
       </TouchableOpacity>
 
       <Modal
@@ -83,7 +83,7 @@ export function Select({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label || 'Select'}</Text>
               <TouchableOpacity onPress={() => setIsOpen(false)}>
-                <Ionicons name="close" size={24} color={colors.text.primary} />
+                <Ionicons name="close" size={24} color={colors.foreground} />
               </TouchableOpacity>
             </View>
 
@@ -132,26 +132,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colors.white,
+    backgroundColor: colors.card,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     ...shadow.sm,
   },
   triggerText: {
     fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    color: colors.foreground,
     flex: 1,
   },
   placeholderText: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   overlay: {
     flex: 1,
-    backgroundColor: colors.background.overlay,
+    backgroundColor: colors.overlay,
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.card,
     borderTopLeftRadius: borderRadius.xl,
     borderTopRightRadius: borderRadius.xl,
     maxHeight: '70%',
@@ -162,12 +162,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
   },
   modalTitle: {
     fontSize: typography.fontSize.lg,
     fontWeight: typography.fontWeight.semibold,
-    color: colors.text.primary,
+    color: colors.foreground,
   },
   optionList: {
     paddingBottom: spacing.xl,
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
   },
   optionSelected: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
   },
   optionText: {
     fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    color: colors.foreground,
   },
   optionTextSelected: {
     color: colors.primary,

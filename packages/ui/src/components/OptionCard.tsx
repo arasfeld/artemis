@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.medium,
-    color: colors.text.primary,
+    color: colors.foreground,
   },
   titleSelected: {
     color: colors.primary,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: typography.fontSize.sm,
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     marginTop: 2,
   },
   radio: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: colors.border.medium,
+    borderColor: colors.ring,
     alignItems: 'center',
     justifyContent: 'center',
   },

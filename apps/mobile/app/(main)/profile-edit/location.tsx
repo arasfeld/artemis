@@ -113,7 +113,7 @@ export default function EditLocationScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Location</Text>
         <TouchableOpacity
@@ -204,14 +204,14 @@ const styles = StyleSheet.create({
     paddingTop: spacing.lg,
   },
   currentLocation: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 13,
     marginTop: spacing.lg,
     textAlign: 'center',
   },
   detectButton: {
     alignItems: 'center',
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
     borderRadius: 12,
     flexDirection: 'row',
     gap: spacing.sm,
@@ -230,18 +230,18 @@ const styles = StyleSheet.create({
     marginVertical: spacing.xl,
   },
   dividerLine: {
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.muted,
     flex: 1,
     height: 1,
   },
   dividerText: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 14,
     paddingHorizontal: spacing.md,
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   saveTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   selectContainer: {
     marginTop: spacing.sm,

@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   placeholderImage: {
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.border,
   },
 });

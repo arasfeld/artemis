@@ -11,7 +11,7 @@ interface DividerProps {
 
 export function Divider({ style, color, variant = 'light' }: DividerProps) {
   const defaultColor =
-    variant === 'light' ? colors.border.onDark : colors.border.light;
+    variant === 'light' ? colors.ringOnDark : colors.border;
 
   return (
     <View

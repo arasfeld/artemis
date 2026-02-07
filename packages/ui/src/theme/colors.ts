@@ -1,49 +1,40 @@
 export const colors = {
-  // Primary gradient
-  gradient: {
-    start: '#83b59c',
-    end: '#4f685b',
-  },
-
-  // Solid colors
-  primary: '#4f685b',
-  primaryLight: '#83b59c',
-
-  // Neutrals
-  white: '#FFFFFF',
+  accent: '#f5f5f5',
+  accentForeground: '#343434',
+  background: '#ffffff',
   black: '#000000',
+  border: '#e5e5e5',
+  card: '#ffffff',
+  cardForeground: '#252525',
+  chart1: '#2563eb',
+  chart2: '#0d9488',
+  chart3: '#4f46e5',
+  chart4: '#ea580c',
+  chart5: '#d97706',
+  destructive: '#dc2626',
+  destructiveForeground: '#fafafa',
+  foreground: '#252525',
+  input: '#e5e5e5',
+  muted: '#f5f5f5',
+  mutedForeground: '#737373',
+  popover: '#ffffff',
+  popoverForeground: '#252525',
+  primary: '#343434',
+  primaryForeground: '#fafafa',
+  ring: '#a3a3a3',
+  secondary: '#f5f5f5',
+  secondaryForeground: '#343434',
+  sidebar: '#fafafa',
+  sidebarAccent: '#f5f5f5',
+  sidebarAccentForeground: '#343434',
+  sidebarBorder: '#e5e5e5',
+  sidebarForeground: '#252525',
+  sidebarPrimary: '#343434',
+  sidebarPrimaryForeground: '#fafafa',
+  sidebarRing: '#a3a3a3',
+  white: '#ffffff',
 
-  // Text
-  text: {
-    primary: '#333333',
-    secondary: '#666666',
-    muted: '#999999',
-    light: '#FFFFFF',
-    lightMuted: 'rgba(255, 255, 255, 0.7)',
-  },
-
-  // Backgrounds
-  background: {
-    card: '#FFFFFF',
-    cardHover: '#F9F9F9',
-    overlay: 'rgba(0, 0, 0, 0.5)',
-  },
-
-  // Borders
-  border: {
-    light: '#EEEEEE',
-    medium: '#DDDDDD',
-    onDark: 'rgba(255, 255, 255, 0.3)',
-  },
-
-  // States
-  error: '#E53935',
-  success: '#43A047',
-  warning: '#FB8C00',
-
-  // Selection
-  selected: {
-    background: 'rgba(79, 104, 91, 0.1)',
-    border: '#4f685b',
-  },
+  // RN-specific (modal backdrop, divider on dark)
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  ringOnDark: 'rgba(255, 255, 255, 0.3)',
 } as const;

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 4,
   },
   bubbleFromThem: {
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.muted,
     borderBottomLeftRadius: 4,
   },
   container: {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   time: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 11,
     marginTop: 2,
   },

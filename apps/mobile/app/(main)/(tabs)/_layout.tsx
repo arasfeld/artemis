@@ -36,10 +36,10 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.text.muted,
+        tabBarInactiveTintColor: colors.mutedForeground,
         tabBarStyle: {
           backgroundColor: colors.white,
-          borderTopColor: colors.border.light,
+          borderTopColor: colors.border,
         },
       }}
     >
@@ -94,7 +94,7 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: colors.error,
+    backgroundColor: colors.destructive,
     borderRadius: 10,
     minWidth: 18,
     paddingHorizontal: 4,

@@ -45,7 +45,7 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
           onChangeText={setText}
           onSubmitEditing={handleSubmitEditing}
           placeholder="Type a message..."
-          placeholderTextColor={colors.text.muted}
+          placeholderTextColor={colors.mutedForeground}
           style={styles.input}
           value={text}
         />
@@ -55,7 +55,7 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
           style={[styles.sendButton, canSend && styles.sendButtonActive]}
         >
           <Ionicons
-            color={canSend ? colors.white : colors.text.muted}
+            color={canSend ? colors.primaryForeground : colors.mutedForeground}
             name="send"
             size={20}
           />
@@ -68,14 +68,14 @@ export function ChatInput({ disabled = false, onSend }: ChatInputProps) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    borderTopColor: colors.border.light,
+    borderTopColor: colors.border,
     borderTopWidth: 1,
     paddingBottom: spacing.md,
     paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
   },
   input: {
-    color: colors.text.primary,
+    color: colors.foreground,
     flex: 1,
     fontSize: 16,
     maxHeight: 100,
@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: 'flex-end',
-    backgroundColor: colors.background.cardHover,
+    backgroundColor: colors.accent,
     borderRadius: borderRadius.xl,
     flexDirection: 'row',
     ...shadow.sm,
   },
   sendButton: {
     alignItems: 'center',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.muted,
     borderRadius: borderRadius.full,
     height: 36,
     justifyContent: 'center',

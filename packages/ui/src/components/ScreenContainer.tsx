@@ -44,7 +44,7 @@ export function ScreenContainer({
   if (withGradient) {
     return (
       <LinearGradient
-        colors={[colors.gradient.start, colors.gradient.end]}
+        colors={[colors.muted, colors.primary]}
         style={styles.gradient}
       >
         {content}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
   },
   safeArea: {
     flex: 1,

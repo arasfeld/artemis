@@ -149,13 +149,13 @@ export default function PhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons name="close-circle" size={24} color={colors.error} />
+                <Ionicons name="close-circle" size={24} color={colors.destructive} />
               </TouchableOpacity>
             )}
           </View>
         ) : (
           <View style={styles.emptySlot}>
-            <Ionicons name="add" size={32} color={colors.text.muted} />
+            <Ionicons name="add" size={32} color={colors.mutedForeground} />
             {isMainPhoto && (
               <Text variant="muted" color="dark" style={styles.mainLabel}>
                 Main photo
@@ -257,14 +257,14 @@ const styles = StyleSheet.create({
   },
   photoSlot: {
     aspectRatio: 3 / 4,
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: borderRadius.lg,
     flex: 1,
     overflow: 'hidden',
     ...shadow.sm,
   },
   removeButton: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: 12,
     position: 'absolute',
     right: spacing.xs,

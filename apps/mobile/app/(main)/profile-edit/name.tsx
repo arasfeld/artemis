@@ -37,7 +37,7 @@ export default function EditNameScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Name</Text>
         <TouchableOpacity
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   hint: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 13,
     marginTop: spacing.sm,
   },
   label: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     fontWeight: '500',
     marginBottom: spacing.sm,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   saveTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   title: {
     fontSize: 18,

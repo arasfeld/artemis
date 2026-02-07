@@ -140,13 +140,13 @@ export default function EditPhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons color={colors.error} name="close-circle" size={24} />
+                <Ionicons color={colors.destructive} name="close-circle" size={24} />
               </TouchableOpacity>
             )}
           </View>
         ) : (
           <View style={styles.emptySlot}>
-            <Ionicons color={colors.text.muted} name="add" size={32} />
+            <Ionicons color={colors.mutedForeground} name="add" size={32} />
             {isMainPhoto && <Text style={styles.mainLabel}>Main photo</Text>}
           </View>
         )}
@@ -158,7 +158,7 @@ export default function EditPhotosScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Edit Photos</Text>
         <View style={styles.headerButton} />
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   container: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     flex: 1,
   },
   content: {
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   mainLabel: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 10,
     marginTop: spacing.xs,
   },
@@ -255,21 +255,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   photoCount: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 14,
     marginTop: spacing.lg,
     textAlign: 'center',
   },
   photoSlot: {
     aspectRatio: 3 / 4,
-    backgroundColor: colors.background.card,
+    backgroundColor: colors.card,
     borderRadius: borderRadius.lg,
     flex: 1,
     overflow: 'hidden',
     ...shadow.sm,
   },
   removeButton: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: 12,
     position: 'absolute',
     right: spacing.xs,
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   subtitle: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     textAlign: 'center',
   },
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   warningText: {
-    color: colors.error,
+    color: colors.destructive,
     fontSize: 13,
     marginTop: spacing.sm,
     textAlign: 'center',

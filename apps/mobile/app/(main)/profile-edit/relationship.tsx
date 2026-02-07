@@ -59,7 +59,7 @@ export default function EditRelationshipScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Looking For</Text>
         <TouchableOpacity
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 16,
   },
   optionList: {
@@ -158,10 +158,10 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   saveTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   subtitle: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 16,
     textAlign: 'center',
   },

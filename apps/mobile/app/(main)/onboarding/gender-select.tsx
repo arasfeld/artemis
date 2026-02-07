@@ -144,7 +144,7 @@ export default function GenderSelectScreen() {
           onPress={() => router.back()}
           style={styles.closeButton}
         >
-          <Ionicons name="close" size={24} color={colors.text.primary} />
+          <Ionicons name="close" size={24} color={colors.foreground} />
         </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
         <TouchableOpacity
@@ -182,7 +182,7 @@ export default function GenderSelectScreen() {
 const styles = StyleSheet.create({
   checkbox: {
     alignItems: 'center',
-    borderColor: colors.border.medium,
+    borderColor: colors.ring,
     borderRadius: 4,
     borderWidth: 2,
     height: 24,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   checkboxDisabled: {
-    borderColor: colors.border.light,
+    borderColor: colors.border,
   },
   checkboxSelected: {
     backgroundColor: colors.primary,
@@ -217,11 +217,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   doneTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: spacing.lg,
@@ -241,38 +241,38 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   itemDescription: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 13,
     marginTop: 2,
   },
   itemDescriptionDisabled: {
-    color: colors.border.medium,
+    color: colors.ring,
   },
   itemDisabled: {
     opacity: 0.5,
   },
   itemLabel: {
-    color: colors.text.primary,
+    color: colors.foreground,
     fontSize: 16,
     fontWeight: '500',
   },
   itemLabelDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   itemLabelSelected: {
     color: colors.primary,
     fontWeight: '600',
   },
   itemSelected: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
   },
   limitNotice: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
   limitText: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     textAlign: 'center',
   },
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 16,
   },
   title: {

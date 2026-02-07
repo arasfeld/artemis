@@ -89,7 +89,7 @@ export function ProfileView({
       <ProfileSection title="About Me" onPress={() => onEditSection('gender')}>
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.text.secondary}
+            color={colors.mutedForeground}
             name="person-outline"
             size={18}
           />
@@ -105,7 +105,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.text.secondary}
+            color={colors.mutedForeground}
             name="heart-outline"
             size={18}
           />
@@ -121,7 +121,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.text.secondary}
+            color={colors.mutedForeground}
             name="people-outline"
             size={18}
           />
@@ -137,7 +137,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.text.secondary}
+            color={colors.mutedForeground}
             name="calendar-outline"
             size={18}
           />
@@ -152,7 +152,7 @@ export function ProfileView({
       >
         <View style={styles.infoRow}>
           <Ionicons
-            color={colors.text.secondary}
+            color={colors.mutedForeground}
             name="location-outline"
             size={18}
           />
@@ -198,14 +198,14 @@ const styles = StyleSheet.create({
     height: spacing.xl,
   },
   container: {
-    backgroundColor: colors.background.primary,
+    backgroundColor: colors.background,
     flex: 1,
   },
   contentContainer: {
     flexGrow: 1,
   },
   infoLabel: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     marginLeft: spacing.sm,
   },
@@ -215,16 +215,16 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   infoValue: {
-    color: colors.text.primary,
+    color: colors.foreground,
     flex: 1,
     fontSize: 14,
   },
   sectionHint: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 13,
   },
   signOutHint: {
-    color: colors.error,
+    color: colors.destructive,
     fontSize: 13,
   },
 });

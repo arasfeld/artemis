@@ -102,7 +102,7 @@ export default function ChatScreen() {
             <View style={[styles.header, { paddingTop: insets.top }]}>
               <Pressable onPress={handleBack} style={styles.backButton}>
                 <Ionicons
-                  color={colors.text.primary}
+                  color={colors.foreground}
                   name="chevron-back"
                   size={28}
                 />
@@ -116,7 +116,7 @@ export default function ChatScreen() {
                 ) : (
                   <View style={[styles.headerAvatar, styles.avatarPlaceholder]}>
                     <Ionicons
-                      color={colors.text.muted}
+                      color={colors.mutedForeground}
                       name="person"
                       size={16}
                     />
@@ -155,14 +155,14 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
   avatarPlaceholder: {
     alignItems: 'center',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.muted,
     justifyContent: 'center',
   },
   backButton: {
     padding: spacing.sm,
   },
   container: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     flex: 1,
   },
   emptyContainer: {
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    backgroundColor: colors.white,
-    borderBottomColor: colors.border.light,
+    backgroundColor: colors.background,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingBottom: spacing.sm,

@@ -27,7 +27,7 @@ export function MatchModal({
     >
       <View style={styles.overlay}>
         <LinearGradient
-          colors={[colors.gradient.start, colors.gradient.end]}
+          colors={[colors.muted, colors.primary]}
           style={styles.container}
         >
           <Text color="light" style={styles.title} variant="title">
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     alignItems: 'center',
-    backgroundColor: colors.background.overlay,
+    backgroundColor: colors.overlay,
     flex: 1,
     justifyContent: 'center',
   },

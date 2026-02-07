@@ -58,7 +58,7 @@ export default function EditAgeRangeScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Age Preferences</Text>
         <TouchableOpacity
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   inputLabel: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     textAlign: 'center',
   },
@@ -174,12 +174,12 @@ const styles = StyleSheet.create({
     marginTop: spacing['2xl'],
   },
   rangeLabel: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 16,
     marginTop: spacing.xs,
   },
   rangeText: {
-    color: colors.text.primary,
+    color: colors.foreground,
     fontSize: 48,
     fontWeight: 'bold',
   },
@@ -190,10 +190,10 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   saveTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   subtitle: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 16,
     textAlign: 'center',
   },

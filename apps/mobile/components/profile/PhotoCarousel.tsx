@@ -74,7 +74,7 @@ export function PhotoCarousel({
         />
       ) : (
         <View style={[styles.photo, styles.placeholderPhoto, { height }]}>
-          <Ionicons color={colors.text.muted} name="person" size={64} />
+          <Ionicons color={colors.mutedForeground} name="person" size={64} />
         </View>
       )}
 
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   placeholderPhoto: {
     alignItems: 'center',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.border,
     justifyContent: 'center',
   },
 });

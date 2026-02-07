@@ -30,7 +30,7 @@ export function TextInput({
       <View style={[styles.inputWrapper, error && styles.inputError]}>
         <RNTextInput
           style={[styles.input, style]}
-          placeholderTextColor={colors.text.muted}
+          placeholderTextColor={colors.mutedForeground}
           {...props}
         />
       </View>
@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.medium,
-    color: colors.text.light,
+    color: colors.primaryForeground,
     marginBottom: spacing.sm,
   },
   inputWrapper: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: borderRadius.lg,
     ...shadow.sm,
   },
@@ -58,15 +58,15 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: spacing.md,
     fontSize: typography.fontSize.base,
-    color: colors.text.primary,
+    color: colors.foreground,
   },
   inputError: {
     borderWidth: 2,
-    borderColor: colors.error,
+    borderColor: colors.destructive,
   },
   error: {
     fontSize: typography.fontSize.sm,
-    color: colors.error,
+    color: colors.destructive,
     marginTop: spacing.xs,
   },
 });

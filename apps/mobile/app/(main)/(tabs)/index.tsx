@@ -235,7 +235,7 @@ export default function DiscoverScreen() {
       <ScreenContainer withGradient={false}>
         <View style={styles.centerContainer}>
           <Ionicons
-            color={colors.text.muted}
+            color={colors.mutedForeground}
             name="compass-outline"
             size={64}
           />
@@ -292,14 +292,14 @@ export default function DiscoverScreen() {
             onPress={() => handleButtonPress('pass')}
             style={[styles.actionButton, styles.passButton]}
           >
-            <Ionicons color={colors.error} name="close" size={32} />
+            <Ionicons color={colors.destructive} name="close" size={32} />
           </Pressable>
           <Pressable
             accessibilityLabel="Like"
             onPress={() => handleButtonPress('like')}
             style={[styles.actionButton, styles.likeButton]}
           >
-            <Ionicons color={colors.success} name="heart" size={32} />
+            <Ionicons color={colors.chart2} name="heart" size={32} />
           </Pressable>
         </View>
 
@@ -373,14 +373,14 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   likeButton: {
-    borderColor: colors.success,
+    borderColor: colors.chart2,
     borderWidth: 2,
   },
   nextCard: {
     transform: [{ scale: 0.95 }],
   },
   passButton: {
-    borderColor: colors.error,
+    borderColor: colors.destructive,
     borderWidth: 2,
   },
   profileCardWrapper: {

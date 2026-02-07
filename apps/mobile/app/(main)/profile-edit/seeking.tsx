@@ -96,7 +96,7 @@ export default function EditSeekingScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Interested In</Text>
         <TouchableOpacity
@@ -138,7 +138,7 @@ export default function EditSeekingScreen() {
 const styles = StyleSheet.create({
   checkbox: {
     alignItems: 'center',
-    borderColor: colors.border.medium,
+    borderColor: colors.ring,
     borderRadius: 4,
     borderWidth: 2,
     height: 24,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   item: {
     alignItems: 'center',
-    borderBottomColor: colors.border.light,
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: spacing.lg,
@@ -182,12 +182,12 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   itemDescription: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 13,
     marginTop: 2,
   },
   itemLabel: {
-    color: colors.text.primary,
+    color: colors.foreground,
     fontSize: 16,
     fontWeight: '500',
   },
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   itemSelected: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
   },
   listContent: {
     paddingBottom: spacing.xl,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 16,
   },
   saveText: {
@@ -217,15 +217,15 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   saveTextDisabled: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
   },
   subtitle: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
   subtitleText: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     fontSize: 14,
     textAlign: 'center',
   },

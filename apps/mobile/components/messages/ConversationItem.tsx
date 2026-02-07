@@ -51,7 +51,7 @@ export function ConversationItem({
           <Image source={{ uri: user.photo }} style={styles.avatar} />
         ) : (
           <View style={[styles.avatar, styles.avatarPlaceholder]}>
-            <Ionicons color={colors.text.muted} name="person" size={24} />
+            <Ionicons color={colors.mutedForeground} name="person" size={24} />
           </View>
         )}
         {hasUnread && <View style={styles.unreadBadge} />}
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   avatarPlaceholder: {
     alignItems: 'center',
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.muted,
     justifyContent: 'center',
   },
   container: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   message: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     flex: 1,
   },
   messageRow: {
@@ -145,14 +145,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   noMessages: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontStyle: 'italic',
   },
   pressed: {
-    backgroundColor: colors.background.cardHover,
+    backgroundColor: colors.accent,
   },
   time: {
-    color: colors.text.muted,
+    color: colors.mutedForeground,
     fontSize: 12,
   },
   unreadBadge: {

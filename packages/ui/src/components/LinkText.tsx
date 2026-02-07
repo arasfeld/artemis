@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   light: {
-    color: colors.text.light,
+    color: colors.primaryForeground,
   },
   dark: {
     color: colors.primary,

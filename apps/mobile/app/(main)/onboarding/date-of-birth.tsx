@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
   },
   errorText: {
-    color: colors.error,
+    color: colors.destructive,
     marginTop: spacing.sm,
   },
   footer: {

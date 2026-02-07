@@ -244,7 +244,7 @@ export default function GenderScreen() {
 const styles = StyleSheet.create({
   checkbox: {
     alignItems: 'center',
-    borderColor: colors.border.medium,
+    borderColor: colors.ring,
     borderRadius: 4,
     borderWidth: 2,
     height: 24,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   checkboxLabel: {
-    color: colors.text.primary,
+    color: colors.foreground,
     fontSize: 16,
     fontWeight: '500',
   },
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   otherSeekingContainer: {
-    backgroundColor: colors.selected.background,
+    backgroundColor: colors.accent,
     borderRadius: 8,
     padding: spacing.sm,
   },

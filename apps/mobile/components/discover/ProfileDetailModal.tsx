@@ -70,7 +70,7 @@ export function ProfileDetailModal({
       <SafeAreaView style={styles.container}>
         {/* Close button */}
         <Pressable onPress={onClose} style={styles.closeButton}>
-          <Ionicons color={colors.text.primary} name="close" size={28} />
+          <Ionicons color={colors.foreground} name="close" size={28} />
         </Pressable>
 
         {/* Photo carousel */}
@@ -122,7 +122,7 @@ export function ProfileDetailModal({
           {genderText && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={colors.mutedForeground}
                 name="person-outline"
                 size={20}
               />
@@ -135,7 +135,7 @@ export function ProfileDetailModal({
           {lookingForText && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={colors.mutedForeground}
                 name="heart-outline"
                 size={20}
               />
@@ -148,7 +148,7 @@ export function ProfileDetailModal({
           {profile.location && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={colors.mutedForeground}
                 name="location-outline"
                 size={20}
               />
@@ -166,14 +166,14 @@ export function ProfileDetailModal({
             onPress={onPass}
             style={[styles.actionButton, styles.passButton]}
           >
-            <Ionicons color={colors.error} name="close" size={36} />
+            <Ionicons color={colors.destructive} name="close" size={36} />
           </Pressable>
           <Pressable
             accessibilityLabel="Like"
             onPress={onLike}
             style={[styles.actionButton, styles.likeButton]}
           >
-            <Ionicons color={colors.success} name="heart" size={36} />
+            <Ionicons color={colors.chart2} name="heart" size={36} />
           </Pressable>
         </View>
       </SafeAreaView>
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: colors.background.card,
+    backgroundColor: colors.card,
     borderRadius: 20,
     elevation: 2,
     height: 40,
@@ -236,11 +236,11 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   infoText: {
-    color: colors.text.secondary,
+    color: colors.mutedForeground,
     flex: 1,
   },
   likeButton: {
-    borderColor: colors.success,
+    borderColor: colors.chart2,
     borderWidth: 2,
   },
   name: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   passButton: {
-    borderColor: colors.error,
+    borderColor: colors.destructive,
     borderWidth: 2,
   },
   photo: {
@@ -278,6 +278,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   placeholderPhoto: {
-    backgroundColor: colors.border.light,
+    backgroundColor: colors.border,
   },
 });

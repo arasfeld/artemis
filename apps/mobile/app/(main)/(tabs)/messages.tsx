@@ -42,7 +42,7 @@ export default function MessagesScreen() {
       <ScreenContainer withGradient={false}>
         <View style={styles.emptyContainer}>
           <Ionicons
-            color={colors.text.muted}
+            color={colors.mutedForeground}
             name="chatbubbles-outline"
             size={64}
           />
