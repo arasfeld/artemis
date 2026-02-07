@@ -103,7 +103,7 @@ export default function EditNameScreen() {
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     content: {
@@ -137,6 +137,7 @@ function createStyles(theme: Theme) {
       color: theme.colors.mutedForeground,
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

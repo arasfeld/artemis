@@ -1,25 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Checkbox,
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemTitle,
-  Text,
-  useTheme,
-  type Theme,
-} from '@artemis/ui';
+import { Checkbox, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { useGetRelationshipTypesQuery } from '@/store/api/apiSlice';
 import type { RelationshipTypeData } from '@/types/api';
@@ -37,14 +20,14 @@ export default function EditRelationshipScreen() {
 
   const canSubmit = relationshipTypes.length > 0;
   const hasChanges =
-    JSON.stringify(relationshipTypes.sort()) !==
-    JSON.stringify((data.relationshipTypes || []).sort());
+    JSON.stringify([...relationshipTypes].sort()) !==
+    JSON.stringify([...(data.relationshipTypes || [])].sort());
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!canSubmit) return;
     await updateData({ relationshipTypes });
     router.back();
-  };
+  }, [canSubmit, relationshipTypes, router, updateData]);
 
   const handleCancel = () => {
     router.back();
@@ -58,6 +41,41 @@ export default function EditRelationshipScreen() {
       return [...prev, id];
     });
   }, []);
+
+  const isSelected = useCallback(
+    (id: string) => relationshipTypes.includes(id),
+    [relationshipTypes]
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: RelationshipTypeData }) => {
+      const selected = isSelected(item.id);
+
+      return (
+        <TouchableOpacity
+          style={[styles.item, selected && styles.itemSelected]}
+          onPress={() => handleToggle(item.id)}
+          activeOpacity={0.7}
+        >
+          <View style={styles.itemContent}>
+            <Text
+              style={[styles.itemLabel, selected && styles.itemLabelSelected]}
+            >
+              {item.name}
+            </Text>
+            {item.description ? (
+              <Text style={styles.itemDescription}>{item.description}</Text>
+            ) : null}
+          </View>
+          <Checkbox
+            checked={selected}
+            onCheckedChange={() => handleToggle(item.id)}
+          />
+        </TouchableOpacity>
+      );
+    },
+    [handleToggle, isSelected, styles]
+  );
 
   if (isLoading) {
     return (
@@ -100,40 +118,19 @@ export default function EditRelationshipScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        style={styles.content}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.subtitle}>
+      <View style={styles.subtitle}>
+        <Text style={styles.subtitleText}>
           What type of relationship are you looking for?
         </Text>
+      </View>
 
-        <ItemGroup style={styles.optionList}>
-          {options.map((option: RelationshipTypeData) => {
-            const selected = relationshipTypes.includes(option.id);
-
-            return (
-              <Item asChild key={option.id} variant="outline">
-                <Pressable onPress={() => handleToggle(option.id)}>
-                  <ItemContent>
-                    <ItemTitle>{option.name}</ItemTitle>
-                    {option.description ? (
-                      <ItemDescription>{option.description}</ItemDescription>
-                    ) : null}
-                  </ItemContent>
-                  <ItemActions>
-                    <Checkbox
-                      checked={selected}
-                      onCheckedChange={() => handleToggle(option.id)}
-                    />
-                  </ItemActions>
-                </Pressable>
-              </Item>
-            );
-          })}
-        </ItemGroup>
-      </ScrollView>
+      <FlatList
+        data={options}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 }
@@ -141,16 +138,8 @@ export default function EditRelationshipScreen() {
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
-    },
-    content: {
-      flex: 1,
-    },
-    contentContainer: {
-      paddingBottom: theme.spacing.xl,
-      paddingHorizontal: theme.spacing.lg,
-      paddingTop: theme.spacing.lg,
     },
     header: {
       alignItems: 'center',
@@ -168,6 +157,38 @@ function createStyles(theme: Theme) {
     headerButtonDisabled: {
       opacity: 0.5,
     },
+    item: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    itemContent: {
+      flex: 1,
+      marginRight: theme.spacing.md,
+    },
+    itemDescription: {
+      color: theme.colors.mutedForeground,
+      fontSize: 13,
+      marginTop: 2,
+    },
+    itemLabel: {
+      color: theme.colors.foreground,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    itemLabelSelected: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    itemSelected: {
+      backgroundColor: theme.colors.accent,
+    },
+    listContent: {
+      paddingBottom: theme.spacing.xl,
+    },
     loadingContainer: {
       alignItems: 'center',
       flex: 1,
@@ -176,10 +197,6 @@ function createStyles(theme: Theme) {
     loadingText: {
       color: theme.colors.mutedForeground,
       fontSize: 16,
-    },
-    optionList: {
-      gap: theme.spacing.sm,
-      marginTop: theme.spacing.lg,
     },
     saveText: {
       color: theme.colors.primary,
@@ -191,11 +208,16 @@ function createStyles(theme: Theme) {
       color: theme.colors.mutedForeground,
     },
     subtitle: {
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.sm,
+    },
+    subtitleText: {
       color: theme.colors.mutedForeground,
-      fontSize: 16,
+      fontSize: 14,
       textAlign: 'center',
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

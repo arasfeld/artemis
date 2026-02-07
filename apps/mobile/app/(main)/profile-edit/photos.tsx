@@ -142,13 +142,21 @@ export default function EditPhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons color={theme.colors.destructive} name="close-circle" size={24} />
+                <Ionicons
+                  color={theme.colors.destructive}
+                  name="close-circle"
+                  size={24}
+                />
               </TouchableOpacity>
             )}
           </View>
         ) : (
           <View style={styles.emptySlot}>
-            <Ionicons color={theme.colors.mutedForeground} name="add" size={32} />
+            <Ionicons
+              color={theme.colors.mutedForeground}
+              name="add"
+              size={32}
+            />
             {isMainPhoto && <Text style={styles.mainLabel}>Main photo</Text>}
           </View>
         )}
@@ -288,6 +296,7 @@ function createStyles(theme: Theme) {
       textAlign: 'center',
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

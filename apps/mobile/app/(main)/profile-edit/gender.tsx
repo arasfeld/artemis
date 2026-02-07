@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, useTheme, type Theme } from '@artemis/ui';
+import { Checkbox, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { useGetGendersQuery } from '@/store/api/apiSlice';
 import type { GenderData } from '@/types/api';
@@ -89,21 +89,15 @@ export default function EditGenderScreen() {
               </Text>
             )}
           </View>
-          <View
-            style={[
-              styles.checkbox,
-              selected && styles.checkboxSelected,
-              disabled && styles.checkboxDisabled,
-            ]}
-          >
-            {selected && (
-              <Ionicons color={theme.colors.white} name="checkmark" size={16} />
-            )}
-          </View>
+          <Checkbox
+            checked={selected}
+            disabled={disabled}
+            onCheckedChange={() => handleSelect(item)}
+          />
         </TouchableOpacity>
       );
     },
-    [atMaxGenders, handleSelect, isSelected]
+    [atMaxGenders, handleSelect, isSelected, styles]
   );
 
   if (isLoading) {
@@ -166,24 +160,8 @@ export default function EditGenderScreen() {
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
-    checkbox: {
-      alignItems: 'center',
-      borderColor: theme.colors.ring,
-      borderRadius: 4,
-      borderWidth: 2,
-      height: 24,
-      justifyContent: 'center',
-      width: 24,
-    },
-    checkboxDisabled: {
-      borderColor: theme.colors.border,
-    },
-    checkboxSelected: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
-    },
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     header: {
@@ -241,7 +219,6 @@ function createStyles(theme: Theme) {
       backgroundColor: theme.colors.accent,
     },
     limitNotice: {
-      backgroundColor: theme.colors.accent,
       paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.sm,
     },
@@ -272,6 +249,7 @@ function createStyles(theme: Theme) {
       color: theme.colors.mutedForeground,
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

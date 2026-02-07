@@ -52,7 +52,6 @@ export {
 } from './components/Item';
 export { Input } from './components/Input';
 export { Label } from './components/Label';
-export { OptionCard } from './components/OptionCard';
 export { ProgressIndicator } from './components/ProgressIndicator';
 export {
   RadioGroup,

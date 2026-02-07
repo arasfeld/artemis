@@ -146,7 +146,7 @@ function createStyles(theme: Theme) {
       textAlign: 'center',
     },
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     content: {
@@ -213,6 +213,7 @@ function createStyles(theme: Theme) {
       textAlign: 'center',
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

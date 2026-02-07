@@ -209,7 +209,7 @@ export default function EditLocationScreen() {
 function createStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     content: {
@@ -285,6 +285,7 @@ function createStyles(theme: Theme) {
       marginTop: theme.spacing.sm,
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

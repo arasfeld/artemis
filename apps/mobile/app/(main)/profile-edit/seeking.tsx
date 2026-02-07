@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, useTheme, type Theme } from '@artemis/ui';
+import { Checkbox, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { pluralizeGender } from '@/lib/pluralize';
 import { useGetGendersQuery } from '@/store/api/apiSlice';
@@ -68,15 +68,14 @@ export default function EditSeekingScreen() {
               <Text style={styles.itemDescription}>{item.description}</Text>
             )}
           </View>
-          <View style={[styles.checkbox, selected && styles.checkboxSelected]}>
-            {selected && (
-              <Ionicons color={theme.colors.white} name="checkmark" size={16} />
-            )}
-          </View>
+          <Checkbox
+            checked={selected}
+            onCheckedChange={() => handleSelect(item)}
+          />
         </TouchableOpacity>
       );
     },
-    [handleSelect, isSelected]
+    [handleSelect, isSelected, styles]
   );
 
   if (isLoading) {
@@ -139,21 +138,8 @@ export default function EditSeekingScreen() {
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
-    checkbox: {
-      alignItems: 'center',
-      borderColor: theme.colors.ring,
-      borderRadius: 4,
-      borderWidth: 2,
-      height: 24,
-      justifyContent: 'center',
-      width: 24,
-    },
-    checkboxSelected: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
-    },
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     header: {
@@ -223,7 +209,6 @@ function createStyles(theme: Theme) {
       color: theme.colors.mutedForeground,
     },
     subtitle: {
-      backgroundColor: theme.colors.accent,
       paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.sm,
     },
@@ -233,6 +218,7 @@ function createStyles(theme: Theme) {
       textAlign: 'center',
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },

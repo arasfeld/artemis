@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, useTheme, type Theme } from '@artemis/ui';
+import { Checkbox, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { pluralizeGender } from '@/lib/pluralize';
 import { useGetGendersQuery } from '@/store/api/apiSlice';
@@ -107,21 +107,15 @@ export default function GenderSelectScreen() {
               </Text>
             )}
           </View>
-          <View
-            style={[
-              styles.checkbox,
-              selected && styles.checkboxSelected,
-              disabled && styles.checkboxDisabled,
-            ]}
-          >
-            {selected && (
-              <Ionicons name="checkmark" size={16} color={theme.colors.white} />
-            )}
-          </View>
+          <Checkbox
+            checked={selected}
+            disabled={disabled}
+            onCheckedChange={() => handleSelect(item)}
+          />
         </TouchableOpacity>
       );
     },
-    [atMaxGenders, handleSelect, isSelected, mode]
+    [atMaxGenders, handleSelect, isSelected, mode, styles]
   );
 
   if (isLoading) {
@@ -183,28 +177,12 @@ export default function GenderSelectScreen() {
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
-    checkbox: {
-      alignItems: 'center',
-      borderColor: theme.colors.ring,
-      borderRadius: 4,
-      borderWidth: 2,
-      height: 24,
-      justifyContent: 'center',
-      width: 24,
-    },
-    checkboxDisabled: {
-      borderColor: theme.colors.border,
-    },
-    checkboxSelected: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
-    },
     closeButton: {
       minWidth: 40,
       padding: theme.spacing.xs,
     },
     container: {
-      backgroundColor: theme.colors.white,
+      backgroundColor: theme.colors.background,
       flex: 1,
     },
     doneButton: {
@@ -270,7 +248,6 @@ function createStyles(theme: Theme) {
       backgroundColor: theme.colors.accent,
     },
     limitNotice: {
-      backgroundColor: theme.colors.accent,
       paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.sm,
     },
@@ -292,6 +269,7 @@ function createStyles(theme: Theme) {
       fontSize: 16,
     },
     title: {
+      color: theme.colors.foreground,
       fontSize: 18,
       fontWeight: '600',
     },
