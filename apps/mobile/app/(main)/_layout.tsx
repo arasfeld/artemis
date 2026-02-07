@@ -9,9 +9,9 @@ export default function MainLayout() {
   useEffect(() => {
     if (isLoading) return;
 
-    // Redirect unauthenticated users to welcome
+    // Redirect unauthenticated users to sign-in
     if (!isAuthenticated) {
-      router.replace('/(auth)/welcome');
+      router.replace('/sign-in');
     }
   }, [isAuthenticated, isLoading, router]);
 

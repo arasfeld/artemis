@@ -2,6 +2,10 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 import { colors } from '@artemis/ui';
 import { store } from '@/store';
 import { useAppAuth } from '@/hooks/useAppAuth';
@@ -31,7 +35,7 @@ function RootLayoutNav() {
       }}
     >
       <Stack.Screen name="index" options={{ animation: 'none' }} />
-      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="sign-in" />
       <Stack.Screen name="(main)" />
     </Stack>
   );
@@ -39,8 +43,10 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <RootLayoutNav />
-    </Provider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <Provider store={store}>
+        <RootLayoutNav />
+      </Provider>
+    </SafeAreaProvider>
   );
 }

@@ -5,7 +5,7 @@ import { useAppAuth } from './useAppAuth';
 import type { OnboardingData } from '@/types/onboarding';
 
 export type OnboardingRoute =
-  | '/(auth)/welcome'
+  | '/sign-in'
   | '/(main)/onboarding/first-name'
   | '/(main)/onboarding/location'
   | '/(main)/onboarding/manual-location'
@@ -16,7 +16,7 @@ export type OnboardingRoute =
   | '/(main)/onboarding/photos';
 
 export type FlowDestination =
-  | '/(auth)/welcome'
+  | '/sign-in'
   | '/(main)/onboarding/first-name'
   | '/(main)/onboarding/location'
   | '/(main)/onboarding/gender'
@@ -31,7 +31,7 @@ export type FlowDestination =
  * Used for safe back navigation when there's no navigation history.
  */
 const PREVIOUS_ROUTE_MAP: Record<OnboardingRoute, OnboardingRoute | null> = {
-  '/(auth)/welcome': null,
+  '/sign-in': null,
   '/(main)/onboarding/first-name': null, // No back from first onboarding step (user is authenticated)
   '/(main)/onboarding/location': '/(main)/onboarding/first-name',
   '/(main)/onboarding/manual-location': '/(main)/onboarding/location',
@@ -139,7 +139,7 @@ export function useOnboardingFlow(): OnboardingFlowResult {
   // Determine the destination based on current state
   const destination = useMemo((): FlowDestination => {
     if (!isAuthenticated) {
-      return '/(auth)/welcome';
+      return '/sign-in';
     }
 
     if (
