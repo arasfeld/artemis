@@ -14,6 +14,7 @@ export {
 
 // Components
 export { BackButton } from './components/BackButton';
+export { Input } from './components/Input';
 export {
   Button,
   type ButtonProps,
