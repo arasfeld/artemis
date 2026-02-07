@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -126,9 +126,7 @@ export default function GenderScreen() {
           </Text>
           <RadioGroup
             onValueChange={handlePrimaryGenderSelect}
-            value={
-              data.genderIds.length === 1 ? data.genderIds[0] : undefined
-            }
+            value={data.genderIds.length === 1 ? data.genderIds[0] : undefined}
           >
             <ItemGroup>
               {primaryGenders.map((gender) => (
@@ -153,9 +151,7 @@ export default function GenderScreen() {
                   <Pressable onPress={handleViewMoreGender}>
                     <ItemContent>
                       <ItemTitle>
-                        <Text style={styles.summaryLabel}>
-                          {genderLabels}
-                        </Text>
+                        <Text style={styles.summaryLabel}>{genderLabels}</Text>
                       </ItemTitle>
                     </ItemContent>
                     <ItemActions>
@@ -171,17 +167,10 @@ export default function GenderScreen() {
             </ItemGroup>
           </RadioGroup>
 
-          <TouchableOpacity
-            style={styles.viewMoreButton}
-            onPress={handleViewMoreGender}
-          >
+          <Button onPress={handleViewMoreGender} variant="link">
             <Text style={styles.viewMoreText}>View more options</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color={theme.colors.white}
-            />
-          </TouchableOpacity>
+            <Ionicons name="chevron-forward" size={18} />
+          </Button>
         </View>
 
         {/* Seeking Selection */}
@@ -195,20 +184,14 @@ export default function GenderScreen() {
 
               return (
                 <Item asChild key={gender.id} variant="outline">
-                  <Pressable
-                    onPress={() => handleSeekingToggle(gender.id)}
-                  >
+                  <Pressable onPress={() => handleSeekingToggle(gender.id)}>
                     <ItemContent>
-                      <ItemTitle>
-                        {pluralizeGender(gender.name)}
-                      </ItemTitle>
+                      <ItemTitle>{pluralizeGender(gender.name)}</ItemTitle>
                     </ItemContent>
                     <ItemActions>
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={() =>
-                          handleSeekingToggle(gender.id)
-                        }
+                        onCheckedChange={() => handleSeekingToggle(gender.id)}
                       />
                     </ItemActions>
                   </Pressable>
@@ -224,9 +207,7 @@ export default function GenderScreen() {
                 <Pressable onPress={handleViewMoreSeeking}>
                   <ItemContent>
                     <ItemTitle>
-                      <Text style={styles.summaryLabel}>
-                        {seekingLabels}
-                      </Text>
+                      <Text style={styles.summaryLabel}>{seekingLabels}</Text>
                     </ItemTitle>
                   </ItemContent>
                   <ItemActions>
@@ -241,17 +222,10 @@ export default function GenderScreen() {
             )}
           </ItemGroup>
 
-          <TouchableOpacity
-            style={styles.viewMoreButton}
-            onPress={handleViewMoreSeeking}
-          >
+          <Button onPress={handleViewMoreSeeking} variant="link">
             <Text style={styles.viewMoreText}>View more options</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color={theme.colors.white}
-            />
-          </TouchableOpacity>
+            <Ionicons name="chevron-forward" size={18} />
+          </Button>
         </View>
       </ScrollView>
 
@@ -294,16 +268,7 @@ function createStyles(theme: Theme) {
       fontSize: 16,
       fontWeight: '600',
     },
-    viewMoreButton: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      paddingVertical: theme.spacing.sm,
-    },
     viewMoreText: {
-      color: theme.colors.white,
-      fontSize: 15,
-      fontWeight: '500',
       marginRight: theme.spacing.xs,
     },
   });

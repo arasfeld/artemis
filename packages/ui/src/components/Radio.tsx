@@ -10,8 +10,13 @@ import {
 import type { Theme } from '../theme/ThemeContext';
 import { useTheme } from '../theme/ThemeContext';
 
-const RADIO_SIZE = 16;
-const RADIO_INNER_SIZE = 8;
+export type RadioSize = 'sm' | 'md' | 'lg';
+
+const RADIO_SIZES: Record<RadioSize, { outer: number; inner: number }> = {
+  sm: { outer: 16, inner: 8 },
+  md: { outer: 20, inner: 10 },
+  lg: { outer: 24, inner: 12 },
+};
 
 interface RadioGroupContextValue {
   disabled?: boolean;
@@ -90,19 +95,24 @@ function createGroupStyles(theme: Theme) {
 
 export interface RadioGroupItemProps extends ViewProps {
   disabled?: boolean;
+  size?: RadioSize;
   style?: ViewStyle;
   value: string;
 }
 
 export function RadioGroupItem({
   disabled: itemDisabled = false,
+  size = 'md',
   style,
   value,
   ...props
 }: RadioGroupItemProps) {
   const group = useRadioGroup();
   const { theme } = useTheme();
-  const styles = useMemo(() => createItemStyles(theme), [theme]);
+  const styles = useMemo(
+    () => createItemStyles(theme, RADIO_SIZES[size]),
+    [theme, size]
+  );
 
   if (!group) {
     throw new Error('RadioGroupItem must be used within a RadioGroup');
@@ -137,17 +147,21 @@ export function RadioGroupItem({
   );
 }
 
-function createItemStyles(theme: Theme) {
+function createItemStyles(
+  theme: Theme,
+  dimensions: { outer: number; inner: number }
+) {
   const { colors } = theme;
+  const { outer, inner } = dimensions;
   return StyleSheet.create({
     disabled: {
       opacity: 0.5,
     },
     indicator: {
       backgroundColor: colors.primary,
-      borderRadius: RADIO_INNER_SIZE / 2,
-      height: RADIO_INNER_SIZE,
-      width: RADIO_INNER_SIZE,
+      borderRadius: inner / 2,
+      height: inner,
+      width: inner,
     },
     pressed: {
       opacity: 0.9,
@@ -155,13 +169,13 @@ function createItemStyles(theme: Theme) {
     root: {
       alignItems: 'center',
       aspectRatio: 1,
-      backgroundColor: colors.input,
-      borderColor: colors.input,
-      borderRadius: RADIO_SIZE / 2,
-      borderWidth: 1,
-      height: RADIO_SIZE,
+      backgroundColor: 'transparent',
+      borderColor: colors.ring,
+      borderRadius: outer / 2,
+      borderWidth: 2,
+      height: outer,
       justifyContent: 'center',
-      width: RADIO_SIZE,
+      width: outer,
     },
     selected: {
       borderColor: colors.primary,

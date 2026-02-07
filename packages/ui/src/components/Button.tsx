@@ -44,10 +44,9 @@ export interface ButtonProps {
   variant?: ButtonVariant;
 }
 
-function buildSizeStyles(theme: Theme): Record<
-  ButtonSize,
-  { container: ViewStyle; text: TextStyle; gap: number }
-> {
+function buildSizeStyles(
+  theme: Theme
+): Record<ButtonSize, { container: ViewStyle; text: TextStyle; gap: number }> {
   const { typography } = theme;
   return {
     default: {

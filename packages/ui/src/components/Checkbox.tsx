@@ -6,14 +6,20 @@ import { Ionicons } from '@expo/vector-icons';
 import type { Theme } from '../theme/ThemeContext';
 import { useTheme } from '../theme/ThemeContext';
 
-const CHECKBOX_SIZE = 16;
-const CHECK_ICON_SIZE = 14;
+export type CheckboxSize = 'sm' | 'md' | 'lg';
+
+const CHECKBOX_SIZES: Record<CheckboxSize, { box: number; icon: number }> = {
+  sm: { box: 16, icon: 14 },
+  md: { box: 20, icon: 18 },
+  lg: { box: 24, icon: 22 },
+};
 
 export interface CheckboxProps {
   checked?: boolean;
   defaultChecked?: boolean;
   disabled?: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  size?: CheckboxSize;
   style?: ViewStyle;
   /** When true, shows invalid/destructive border and ring styling */
   invalid?: boolean;
@@ -25,6 +31,7 @@ export function Checkbox({
   disabled = false,
   invalid = false,
   onCheckedChange,
+  size = 'md',
   style,
 }: CheckboxProps) {
   const [uncontrolledChecked, setUncontrolledChecked] =
@@ -33,7 +40,11 @@ export function Checkbox({
   const checked = isControlled ? controlledChecked : uncontrolledChecked;
 
   const { theme } = useTheme();
-  const styles = useMemo(() => createStyles(theme), [theme]);
+  const dimensions = CHECKBOX_SIZES[size];
+  const styles = useMemo(
+    () => createStyles(theme, CHECKBOX_SIZES[size]),
+    [theme, size]
+  );
 
   const handlePress = () => {
     if (disabled) return;
@@ -62,15 +73,16 @@ export function Checkbox({
         <Ionicons
           color={theme.colors.primaryForeground}
           name="checkmark"
-          size={CHECK_ICON_SIZE}
+          size={dimensions.icon}
         />
       ) : null}
     </Pressable>
   );
 }
 
-function createStyles(theme: Theme) {
+function createStyles(theme: Theme, dimensions: { box: number; icon: number }) {
   const { colors } = theme;
+  const { box } = dimensions;
   return StyleSheet.create({
     root: {
       alignItems: 'center',
@@ -78,9 +90,9 @@ function createStyles(theme: Theme) {
       borderColor: colors.input,
       borderRadius: 4,
       borderWidth: 1,
-      height: CHECKBOX_SIZE,
+      height: box,
       justifyContent: 'center',
-      width: CHECKBOX_SIZE,
+      width: box,
     },
     checked: {
       backgroundColor: colors.primary,

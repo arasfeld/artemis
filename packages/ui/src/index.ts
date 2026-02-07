@@ -20,7 +20,11 @@ export {
   type ButtonSize,
   type ButtonVariant,
 } from './components/Button';
-export { Checkbox, type CheckboxProps } from './components/Checkbox';
+export {
+  Checkbox,
+  type CheckboxProps,
+  type CheckboxSize,
+} from './components/Checkbox';
 export {
   Field,
   FieldContent,
@@ -56,8 +60,9 @@ export { ProgressIndicator } from './components/ProgressIndicator';
 export {
   RadioGroup,
   RadioGroupItem,
-  type RadioGroupProps,
   type RadioGroupItemProps,
+  type RadioGroupProps,
+  type RadioSize,
 } from './components/Radio';
 export { ScreenContainer } from './components/ScreenContainer';
 export { Select, type SelectOption } from './components/Select';
