@@ -1,5 +1,4 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
 import { useAppAuth } from '@/hooks/useAppAuth';
 
@@ -16,31 +15,24 @@ export default function SignInScreen() {
   }, [clearError, error]);
 
   return (
-    <LinearGradient colors={['#83b59c', '#4f685b']} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Artemis</Text>
-        <Text style={styles.subtitle}>Dating for Animal Lovers</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Artemis</Text>
+      <Text style={styles.subtitle}>Dating for Animal Lovers</Text>
 
-        <TouchableOpacity
-          style={[styles.button, isLoading && styles.buttonDisabled]}
-          onPress={signInWithGoogle}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>
-            {isLoading ? 'Signing in...' : 'Sign in with Google'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+      <TouchableOpacity
+        style={[styles.button, isLoading && styles.buttonDisabled]}
+        onPress={signInWithGoogle}
+        disabled={isLoading}
+      >
+        <Text style={styles.buttonText}>
+          {isLoading ? 'Signing in...' : 'Sign in with Google'}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
   button: {
     backgroundColor: 'white',
     borderRadius: 25,
@@ -62,6 +54,8 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
   },
   subtitle: {

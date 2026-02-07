@@ -1,5 +1,4 @@
 import { StyleSheet, Text, ActivityIndicator, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
@@ -18,23 +17,18 @@ export default function Index() {
   }, [isLoading, navigate, destination]);
 
   return (
-    <LinearGradient colors={['#83b59c', '#4f685b']} style={styles.background}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Artemis</Text>
-        <ActivityIndicator size="large" color="white" style={styles.spinner} />
-      </View>
-    </LinearGradient>
+    <View style={styles.container}>
+      <Text style={styles.title}>Artemis</Text>
+      <ActivityIndicator size="large" color="white" style={styles.spinner} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 48,

@@ -219,7 +219,7 @@ export default function DiscoverScreen() {
   // Loading state
   if (isLoading) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.centerContainer}>
           <Text color="dark" variant="subtitle">
             Finding people near you...
@@ -232,7 +232,7 @@ export default function DiscoverScreen() {
   // Empty state
   if (!currentProfile) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.centerContainer}>
           <Ionicons
             color={colors.mutedForeground}
@@ -256,7 +256,7 @@ export default function DiscoverScreen() {
   }
 
   return (
-    <ScreenContainer withGradient={false}>
+    <ScreenContainer>
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           {/* Next card (behind current) */}

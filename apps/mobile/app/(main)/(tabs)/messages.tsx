@@ -39,7 +39,7 @@ export default function MessagesScreen() {
   // Empty state
   if (!isLoading && conversations.length === 0) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.emptyContainer}>
           <Ionicons
             color={colors.mutedForeground}
@@ -58,7 +58,7 @@ export default function MessagesScreen() {
   }
 
   return (
-    <ScreenContainer withGradient={false}>
+    <ScreenContainer>
       <View style={styles.header}>
         <Text color="dark" variant="title">
           Messages

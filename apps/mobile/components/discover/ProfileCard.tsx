@@ -30,7 +30,7 @@ export const ProfileCard = memo(function ProfileCard({
         <View style={[styles.image, styles.placeholderImage]} />
       )}
       <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.8)']}
+        colors={['transparent', colors.overlay]}
         style={styles.gradient}
       />
       <View style={styles.infoContainer}>
