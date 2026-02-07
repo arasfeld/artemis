@@ -36,7 +36,6 @@ export const lightColors = {
 
   // RN-specific (modal backdrop, divider on dark)
   overlay: 'rgba(0, 0, 0, 0.5)',
-  ringOnDark: 'rgba(255, 255, 255, 0.3)',
 } as const;
 
 export const darkColors: Colors = {
@@ -77,7 +76,6 @@ export const darkColors: Colors = {
 
   // RN-specific
   overlay: 'rgba(0, 0, 0, 0.7)',
-  ringOnDark: 'rgba(255, 255, 255, 0.2)',
 } as const;
 
 export type Colors = { [K in keyof typeof lightColors]: string };

@@ -10,7 +10,16 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Select, Text, TextInput, useTheme, type Theme } from '@artemis/ui';
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
+  Select,
+  Text,
+  useTheme,
+  type Theme,
+} from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { getCurrentLocation } from '@/lib/location';
 
@@ -174,16 +183,18 @@ export default function EditLocationScreen() {
           />
         </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            label="ZIP / Postal Code"
-            value={zipCode}
-            onChangeText={setZipCode}
-            placeholder="Enter your postal code"
-            keyboardType="default"
-            autoCapitalize="characters"
-          />
-        </View>
+        <Field style={styles.inputContainer}>
+          <FieldLabel>ZIP / Postal Code</FieldLabel>
+          <FieldContent>
+            <Input
+              autoCapitalize="characters"
+              keyboardType="default"
+              placeholder="Enter your postal code"
+              value={zipCode}
+              onChangeText={setZipCode}
+            />
+          </FieldContent>
+        </Field>
 
         {data.location?.type === 'automatic' && (
           <Text style={styles.currentLocation}>

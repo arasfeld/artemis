@@ -3,10 +3,14 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+  Input,
   ProgressIndicator,
   ScreenContainer,
   Text,
-  TextInput,
   useTheme,
   type Theme,
 } from '@artemis/ui';
@@ -48,17 +52,23 @@ export default function FirstNameScreen() {
             This is how you&apos;ll appear on Artemis
           </Text>
 
-          <TextInput
-            value={firstName}
-            onChangeText={(text) => {
-              setFirstName(text);
-              setError('');
-            }}
-            placeholder="First name"
-            autoCapitalize="words"
-            autoFocus
-            error={error}
-          />
+          <Field invalid={!!error}>
+            <FieldLabel>First name</FieldLabel>
+            <FieldContent>
+              <Input
+                autoCapitalize="words"
+                autoFocus
+                invalid={!!error}
+                placeholder="First name"
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  setError('');
+                }}
+              />
+              {error && <FieldError>{error}</FieldError>}
+            </FieldContent>
+          </Field>
         </View>
 
         <View style={styles.footer}>

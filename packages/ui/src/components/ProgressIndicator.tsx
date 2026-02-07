@@ -40,13 +40,13 @@ function createStyles(theme: Theme) {
       marginBottom: theme.spacing.xl,
     },
     dot: {
-      backgroundColor: theme.colors.ringOnDark,
+      backgroundColor: theme.colors.muted,
       borderRadius: 4,
       height: 8,
       width: 8,
     },
     dotActive: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.primary,
     },
   });
 }

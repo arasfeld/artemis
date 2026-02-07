@@ -8,10 +8,13 @@ import {
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
   ProgressIndicator,
   ScreenContainer,
   Text,
-  TextInput,
   useTheme,
   type Theme,
 } from '@artemis/ui';
@@ -97,35 +100,39 @@ export default function AgeRangeScreen() {
           </View>
 
           <View style={styles.inputsContainer}>
-            <View style={styles.inputWrapper}>
-              <Text variant="label">Minimum age</Text>
-              <TextInput
-                value={minAge}
-                onChangeText={handleMinChange}
-                keyboardType="number-pad"
-                placeholder={`${MIN_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="next"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel>Minimum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MIN_AGE}`}
+                  returnKeyType="next"
+                  showSoftInputOnFocus={true}
+                  style={styles.ageInput}
+                  value={minAge}
+                  onChangeText={handleMinChange}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputWrapper}>
-              <Text variant="label">Maximum age</Text>
-              <TextInput
-                value={maxAge}
-                onChangeText={handleMaxChange}
-                keyboardType="number-pad"
-                placeholder={`${MAX_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel>Maximum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MAX_AGE}`}
+                  returnKeyType="done"
+                  showSoftInputOnFocus={true}
+                  style={styles.ageInput}
+                  value={maxAge}
+                  onChangeText={handleMaxChange}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+              </FieldContent>
+            </Field>
           </View>
         </View>
       </TouchableWithoutFeedback>

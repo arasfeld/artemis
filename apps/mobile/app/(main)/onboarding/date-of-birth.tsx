@@ -8,10 +8,12 @@ import {
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  Input,
   ProgressIndicator,
   ScreenContainer,
   Text,
-  TextInput,
   useTheme,
   type Theme,
 } from '@artemis/ui';
@@ -107,60 +109,66 @@ export default function DateOfBirthScreen() {
           </Text>
 
           <View style={styles.dateInputsContainer}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={month}
-                onChangeText={setMonth}
-                placeholder="MM"
-                keyboardType="number-pad"
-                maxLength={2}
-                style={styles.dateInput}
-                returnKeyType="next"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-              <Text variant="muted" style={styles.inputLabel}>
-                Month
-              </Text>
-            </View>
+            <Field style={styles.inputContainer}>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder="MM"
+                  returnKeyType="next"
+                  showSoftInputOnFocus={true}
+                  style={styles.dateInput}
+                  value={month}
+                  onChangeText={setMonth}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+                <Text variant="muted" style={styles.inputLabel}>
+                  Month
+                </Text>
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={day}
-                onChangeText={setDay}
-                placeholder="DD"
-                keyboardType="number-pad"
-                maxLength={2}
-                style={styles.dateInput}
-                returnKeyType="next"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-              <Text variant="muted" style={styles.inputLabel}>
-                Day
-              </Text>
-            </View>
+            <Field style={styles.inputContainer}>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder="DD"
+                  returnKeyType="next"
+                  showSoftInputOnFocus={true}
+                  style={styles.dateInput}
+                  value={day}
+                  onChangeText={setDay}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+                <Text variant="muted" style={styles.inputLabel}>
+                  Day
+                </Text>
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={year}
-                onChangeText={setYear}
-                placeholder="YYYY"
-                keyboardType="number-pad"
-                maxLength={4}
-                style={styles.dateInput}
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-              <Text variant="muted" style={styles.inputLabel}>
-                Year
-              </Text>
-            </View>
+            <Field style={styles.inputContainerYear}>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  placeholder="YYYY"
+                  returnKeyType="done"
+                  showSoftInputOnFocus={true}
+                  style={styles.dateInput}
+                  value={year}
+                  onChangeText={setYear}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+                <Text variant="muted" style={styles.inputLabel}>
+                  Year
+                </Text>
+              </FieldContent>
+            </Field>
           </View>
 
           {age !== null && (
-            <Text variant="body" center style={styles.ageText}>
+            <Text variant="muted" center>
               You are {age} years old
             </Text>
           )}
@@ -189,22 +197,18 @@ export default function DateOfBirthScreen() {
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
-    ageText: {
-      marginTop: theme.spacing.lg,
-    },
     content: {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: theme.spacing.md,
     },
     dateInput: {
-      fontSize: 18,
       fontWeight: '600',
       textAlign: 'center',
     },
     dateInputsContainer: {
       flexDirection: 'row',
-      gap: theme.spacing.sm,
+      gap: theme.spacing.md,
       justifyContent: 'space-between',
       marginTop: theme.spacing.xl,
     },
@@ -216,8 +220,14 @@ function createStyles(theme: Theme) {
       paddingBottom: theme.spacing.xl,
     },
     inputContainer: {
-      alignItems: 'center',
+      alignItems: 'stretch',
       flex: 1,
+      minWidth: 0,
+    },
+    inputContainerYear: {
+      alignItems: 'stretch',
+      flex: 1.4,
+      minWidth: 0,
     },
     inputLabel: {
       fontSize: 12,

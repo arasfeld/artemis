@@ -8,7 +8,17 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, TextInput, useTheme, type Theme } from '@artemis/ui';
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  Input,
+  Text,
+  useTheme,
+  type Theme,
+} from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 export default function EditNameScreen() {
@@ -65,21 +75,26 @@ export default function EditNameScreen() {
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Text style={styles.label}>First Name</Text>
-        <TextInput
-          value={firstName}
-          onChangeText={(text) => {
-            setFirstName(text);
-            setError('');
-          }}
-          placeholder="First name"
-          autoCapitalize="words"
-          autoFocus
-          error={error}
-        />
-        <Text style={styles.hint}>
-          This is how you&apos;ll appear on Artemis
-        </Text>
+        <Field invalid={!!error}>
+          <FieldLabel>First Name</FieldLabel>
+          <FieldContent>
+            <Input
+              autoCapitalize="words"
+              autoFocus
+              invalid={!!error}
+              placeholder="First name"
+              value={firstName}
+              onChangeText={(text) => {
+                setFirstName(text);
+                setError('');
+              }}
+            />
+            <FieldDescription>
+              This is how you&apos;ll appear on Artemis
+            </FieldDescription>
+            {error && <FieldError>{error}</FieldError>}
+          </FieldContent>
+        </Field>
       </KeyboardAvoidingView>
     </View>
   );
@@ -111,17 +126,6 @@ function createStyles(theme: Theme) {
     },
     headerButtonDisabled: {
       opacity: 0.5,
-    },
-    hint: {
-      color: theme.colors.mutedForeground,
-      fontSize: 13,
-      marginTop: theme.spacing.sm,
-    },
-    label: {
-      color: theme.colors.mutedForeground,
-      fontSize: 14,
-      fontWeight: '500',
-      marginBottom: theme.spacing.sm,
     },
     saveText: {
       color: theme.colors.primary,

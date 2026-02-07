@@ -8,7 +8,15 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, TextInput, useTheme, type Theme } from '@artemis/ui';
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
+  Text,
+  useTheme,
+  type Theme,
+} from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 const MIN_AGE = 18;
@@ -93,31 +101,35 @@ export default function EditAgeRangeScreen() {
           </View>
 
           <View style={styles.inputsContainer}>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Minimum age</Text>
-              <TextInput
-                value={minAge}
-                onChangeText={handleMinChange}
-                keyboardType="number-pad"
-                placeholder={`${MIN_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="next"
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel style={styles.inputLabel}>Minimum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MIN_AGE}`}
+                  returnKeyType="next"
+                  style={styles.ageInput}
+                  value={minAge}
+                  onChangeText={handleMinChange}
+                />
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Maximum age</Text>
-              <TextInput
-                value={maxAge}
-                onChangeText={handleMaxChange}
-                keyboardType="number-pad"
-                placeholder={`${MAX_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="done"
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel style={styles.inputLabel}>Maximum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MAX_AGE}`}
+                  returnKeyType="done"
+                  style={styles.ageInput}
+                  value={maxAge}
+                  onChangeText={handleMaxChange}
+                />
+              </FieldContent>
+            </Field>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -174,7 +186,7 @@ function createStyles(theme: Theme) {
     },
     rangeDisplay: {
       alignItems: 'center',
-      marginTop: spacing['2xl'],
+      marginTop: theme.spacing['2xl'],
     },
     rangeLabel: {
       color: theme.colors.mutedForeground,
