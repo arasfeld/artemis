@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Button,
-  LinkText,
   ProgressIndicator,
   ScreenContainer,
   Text,
@@ -120,9 +119,9 @@ export default function LocationScreen() {
           )}
         </Button>
         <View style={styles.linkContainer}>
-          <LinkText onPress={handleEnterManually}>
+          <Button onPress={handleEnterManually} variant="link">
             Enter location manually instead
-          </LinkText>
+          </Button>
         </View>
       </View>
     </ScreenContainer>

@@ -19,7 +19,6 @@ export { TextInput } from './components/TextInput';
 export { ScreenContainer } from './components/ScreenContainer';
 export { ProgressIndicator } from './components/ProgressIndicator';
 export { OptionCard } from './components/OptionCard';
-export { LinkText } from './components/LinkText';
 export { Divider } from './components/Divider';
 export { BackButton } from './components/BackButton';
 export { Select, type SelectOption } from './components/Select';
