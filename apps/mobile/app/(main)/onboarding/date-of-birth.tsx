@@ -75,7 +75,8 @@ export default function DateOfBirthScreen() {
 
   const age = calculateAgeFromInputs();
   const isValid = age !== null && age >= 18;
-  const hasEnteredData = month.length > 0 || day.length > 0 || year.length > 0;
+  const hasEnteredData =
+    month.length > 0 && day.length > 0 && year.length === 4;
 
   const handleContinue = () => {
     if (!isValid) return;
