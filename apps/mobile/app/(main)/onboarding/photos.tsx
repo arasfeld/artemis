@@ -149,7 +149,11 @@ export default function PhotosScreen() {
                 style={styles.removeButton}
                 onPress={() => handleRemovePhoto(index)}
               >
-                <Ionicons name="close-circle" size={24} color={colors.destructive} />
+                <Ionicons
+                  name="close-circle"
+                  size={24}
+                  color={colors.destructive}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -200,9 +204,11 @@ export default function PhotosScreen() {
 
       <View style={styles.footer}>
         <Button
-          onPress={handleFinish}
           disabled={!isValid || isUploadingPhoto}
           fullWidth
+          loading={isUploadingPhoto}
+          onPress={handleFinish}
+          size="lg"
         >
           {isUploadingPhoto ? 'Uploading...' : 'Finish'}
         </Button>

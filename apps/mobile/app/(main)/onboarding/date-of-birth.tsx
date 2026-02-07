@@ -171,7 +171,12 @@ export default function DateOfBirthScreen() {
       </TouchableWithoutFeedback>
 
       <View style={styles.footer}>
-        <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+        <Button
+          disabled={!isValid}
+          fullWidth
+          onPress={handleContinue}
+          size="lg"
+        >
           Continue
         </Button>
       </View>

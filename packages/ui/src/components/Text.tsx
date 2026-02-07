@@ -80,11 +80,11 @@ const variantStyles = StyleSheet.create({
 
 const colorStyles: Record<TextColor, Record<TextVariant, TextStyle>> = {
   light: {
-    title: { color: colors.primaryForeground },
-    subtitle: { color: colors.primaryForeground },
-    body: { color: colors.primaryForeground },
-    muted: { color: colors.primaryForeground },
-    label: { color: colors.primaryForeground },
+    title: { color: colors.foreground },
+    subtitle: { color: colors.mutedForeground },
+    body: { color: colors.foreground },
+    muted: { color: colors.mutedForeground },
+    label: { color: colors.mutedForeground },
   },
   dark: {
     title: { color: colors.foreground },

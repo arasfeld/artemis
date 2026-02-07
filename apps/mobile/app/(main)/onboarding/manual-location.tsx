@@ -103,7 +103,12 @@ export default function ManualLocationScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+          <Button
+            disabled={!isValid}
+            fullWidth
+            onPress={handleContinue}
+            size="lg"
+          >
             Continue
           </Button>
         </View>

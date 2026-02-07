@@ -43,17 +43,14 @@ export function MatchModal({
 
           <View style={styles.buttons}>
             <Button
+              fullWidth
               onPress={onSendMessage}
-              style={styles.messageButton}
-              variant="secondary"
+              size="lg"
+              variant="outline"
             >
               Send Message
             </Button>
-            <Button
-              onPress={onClose}
-              style={styles.keepSwipingButton}
-              variant="primary"
-            >
+            <Button fullWidth onPress={onClose} size="lg" variant="default">
               Keep Swiping
             </Button>
           </View>
@@ -76,14 +73,6 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     paddingHorizontal: 20,
     paddingTop: 60,
-  },
-  keepSwipingButton: {
-    width: '100%',
-  },
-  messageButton: {
-    backgroundColor: 'transparent',
-    borderColor: colors.white,
-    width: '100%',
   },
   overlay: {
     alignItems: 'center',

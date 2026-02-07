@@ -93,7 +93,7 @@ export default function GenderScreen() {
 
   const handleContinue = useCallback(() => {
     if (!isValid) return;
-    setCurrentStep();
+    setCurrentStep(4);
     router.push('/(main)/onboarding/date-of-birth');
   }, [isValid, router, setCurrentStep]);
 
@@ -233,7 +233,12 @@ export default function GenderScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+        <Button
+          disabled={!isValid}
+          fullWidth
+          onPress={handleContinue}
+          size="lg"
+        >
           Continue
         </Button>
       </View>

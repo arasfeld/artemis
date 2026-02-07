@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import { colors } from '@artemis/ui';
 import { store } from '@/store';
 import { useAppAuth } from '@/hooks/useAppAuth';
 
@@ -23,6 +24,9 @@ function RootLayoutNav() {
   return (
     <Stack
       screenOptions={{
+        contentStyle: {
+          backgroundColor: colors.background,
+        },
         headerShown: false,
       }}
     >

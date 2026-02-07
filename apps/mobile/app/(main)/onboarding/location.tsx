@@ -101,7 +101,13 @@ export default function LocationScreen() {
       </View>
 
       <View style={styles.footer}>
-        <Button onPress={handleEnableLocation} fullWidth disabled={isLoading}>
+        <Button
+          disabled={isLoading}
+          fullWidth
+          loading={isLoading}
+          onPress={handleEnableLocation}
+          size="lg"
+        >
           {isLoading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="small" color={colors.white} />

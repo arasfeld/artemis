@@ -3,7 +3,7 @@ export { colors, typography, spacing, borderRadius, shadow } from './theme';
 
 // Components
 export { Text } from './components/Text';
-export { Button } from './components/Button';
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './components/Button';
 export { TextInput } from './components/TextInput';
 export { ScreenContainer } from './components/ScreenContainer';
 export { ProgressIndicator } from './components/ProgressIndicator';

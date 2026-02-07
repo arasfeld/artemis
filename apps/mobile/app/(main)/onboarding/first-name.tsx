@@ -14,7 +14,7 @@ import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 export default function FirstNameScreen() {
   const router = useRouter();
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
-  const [firstName, setFirstName] = useState(data.firstName);
+  const [firstName, setFirstName] = useState(data.firstName || '');
   const [error, setError] = useState('');
 
   const isValid = firstName.trim().length >= 2;
@@ -59,7 +59,12 @@ export default function FirstNameScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+          <Button
+            disabled={!isValid}
+            fullWidth
+            onPress={handleContinue}
+            size="lg"
+          >
             Continue
           </Button>
         </View>

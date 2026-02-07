@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, ScreenContainer, spacing, Text } from '@artemis/ui';
+import { Button, spacing, Text } from '@artemis/ui';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <ScreenContainer centered>
+    <View style={styles.container}>
       <View style={styles.content}>
         <Text variant="title" center>
           Artemis
@@ -21,22 +21,25 @@ export default function WelcomeScreen() {
       </View>
 
       <View style={styles.buttons}>
-        <Button onPress={handleSignIn} fullWidth>
+        <Button fullWidth onPress={handleSignIn} size="lg">
           Join Artemis
         </Button>
         <View style={styles.spacer} />
-        <Button variant="secondary" onPress={handleSignIn} fullWidth>
+        <Button fullWidth onPress={handleSignIn} size="lg" variant="outline">
           Sign In
         </Button>
       </View>
-    </ScreenContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   buttons: {
-    paddingBottom: spacing.xl,
     width: '100%',
+  },
+  container: {
+    flex: 1,
+    padding: spacing.md,
   },
   content: {
     alignItems: 'center',

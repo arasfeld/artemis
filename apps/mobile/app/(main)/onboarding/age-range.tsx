@@ -128,7 +128,7 @@ export default function AgeRangeScreen() {
       </TouchableWithoutFeedback>
 
       <View style={styles.footer}>
-        <Button onPress={handleContinue} fullWidth>
+        <Button fullWidth onPress={handleContinue} size="lg">
           Continue
         </Button>
       </View>
