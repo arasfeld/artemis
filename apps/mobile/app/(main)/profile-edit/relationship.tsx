@@ -1,9 +1,21 @@
-import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
-  OptionCard,
+  Checkbox,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
   Text,
   useTheme,
   type Theme,
@@ -38,14 +50,14 @@ export default function EditRelationshipScreen() {
     router.back();
   };
 
-  const handleToggle = (id: string) => {
+  const handleToggle = useCallback((id: string) => {
     setRelationshipTypes((prev) => {
       if (prev.includes(id)) {
         return prev.filter((i) => i !== id);
       }
       return [...prev, id];
     });
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -97,20 +109,30 @@ export default function EditRelationshipScreen() {
           What type of relationship are you looking for?
         </Text>
 
-        <View style={styles.optionList}>
+        <ItemGroup style={styles.optionList}>
           {options.map((option: RelationshipTypeData) => {
             const selected = relationshipTypes.includes(option.id);
+
             return (
-              <OptionCard
-                key={option.id}
-                title={option.name}
-                subtitle={option.description}
-                selected={selected}
-                onPress={() => handleToggle(option.id)}
-              />
+              <Item asChild key={option.id} variant="outline">
+                <Pressable onPress={() => handleToggle(option.id)}>
+                  <ItemContent>
+                    <ItemTitle>{option.name}</ItemTitle>
+                    {option.description ? (
+                      <ItemDescription>{option.description}</ItemDescription>
+                    ) : null}
+                  </ItemContent>
+                  <ItemActions>
+                    <Checkbox
+                      checked={selected}
+                      onCheckedChange={() => handleToggle(option.id)}
+                    />
+                  </ItemActions>
+                </Pressable>
+              </Item>
             );
           })}
-        </View>
+        </ItemGroup>
       </ScrollView>
     </View>
   );

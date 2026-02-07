@@ -1,9 +1,15 @@
-import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Button,
-  OptionCard,
+  Checkbox,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
   ProgressIndicator,
   ScreenContainer,
   Text,
@@ -30,13 +36,26 @@ export default function RelationshipScreen() {
 
   const isValid = (relationshipTypes && relationshipTypes.length > 0) ?? false;
 
-  const handleContinue = () => {
+  const handleToggle = useCallback(
+    (optionId: string) => {
+      const next = new Set(relationshipTypes || []);
+      if (next.has(optionId)) {
+        next.delete(optionId);
+      } else {
+        next.add(optionId);
+      }
+      setRelationshipTypes(Array.from(next));
+    },
+    [relationshipTypes]
+  );
+
+  const handleContinue = useCallback(() => {
     if (!isValid) return;
 
     updateData({ relationshipTypes });
     setCurrentStep(6);
     router.push('/(main)/onboarding/age-range');
-  };
+  }, [isValid, relationshipTypes, updateData, setCurrentStep, router]);
 
   return (
     <ScreenContainer onBack={handleBack}>
@@ -50,28 +69,30 @@ export default function RelationshipScreen() {
           This helps us find better matches for you
         </Text>
 
-        <View style={styles.optionList}>
+        <ItemGroup style={styles.optionList}>
           {options.map((option: RelationshipTypeData) => {
             const selected = relationshipTypes?.includes(option.id) ?? false;
+
             return (
-              <OptionCard
-                key={option.id}
-                title={option.name}
-                subtitle={option.description}
-                selected={selected}
-                onPress={() => {
-                  const next = new Set(relationshipTypes || []);
-                  if (next.has(option.id)) {
-                    next.delete(option.id);
-                  } else {
-                    next.add(option.id);
-                  }
-                  setRelationshipTypes(Array.from(next));
-                }}
-              />
+              <Item asChild key={option.id} variant="outline">
+                <Pressable onPress={() => handleToggle(option.id)}>
+                  <ItemContent>
+                    <ItemTitle>{option.name}</ItemTitle>
+                    {option.description ? (
+                      <ItemDescription>{option.description}</ItemDescription>
+                    ) : null}
+                  </ItemContent>
+                  <ItemActions>
+                    <Checkbox
+                      checked={selected}
+                      onCheckedChange={() => handleToggle(option.id)}
+                    />
+                  </ItemActions>
+                </Pressable>
+              </Item>
             );
           })}
-        </View>
+        </ItemGroup>
       </View>
 
       <View style={styles.footer}>

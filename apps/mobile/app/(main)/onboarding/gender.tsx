@@ -1,11 +1,18 @@
 import { useCallback, useMemo } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Button,
-  OptionCard,
+  Checkbox,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemGroup,
+  ItemTitle,
   ProgressIndicator,
+  RadioGroup,
+  RadioGroupItem,
   ScreenContainer,
   Text,
   useTheme,
@@ -99,12 +106,6 @@ export default function GenderScreen() {
     router.push('/(main)/onboarding/date-of-birth');
   }, [isValid, router, setCurrentStep]);
 
-  // Check if a primary gender is selected (for radio button display)
-  const isPrimarySelected = (genderId: string) => {
-    // If user has only one gender selected and it's this primary one
-    return data.genderIds.length === 1 && data.genderIds[0] === genderId;
-  };
-
   return (
     <ScreenContainer onBack={handleBack}>
       <ProgressIndicator currentStep={3} totalSteps={totalSteps} />
@@ -123,41 +124,64 @@ export default function GenderScreen() {
           <Text variant="label" style={styles.sectionLabel}>
             I am a...
           </Text>
-          <View style={styles.optionList}>
-            {primaryGenders.map((gender) => (
-              <OptionCard
-                key={gender.id}
-                title={gender.name}
-                selected={isPrimarySelected(gender.id)}
-                onPress={() => handlePrimaryGenderSelect(gender.id)}
-              />
-            ))}
+          <RadioGroup
+            onValueChange={handlePrimaryGenderSelect}
+            value={
+              data.genderIds.length === 1 ? data.genderIds[0] : undefined
+            }
+          >
+            <ItemGroup>
+              {primaryGenders.map((gender) => (
+                <Item asChild key={gender.id} variant="outline">
+                  <Pressable
+                    onPress={() => handlePrimaryGenderSelect(gender.id)}
+                  >
+                    <ItemContent>
+                      <ItemTitle>{gender.name}</ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <RadioGroupItem value={gender.id} />
+                    </ItemActions>
+                  </Pressable>
+                </Item>
+              ))}
 
-            {/* Show non-primary selected genders or multi-selection summary */}
-            {(nonPrimarySelectedGenders.length > 0 ||
-              data.genderIds.length > 1) && (
-              <TouchableOpacity
-                style={[styles.summaryCard, styles.summaryCardSelected]}
-                onPress={handleViewMoreGender}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.summaryLabel}>{genderLabels}</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={theme.colors.primary}
-                />
-              </TouchableOpacity>
-            )}
+              {/* Show non-primary selected genders or multi-selection summary */}
+              {(nonPrimarySelectedGenders.length > 0 ||
+                data.genderIds.length > 1) && (
+                <Item asChild variant="outline">
+                  <Pressable onPress={handleViewMoreGender}>
+                    <ItemContent>
+                      <ItemTitle>
+                        <Text style={styles.summaryLabel}>
+                          {genderLabels}
+                        </Text>
+                      </ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <Ionicons
+                        name="chevron-forward"
+                        size={20}
+                        color={theme.colors.primary}
+                      />
+                    </ItemActions>
+                  </Pressable>
+                </Item>
+              )}
+            </ItemGroup>
+          </RadioGroup>
 
-            <TouchableOpacity
-              style={styles.viewMoreButton}
-              onPress={handleViewMoreGender}
-            >
-              <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons name="chevron-forward" size={18} color={theme.colors.white} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.viewMoreButton}
+            onPress={handleViewMoreGender}
+          >
+            <Text style={styles.viewMoreText}>View more options</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={theme.colors.white}
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Seeking Selection */}
@@ -165,43 +189,30 @@ export default function GenderScreen() {
           <Text variant="label" style={styles.sectionLabel}>
             Seeking...
           </Text>
-          <View style={styles.optionList}>
+          <ItemGroup>
             {primaryGenders.map((gender) => {
               const isSelected = data.seekingIds.includes(gender.id);
 
               return (
-                <TouchableOpacity
-                  key={gender.id}
-                  style={[
-                    styles.checkboxCard,
-                    isSelected && styles.checkboxCardSelected,
-                  ]}
-                  onPress={() => handleSeekingToggle(gender.id)}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={[
-                      styles.checkboxLabel,
-                      isSelected && styles.checkboxLabelSelected,
-                    ]}
+                <Item asChild key={gender.id} variant="outline">
+                  <Pressable
+                    onPress={() => handleSeekingToggle(gender.id)}
                   >
-                    {pluralizeGender(gender.name)}
-                  </Text>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      isSelected && styles.checkboxSelected,
-                    ]}
-                  >
-                    {isSelected && (
-                      <Ionicons
-                        name="checkmark"
-                        size={16}
-                        color={theme.colors.white}
+                    <ItemContent>
+                      <ItemTitle>
+                        {pluralizeGender(gender.name)}
+                      </ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() =>
+                          handleSeekingToggle(gender.id)
+                        }
                       />
-                    )}
-                  </View>
-                </TouchableOpacity>
+                    </ItemActions>
+                  </Pressable>
+                </Item>
               );
             })}
 
@@ -209,28 +220,38 @@ export default function GenderScreen() {
             {data.seekingIds.some(
               (id) => !primaryGenders.find((g) => g.id === id)
             ) && (
-              <TouchableOpacity
-                style={[styles.summaryCard, styles.summaryCardSelected]}
-                onPress={handleViewMoreSeeking}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.summaryLabel}>{seekingLabels}</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={theme.colors.white}
-                />
-              </TouchableOpacity>
+              <Item asChild variant="outline">
+                <Pressable onPress={handleViewMoreSeeking}>
+                  <ItemContent>
+                    <ItemTitle>
+                      <Text style={styles.summaryLabel}>
+                        {seekingLabels}
+                      </Text>
+                    </ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={20}
+                      color={theme.colors.white}
+                    />
+                  </ItemActions>
+                </Pressable>
+              </Item>
             )}
+          </ItemGroup>
 
-            <TouchableOpacity
-              style={styles.viewMoreButton}
-              onPress={handleViewMoreSeeking}
-            >
-              <Text style={styles.viewMoreText}>View more options</Text>
-              <Ionicons name="chevron-forward" size={18} color={theme.colors.white} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.viewMoreButton}
+            onPress={handleViewMoreSeeking}
+          >
+            <Text style={styles.viewMoreText}>View more options</Text>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={theme.colors.white}
+            />
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -250,60 +271,9 @@ export default function GenderScreen() {
 
 function createStyles(theme: Theme) {
   return StyleSheet.create({
-    checkbox: {
-      alignItems: 'center',
-      borderColor: theme.colors.ring,
-      borderRadius: 4,
-      borderWidth: 2,
-      height: 24,
-      justifyContent: 'center',
-      width: 24,
-    },
-    checkboxCard: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.white,
-      borderColor: 'transparent',
-      borderRadius: 12,
-      borderWidth: 2,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: theme.spacing.md,
-      shadowColor: theme.colors.black,
-      shadowOffset: { height: 1, width: 0 },
-      shadowOpacity: 0.05,
-      shadowRadius: 2,
-    },
-    checkboxCardSelected: {
-      borderColor: theme.colors.primary,
-    },
-    checkboxLabel: {
-      color: theme.colors.foreground,
-      fontSize: 16,
-      fontWeight: '500',
-    },
-    checkboxLabelSelected: {
-      color: theme.colors.primary,
-      fontWeight: '600',
-    },
-    checkboxSelected: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
-    },
     footer: {
       paddingBottom: theme.spacing.xl,
       paddingHorizontal: theme.spacing.lg,
-    },
-    optionList: {
-      gap: theme.spacing.sm,
-    },
-    otherSeekingContainer: {
-      backgroundColor: theme.colors.accent,
-      borderRadius: 8,
-      padding: theme.spacing.sm,
-    },
-    otherSeekingText: {
-      color: theme.colors.white,
-      fontSize: 14,
     },
     scrollContent: {
       paddingBottom: theme.spacing.lg,
@@ -317,23 +287,6 @@ function createStyles(theme: Theme) {
     },
     sectionLabel: {
       marginBottom: theme.spacing.sm,
-    },
-    summaryCard: {
-      alignItems: 'center',
-      backgroundColor: theme.colors.white,
-      borderColor: 'transparent',
-      borderRadius: 12,
-      borderWidth: 2,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: theme.spacing.md,
-      shadowColor: theme.colors.black,
-      shadowOffset: { height: 1, width: 0 },
-      shadowOpacity: 0.05,
-      shadowRadius: 2,
-    },
-    summaryCardSelected: {
-      borderColor: theme.colors.primary,
     },
     summaryLabel: {
       color: theme.colors.primary,
