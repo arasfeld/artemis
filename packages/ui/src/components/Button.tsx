@@ -23,9 +23,9 @@ export type ButtonVariant =
   | 'secondary';
 
 export type ButtonSize =
-  | 'default'
   | 'xs'
   | 'sm'
+  | 'md'
   | 'lg'
   | 'icon'
   | 'icon-xs'
@@ -49,27 +49,7 @@ function buildSizeStyles(
 ): Record<ButtonSize, { container: ViewStyle; text: TextStyle; gap: number }> {
   const { typography } = theme;
   return {
-    default: {
-      container: {
-        height: 32,
-        paddingHorizontal: 10,
-        paddingVertical: 0,
-        gap: 6,
-      },
-      text: { fontSize: typography.fontSize.sm },
-      gap: 6,
-    },
     xs: {
-      container: {
-        height: 24,
-        paddingHorizontal: 8,
-        paddingVertical: 0,
-        gap: 4,
-      },
-      text: { fontSize: typography.fontSize.xs },
-      gap: 4,
-    },
-    sm: {
       container: {
         height: 28,
         paddingHorizontal: 10,
@@ -79,20 +59,40 @@ function buildSizeStyles(
       text: { fontSize: 13 },
       gap: 4,
     },
-    lg: {
+    sm: {
       container: {
         height: 36,
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
         paddingVertical: 0,
         gap: 6,
       },
       text: { fontSize: typography.fontSize.sm },
       gap: 6,
     },
+    md: {
+      container: {
+        height: 44,
+        paddingHorizontal: 16,
+        paddingVertical: 0,
+        gap: 8,
+      },
+      text: { fontSize: typography.fontSize.base },
+      gap: 8,
+    },
+    lg: {
+      container: {
+        height: 52,
+        paddingHorizontal: 20,
+        paddingVertical: 0,
+        gap: 8,
+      },
+      text: { fontSize: typography.fontSize.base },
+      gap: 8,
+    },
     icon: {
       container: {
-        width: 32,
-        height: 32,
+        width: 44,
+        height: 44,
         paddingHorizontal: 0,
         paddingVertical: 0,
       },
@@ -100,16 +100,6 @@ function buildSizeStyles(
       gap: 0,
     },
     'icon-xs': {
-      container: {
-        width: 24,
-        height: 24,
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-      },
-      text: {},
-      gap: 0,
-    },
-    'icon-sm': {
       container: {
         width: 28,
         height: 28,
@@ -119,10 +109,20 @@ function buildSizeStyles(
       text: {},
       gap: 0,
     },
-    'icon-lg': {
+    'icon-sm': {
       container: {
         width: 36,
         height: 36,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
+    },
+    'icon-lg': {
+      container: {
+        width: 52,
+        height: 52,
         paddingHorizontal: 0,
         paddingVertical: 0,
       },
@@ -138,7 +138,7 @@ export function Button({
   fullWidth = false,
   loading = false,
   onPress,
-  size = 'default',
+  size = 'md',
   style,
   textStyle,
   variant = 'default',

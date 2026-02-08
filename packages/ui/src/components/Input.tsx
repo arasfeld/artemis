@@ -78,11 +78,11 @@ function createStyles(theme: Theme) {
     input: {
       backgroundColor: isDark ? `${colors.input}4D` : 'transparent',
       borderColor: colors.input,
-      borderRadius: theme.borderRadius.lg,
+      borderRadius: theme.borderRadius.md,
       borderWidth: 1,
       color: colors.foreground,
       fontSize: typography.fontSize.base,
-      minHeight: 32,
+      minHeight: 44,
       minWidth: 0,
       paddingHorizontal: 10,
       paddingVertical: 4,

@@ -89,7 +89,7 @@ export default function LocationScreen() {
 
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <Ionicons name="location" size={64} color={theme.colors.white} />
+          <Ionicons name="location" size={64} color={theme.colors.foreground} />
         </View>
 
         <Text variant="title" center>

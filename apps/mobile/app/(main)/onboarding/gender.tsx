@@ -169,7 +169,11 @@ export default function GenderScreen() {
 
           <Button onPress={handleViewMoreGender} variant="link">
             <Text style={styles.viewMoreText}>View more options</Text>
-            <Ionicons name="chevron-forward" size={18} />
+            <Ionicons
+              color={theme.colors.foreground}
+              name="chevron-forward"
+              size={18}
+            />
           </Button>
         </View>
 
@@ -224,7 +228,11 @@ export default function GenderScreen() {
 
           <Button onPress={handleViewMoreSeeking} variant="link">
             <Text style={styles.viewMoreText}>View more options</Text>
-            <Ionicons name="chevron-forward" size={18} />
+            <Ionicons
+              color={theme.colors.foreground}
+              name="chevron-forward"
+              size={18}
+            />
           </Button>
         </View>
       </ScrollView>

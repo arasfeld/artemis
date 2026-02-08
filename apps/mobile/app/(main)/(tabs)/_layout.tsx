@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, Text as RNText, View } from 'react-native';
 import { Href, Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,7 +6,6 @@ import { useTheme } from '@artemis/ui';
 
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 import { useGetUnreadCountQuery } from '@/store/api/apiSlice';
-import { useEffect } from 'react';
 
 export default function TabsLayout() {
   const router = useRouter();
@@ -50,7 +49,7 @@ export default function TabsLayout() {
           textAlign: 'center',
         },
       }),
-    [theme.colorScheme],
+    [theme.colorScheme]
   );
 
   if (shouldRedirect) {

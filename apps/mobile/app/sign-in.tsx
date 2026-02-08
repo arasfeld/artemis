@@ -2,7 +2,8 @@ import { Image } from 'expo-image';
 import { useEffect, useMemo } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Text, useTheme, type Theme } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
+import { GoogleLoginButton } from '@/components/GoogleLoginButton';
 import { useAppAuth } from '@/hooks/useAppAuth';
 import { useOnboardingFlow } from '@/hooks/useOnboardingFlow';
 
@@ -45,14 +46,11 @@ export default function SignInScreen() {
         </Text>
       </View>
 
-      <Button
+      <GoogleLoginButton
         disabled={isLoading}
         loading={isLoading}
         onPress={signInWithGoogle}
-        size="lg"
-      >
-        {isLoading ? 'Signing in...' : 'Sign in with Google'}
-      </Button>
+      />
     </SafeAreaView>
   );
 }

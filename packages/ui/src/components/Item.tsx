@@ -8,19 +8,19 @@ import type { Theme } from '../theme/ThemeContext';
 import { useTheme } from '../theme/ThemeContext';
 
 export type ItemVariant = 'default' | 'outline' | 'muted';
-export type ItemSize = 'default' | 'sm' | 'xs';
+export type ItemSize = 'xs' | 'sm' | 'md';
 export type ItemMediaVariant = 'default' | 'icon' | 'image';
 
-const gapBySize = { default: 16, sm: 10, xs: 8 } as const;
+const gapBySize = { xs: 8, sm: 10, md: 16 } as const;
 const paddingBySize = {
-  default: { horizontal: 12, vertical: 10 },
-  sm: { horizontal: 12, vertical: 10 },
   xs: { horizontal: 10, vertical: 8 },
+  sm: { horizontal: 12, vertical: 10 },
+  md: { horizontal: 14, vertical: 12 },
 } as const;
-const contentGapBySize = { default: 4, sm: 4, xs: 0 } as const;
-const mediaImageSizeBySize = { default: 40, sm: 32, xs: 24 } as const;
+const contentGapBySize = { xs: 0, sm: 4, md: 4 } as const;
+const mediaImageSizeBySize = { xs: 24, sm: 32, md: 40 } as const;
 
-const ItemContext = createContext<{ size: ItemSize }>({ size: 'default' });
+const ItemContext = createContext<{ size: ItemSize }>({ size: 'md' });
 
 function useItemSize() {
   return useContext(ItemContext).size;
@@ -75,7 +75,7 @@ export interface ItemProps extends ViewProps {
 export function Item({
   asChild = false,
   children,
-  size = 'default',
+  size = 'md',
   style,
   variant = 'default',
   ...props

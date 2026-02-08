@@ -86,7 +86,8 @@ function createStyles(theme: Theme, dimensions: { box: number; icon: number }) {
   return StyleSheet.create({
     root: {
       alignItems: 'center',
-      backgroundColor: colors.input,
+      backgroundColor:
+        theme.colorScheme === 'dark' ? colors.input : 'transparent',
       borderColor: colors.input,
       borderRadius: 4,
       borderWidth: 1,
