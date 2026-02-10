@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Button,
-  colors,
-  LinkText,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { getCurrentLocation } from '@/lib/location';
 
 export default function LocationScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/first-name');
   };
@@ -88,7 +89,7 @@ export default function LocationScreen() {
 
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <Ionicons name="location" size={64} color={colors.white} />
+          <Ionicons name="location" size={64} color={theme.colors.foreground} />
         </View>
 
         <Text variant="title" center>
@@ -101,10 +102,16 @@ export default function LocationScreen() {
       </View>
 
       <View style={styles.footer}>
-        <Button onPress={handleEnableLocation} fullWidth disabled={isLoading}>
+        <Button
+          disabled={isLoading}
+          fullWidth
+          loading={isLoading}
+          onPress={handleEnableLocation}
+          size="lg"
+        >
           {isLoading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color={colors.white} />
+              <ActivityIndicator size="small" color={theme.colors.white} />
               <Text style={styles.loadingText}>Getting Location...</Text>
             </View>
           ) : (
@@ -112,44 +119,46 @@ export default function LocationScreen() {
           )}
         </Button>
         <View style={styles.linkContainer}>
-          <LinkText onPress={handleEnterManually}>
+          <Button onPress={handleEnterManually} variant="link">
             Enter location manually instead
-          </LinkText>
+          </Button>
         </View>
       </View>
     </ScreenContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  description: {
-    marginTop: spacing.md,
-    opacity: 0.9,
-    paddingHorizontal: spacing.lg,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  iconContainer: {
-    marginBottom: spacing.lg,
-  },
-  linkContainer: {
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  loadingContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'center',
-  },
-  loadingText: {
-    color: colors.white,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    content: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: theme.spacing.md,
+    },
+    description: {
+      marginTop: theme.spacing.md,
+      opacity: 0.9,
+      paddingHorizontal: theme.spacing.lg,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    iconContainer: {
+      marginBottom: theme.spacing.lg,
+    },
+    linkContainer: {
+      alignItems: 'center',
+      marginTop: theme.spacing.lg,
+    },
+    loadingContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: theme.spacing.sm,
+      justifyContent: 'center',
+    },
+    loadingText: {
+      color: theme.colors.white,
+    },
+  });
+}

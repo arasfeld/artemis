@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { colors } from '@artemis/ui';
+import { useTheme } from '@artemis/ui';
+
 import {
   calculateAge,
   ProfileEditSection,
@@ -12,6 +13,7 @@ import { useGetProfileQuery } from '@/store/api/apiSlice';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { isLoading: isAuthLoading, signOut } = useAppAuth();
   const { data: profile, isLoading: isProfileLoading } = useGetProfileQuery();
 
@@ -31,7 +33,7 @@ export default function ProfileScreen() {
   if (isLoading || !profile) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator color={colors.primary} size="large" />
+        <ActivityIndicator color={theme.colors.primary} size="large" />
       </View>
     );
   }

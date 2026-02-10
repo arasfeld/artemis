@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
   ProgressIndicator,
   ScreenContainer,
   Select,
-  spacing,
   Text,
-  TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
@@ -41,6 +45,8 @@ const COUNTRY_OPTIONS = [
 
 export default function ManualLocationScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/location');
   };
@@ -90,20 +96,27 @@ export default function ManualLocationScreen() {
             />
           </View>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              label="ZIP / Postal Code"
-              value={zipCode}
-              onChangeText={setZipCode}
-              placeholder="Enter your postal code"
-              keyboardType="default"
-              autoCapitalize="characters"
-            />
-          </View>
+          <Field style={styles.inputContainer}>
+            <FieldLabel>ZIP / Postal Code</FieldLabel>
+            <FieldContent>
+              <Input
+                autoCapitalize="characters"
+                keyboardType="default"
+                placeholder="Enter your postal code"
+                value={zipCode}
+                onChangeText={setZipCode}
+              />
+            </FieldContent>
+          </Field>
         </View>
 
         <View style={styles.footer}>
-          <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+          <Button
+            disabled={!isValid}
+            fullWidth
+            onPress={handleContinue}
+            size="lg"
+          >
             Continue
           </Button>
         </View>
@@ -112,21 +125,23 @@ export default function ManualLocationScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  inputContainer: {
-    marginTop: spacing.xl,
-  },
-  selectContainer: {
-    marginTop: spacing.xl,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    inputContainer: {
+      marginTop: theme.spacing.xl,
+    },
+    selectContainer: {
+      marginTop: theme.spacing.xl,
+    },
+  });
+}

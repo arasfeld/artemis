@@ -1,20 +1,27 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+  Input,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
-  TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 export default function FirstNameScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { data, setCurrentStep, totalSteps, updateData } = useAppOnboarding();
-  const [firstName, setFirstName] = useState(data.firstName);
+  const [firstName, setFirstName] = useState(data.firstName || '');
   const [error, setError] = useState('');
 
   const isValid = firstName.trim().length >= 2;
@@ -45,21 +52,32 @@ export default function FirstNameScreen() {
             This is how you&apos;ll appear on Artemis
           </Text>
 
-          <TextInput
-            value={firstName}
-            onChangeText={(text) => {
-              setFirstName(text);
-              setError('');
-            }}
-            placeholder="First name"
-            autoCapitalize="words"
-            autoFocus
-            error={error}
-          />
+          <Field invalid={!!error}>
+            <FieldLabel>First name</FieldLabel>
+            <FieldContent>
+              <Input
+                autoCapitalize="words"
+                autoFocus
+                invalid={!!error}
+                placeholder="First name"
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  setError('');
+                }}
+              />
+              {error && <FieldError>{error}</FieldError>}
+            </FieldContent>
+          </Field>
         </View>
 
         <View style={styles.footer}>
-          <Button onPress={handleContinue} disabled={!isValid} fullWidth>
+          <Button
+            disabled={!isValid}
+            fullWidth
+            onPress={handleContinue}
+            size="lg"
+          >
             Continue
           </Button>
         </View>
@@ -68,16 +86,18 @@ export default function FirstNameScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+  });
+}

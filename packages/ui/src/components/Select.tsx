@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -8,10 +8,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
 import { Text } from './Text';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
-import { borderRadius, shadow, spacing } from '../theme/spacing';
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 export interface SelectOption {
   value: string;
@@ -35,6 +35,8 @@ export function Select({
   onChange,
   style,
 }: SelectProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [isOpen, setIsOpen] = useState(false);
 
   const selectedOption = options.find((opt) => opt.value === value);
@@ -65,7 +67,7 @@ export function Select({
         >
           {selectedOption?.label || placeholder}
         </Text>
-        <Ionicons name="chevron-down" size={20} color={colors.text.secondary} />
+        <Ionicons name="chevron-down" size={20} color={theme.colors.mutedForeground} />
       </TouchableOpacity>
 
       <Modal
@@ -83,7 +85,7 @@ export function Select({
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label || 'Select'}</Text>
               <TouchableOpacity onPress={() => setIsOpen(false)}>
-                <Ionicons name="close" size={24} color={colors.text.primary} />
+                <Ionicons name="close" size={24} color={theme.colors.foreground} />
               </TouchableOpacity>
             </View>
 
@@ -110,7 +112,7 @@ export function Select({
                     <Ionicons
                       name="checkmark"
                       size={20}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                     />
                   )}
                 </TouchableOpacity>
@@ -124,71 +126,73 @@ export function Select({
   );
 }
 
-const styles = StyleSheet.create({
-  label: {
-    marginBottom: spacing.sm,
-  },
-  trigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    ...shadow.sm,
-  },
-  triggerText: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
-    flex: 1,
-  },
-  placeholderText: {
-    color: colors.text.muted,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: colors.background.overlay,
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: colors.white,
-    borderTopLeftRadius: borderRadius.xl,
-    borderTopRightRadius: borderRadius.xl,
-    maxHeight: '70%',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
-  },
-  modalTitle: {
-    fontSize: typography.fontSize.lg,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.text.primary,
-  },
-  optionList: {
-    paddingBottom: spacing.xl,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
-  },
-  optionSelected: {
-    backgroundColor: colors.selected.background,
-  },
-  optionText: {
-    fontSize: typography.fontSize.base,
-    color: colors.text.primary,
-  },
-  optionTextSelected: {
-    color: colors.primary,
-    fontWeight: typography.fontWeight.semibold,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    label: {
+      marginBottom: theme.spacing.sm,
+    },
+    modalContent: {
+      backgroundColor: theme.colors.card,
+      borderTopLeftRadius: theme.borderRadius.xl,
+      borderTopRightRadius: theme.borderRadius.xl,
+      maxHeight: '70%',
+    },
+    modalHeader: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.lg,
+    },
+    modalTitle: {
+      color: theme.colors.foreground,
+      fontSize: theme.typography.fontSize.lg,
+      fontWeight: theme.typography.fontWeight.semibold,
+    },
+    option: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.lg,
+    },
+    optionList: {
+      paddingBottom: theme.spacing.xl,
+    },
+    optionSelected: {
+      backgroundColor: theme.colors.accent,
+    },
+    optionText: {
+      color: theme.colors.foreground,
+      fontSize: theme.typography.fontSize.base,
+    },
+    optionTextSelected: {
+      color: theme.colors.primary,
+      fontWeight: theme.typography.fontWeight.semibold,
+    },
+    overlay: {
+      backgroundColor: theme.colors.overlay,
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
+    placeholderText: {
+      color: theme.colors.mutedForeground,
+    },
+    trigger: {
+      alignItems: 'center',
+      backgroundColor: theme.colors.card,
+      borderRadius: theme.borderRadius.lg,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: theme.spacing.md,
+      ...theme.shadow.sm,
+    },
+    triggerText: {
+      color: theme.colors.foreground,
+      flex: 1,
+      fontSize: theme.typography.fontSize.base,
+    },
+  });
+}

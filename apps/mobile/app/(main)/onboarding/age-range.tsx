@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -8,11 +8,15 @@ import {
 import { useRouter } from 'expo-router';
 import {
   Button,
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
   ProgressIndicator,
   ScreenContainer,
-  spacing,
   Text,
-  TextInput,
+  useTheme,
+  type Theme,
 } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
@@ -21,6 +25,8 @@ const MAX_AGE = 99;
 
 export default function AgeRangeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const handleBack = () => {
     router.replace('/(main)/onboarding/relationship');
   };
@@ -94,41 +100,45 @@ export default function AgeRangeScreen() {
           </View>
 
           <View style={styles.inputsContainer}>
-            <View style={styles.inputWrapper}>
-              <Text variant="label">Minimum age</Text>
-              <TextInput
-                value={minAge}
-                onChangeText={handleMinChange}
-                keyboardType="number-pad"
-                placeholder={`${MIN_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="next"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel>Minimum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MIN_AGE}`}
+                  returnKeyType="next"
+                  showSoftInputOnFocus={true}
+                  style={styles.ageInput}
+                  value={minAge}
+                  onChangeText={handleMinChange}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputWrapper}>
-              <Text variant="label">Maximum age</Text>
-              <TextInput
-                value={maxAge}
-                onChangeText={handleMaxChange}
-                keyboardType="number-pad"
-                placeholder={`${MAX_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                showSoftInputOnFocus={true}
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel>Maximum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MAX_AGE}`}
+                  returnKeyType="done"
+                  showSoftInputOnFocus={true}
+                  style={styles.ageInput}
+                  value={maxAge}
+                  onChangeText={handleMaxChange}
+                  onSubmitEditing={Keyboard.dismiss}
+                />
+              </FieldContent>
+            </Field>
           </View>
         </View>
       </TouchableWithoutFeedback>
 
       <View style={styles.footer}>
-        <Button onPress={handleContinue} fullWidth>
+        <Button fullWidth onPress={handleContinue} size="lg">
           Continue
         </Button>
       </View>
@@ -136,35 +146,37 @@ export default function AgeRangeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  ageInput: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: spacing.sm,
-    textAlign: 'center',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-  footer: {
-    paddingBottom: spacing.xl,
-  },
-  inputWrapper: {
-    flex: 1,
-  },
-  inputsContainer: {
-    flexDirection: 'row',
-    gap: spacing.lg,
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
-  },
-  rangeDisplay: {
-    marginBottom: spacing.xl,
-    marginTop: spacing['2xl'],
-  },
-  rangeText: {
-    fontSize: 56,
-    marginBottom: 0,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    ageInput: {
+      fontSize: 18,
+      fontWeight: '600',
+      marginTop: theme.spacing.sm,
+      textAlign: 'center',
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.md,
+    },
+    footer: {
+      paddingBottom: theme.spacing.xl,
+    },
+    inputWrapper: {
+      flex: 1,
+    },
+    inputsContainer: {
+      flexDirection: 'row',
+      gap: theme.spacing.lg,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.xl,
+    },
+    rangeDisplay: {
+      marginBottom: theme.spacing.xl,
+      marginTop: theme.spacing['2xl'],
+    },
+    rangeText: {
+      fontSize: 56,
+      marginBottom: 0,
+    },
+  });
+}

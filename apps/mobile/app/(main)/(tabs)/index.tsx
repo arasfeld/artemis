@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { ScreenContainer, Text, borderRadius, colors } from '@artemis/ui';
+import { ScreenContainer, Text, useTheme, type Theme } from '@artemis/ui';
+
 import {
   CARD_HEIGHT,
   CARD_WIDTH,
@@ -30,6 +31,8 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
 export default function DiscoverScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentMatchId, setCurrentMatchId] = useState<string | null>(null);
   const [matchedUser, setMatchedUser] = useState<MatchedUser | null>(null);
@@ -219,11 +222,9 @@ export default function DiscoverScreen() {
   // Loading state
   if (isLoading) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.centerContainer}>
-          <Text color="dark" variant="subtitle">
-            Finding people near you...
-          </Text>
+          <Text variant="subtitle">Finding people near you...</Text>
         </View>
       </ScreenContainer>
     );
@@ -232,17 +233,17 @@ export default function DiscoverScreen() {
   // Empty state
   if (!currentProfile) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.centerContainer}>
           <Ionicons
-            color={colors.text.muted}
+            color={theme.colors.mutedForeground}
             name="compass-outline"
             size={64}
           />
-          <Text color="dark" style={styles.emptyTitle} variant="title">
+          <Text style={styles.emptyTitle} variant="title">
             No more profiles
           </Text>
-          <Text center color="dark" style={styles.emptySubtitle} variant="body">
+          <Text center style={styles.emptySubtitle} variant="body">
             Check back later for new people in your area
           </Text>
           <Pressable onPress={() => refetch()} style={styles.refreshButton}>
@@ -256,7 +257,7 @@ export default function DiscoverScreen() {
   }
 
   return (
-    <ScreenContainer withGradient={false}>
+    <ScreenContainer>
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           {/* Next card (behind current) */}
@@ -292,14 +293,14 @@ export default function DiscoverScreen() {
             onPress={() => handleButtonPress('pass')}
             style={[styles.actionButton, styles.passButton]}
           >
-            <Ionicons color={colors.error} name="close" size={32} />
+            <Ionicons color={theme.colors.destructive} name="close" size={32} />
           </Pressable>
           <Pressable
             accessibilityLabel="Like"
             onPress={() => handleButtonPress('like')}
             style={[styles.actionButton, styles.likeButton]}
           >
-            <Ionicons color={colors.success} name="heart" size={32} />
+            <Ionicons color={theme.colors.chart2} name="heart" size={32} />
           </Pressable>
         </View>
 
@@ -324,78 +325,80 @@ export default function DiscoverScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  actionButton: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 30,
-    elevation: 5,
-    height: 60,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    width: 60,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 20,
-    justifyContent: 'center',
-    paddingBottom: 40,
-  },
-  card: {
-    height: CARD_HEIGHT,
-    position: 'absolute',
-    width: CARD_WIDTH,
-  },
-  cardContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  centerContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  container: {
-    flex: 1,
-  },
-  emptySubtitle: {
-    marginBottom: 24,
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  likeButton: {
-    borderColor: colors.success,
-    borderWidth: 2,
-  },
-  nextCard: {
-    transform: [{ scale: 0.95 }],
-  },
-  passButton: {
-    borderColor: colors.error,
-    borderWidth: 2,
-  },
-  profileCardWrapper: {
-    borderRadius: borderRadius.xl,
-    flex: 1,
-    overflow: 'hidden',
-  },
-  refreshButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 25,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-  },
-  refreshText: {
-    color: colors.white,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    actionButton: {
+      alignItems: 'center',
+      backgroundColor: 'white',
+      borderRadius: 30,
+      elevation: 5,
+      height: 60,
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      width: 60,
+    },
+    buttonContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 20,
+      justifyContent: 'center',
+      paddingBottom: 40,
+    },
+    card: {
+      height: CARD_HEIGHT,
+      position: 'absolute',
+      width: CARD_WIDTH,
+    },
+    cardContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    centerContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+    },
+    container: {
+      flex: 1,
+    },
+    emptySubtitle: {
+      marginBottom: 24,
+      paddingHorizontal: 40,
+    },
+    emptyTitle: {
+      marginBottom: 8,
+      marginTop: 16,
+    },
+    likeButton: {
+      borderColor: theme.colors.chart2,
+      borderWidth: 2,
+    },
+    nextCard: {
+      transform: [{ scale: 0.95 }],
+    },
+    passButton: {
+      borderColor: theme.colors.destructive,
+      borderWidth: 2,
+    },
+    profileCardWrapper: {
+      borderRadius: theme.borderRadius.xl,
+      flex: 1,
+      overflow: 'hidden',
+    },
+    refreshButton: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: 25,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+    },
+    refreshText: {
+      color: theme.colors.primaryForeground,
+      fontWeight: '600',
+    },
+  });
+}

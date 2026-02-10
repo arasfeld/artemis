@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -8,7 +8,15 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text, TextInput } from '@artemis/ui';
+import {
+  Field,
+  FieldContent,
+  FieldLabel,
+  Input,
+  Text,
+  useTheme,
+  type Theme,
+} from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 
 const MIN_AGE = 18;
@@ -16,6 +24,8 @@ const MAX_AGE = 99;
 
 export default function EditAgeRangeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { data, updateData } = useAppOnboarding();
   const [minAge, setMinAge] = useState(data.ageRangeMin.toString());
   const [maxAge, setMaxAge] = useState(data.ageRangeMax.toString());
@@ -58,7 +68,7 @@ export default function EditAgeRangeScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={theme.colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Age Preferences</Text>
         <TouchableOpacity
@@ -91,31 +101,35 @@ export default function EditAgeRangeScreen() {
           </View>
 
           <View style={styles.inputsContainer}>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Minimum age</Text>
-              <TextInput
-                value={minAge}
-                onChangeText={handleMinChange}
-                keyboardType="number-pad"
-                placeholder={`${MIN_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="next"
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel style={styles.inputLabel}>Minimum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MIN_AGE}`}
+                  returnKeyType="next"
+                  style={styles.ageInput}
+                  value={minAge}
+                  onChangeText={handleMinChange}
+                />
+              </FieldContent>
+            </Field>
 
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Maximum age</Text>
-              <TextInput
-                value={maxAge}
-                onChangeText={handleMaxChange}
-                keyboardType="number-pad"
-                placeholder={`${MAX_AGE}`}
-                maxLength={2}
-                style={styles.ageInput}
-                returnKeyType="done"
-              />
-            </View>
+            <Field style={styles.inputWrapper}>
+              <FieldLabel style={styles.inputLabel}>Maximum age</FieldLabel>
+              <FieldContent>
+                <Input
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  placeholder={`${MAX_AGE}`}
+                  returnKeyType="done"
+                  style={styles.ageInput}
+                  value={maxAge}
+                  onChangeText={handleMaxChange}
+                />
+              </FieldContent>
+            </Field>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -123,82 +137,85 @@ export default function EditAgeRangeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  ageInput: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: spacing.sm,
-    textAlign: 'center',
-  },
-  container: {
-    backgroundColor: colors.white,
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.border.light,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  headerButton: {
-    minWidth: 50,
-    padding: spacing.xs,
-  },
-  headerButtonDisabled: {
-    opacity: 0.5,
-  },
-  inputLabel: {
-    color: colors.text.secondary,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  inputWrapper: {
-    flex: 1,
-  },
-  inputsContainer: {
-    flexDirection: 'row',
-    gap: spacing.lg,
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
-  },
-  rangeDisplay: {
-    alignItems: 'center',
-    marginTop: spacing['2xl'],
-  },
-  rangeLabel: {
-    color: colors.text.muted,
-    fontSize: 16,
-    marginTop: spacing.xs,
-  },
-  rangeText: {
-    color: colors.text.primary,
-    fontSize: 48,
-    fontWeight: 'bold',
-  },
-  saveText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'right',
-  },
-  saveTextDisabled: {
-    color: colors.text.muted,
-  },
-  subtitle: {
-    color: colors.text.secondary,
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    ageInput: {
+      fontSize: 18,
+      fontWeight: '600',
+      marginTop: theme.spacing.sm,
+      textAlign: 'center',
+    },
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: theme.spacing.lg,
+      paddingTop: theme.spacing.xl,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.md,
+    },
+    headerButton: {
+      minWidth: 50,
+      padding: theme.spacing.xs,
+    },
+    headerButtonDisabled: {
+      opacity: 0.5,
+    },
+    inputLabel: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    inputWrapper: {
+      flex: 1,
+    },
+    inputsContainer: {
+      flexDirection: 'row',
+      gap: theme.spacing.lg,
+      justifyContent: 'space-between',
+      marginTop: theme.spacing.xl,
+    },
+    rangeDisplay: {
+      alignItems: 'center',
+      marginTop: theme.spacing['2xl'],
+    },
+    rangeLabel: {
+      color: theme.colors.mutedForeground,
+      fontSize: 16,
+      marginTop: theme.spacing.xs,
+    },
+    rangeText: {
+      color: theme.colors.foreground,
+      fontSize: 48,
+      fontWeight: 'bold',
+    },
+    saveText: {
+      color: theme.colors.primary,
+      fontSize: 16,
+      fontWeight: '600',
+      textAlign: 'right',
+    },
+    saveTextDisabled: {
+      color: theme.colors.mutedForeground,
+    },
+    subtitle: {
+      color: theme.colors.mutedForeground,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+    title: {
+      color: theme.colors.foreground,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+  });
+}

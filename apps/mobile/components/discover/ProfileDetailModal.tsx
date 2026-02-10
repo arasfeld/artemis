@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -11,7 +11,8 @@ import {
   ViewToken,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, colors } from '@artemis/ui';
+import { Text, useTheme } from '@artemis/ui';
+
 import type { DiscoverProfile } from '@/types/api';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -32,6 +33,7 @@ export function ProfileDetailModal({
   profile,
   visible,
 }: ProfileDetailModalProps) {
+  const { theme } = useTheme();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
@@ -47,6 +49,65 @@ export function ProfileDetailModal({
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   }).current;
+
+  const dynamicStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        actionButton: {
+          alignItems: 'center',
+          backgroundColor: theme.colors.card,
+          borderRadius: 35,
+          elevation: 5,
+          height: 70,
+          justifyContent: 'center',
+          shadowColor: theme.colors.black,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          width: 70,
+        },
+        closeButton: {
+          alignItems: 'center',
+          backgroundColor: theme.colors.card,
+          borderRadius: 20,
+          elevation: 2,
+          height: 40,
+          justifyContent: 'center',
+          position: 'absolute',
+          right: 16,
+          shadowColor: theme.colors.black,
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.2,
+          shadowRadius: 2,
+          top: 16,
+          width: 40,
+          zIndex: 10,
+        },
+        container: {
+          backgroundColor: theme.colors.background,
+          flex: 1,
+        },
+        infoText: {
+          color: theme.colors.mutedForeground,
+          flex: 1,
+        },
+        likeButton: {
+          borderColor: theme.colors.chart2,
+          borderWidth: 2,
+        },
+        paginationDotActive: {
+          backgroundColor: theme.colors.white,
+        },
+        passButton: {
+          borderColor: theme.colors.destructive,
+          borderWidth: 2,
+        },
+        placeholderPhoto: {
+          backgroundColor: theme.colors.border,
+        },
+      }),
+    [theme.colorScheme],
+  );
 
   if (!profile) return null;
 
@@ -67,10 +128,10 @@ export function ProfileDetailModal({
       presentationStyle="pageSheet"
       visible={visible}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={dynamicStyles.container}>
         {/* Close button */}
-        <Pressable onPress={onClose} style={styles.closeButton}>
-          <Ionicons color={colors.text.primary} name="close" size={28} />
+        <Pressable onPress={onClose} style={dynamicStyles.closeButton}>
+          <Ionicons color={theme.colors.foreground} name="close" size={28} />
         </Pressable>
 
         {/* Photo carousel */}
@@ -94,7 +155,7 @@ export function ProfileDetailModal({
               viewabilityConfig={viewabilityConfig}
             />
           ) : (
-            <View style={[styles.photo, styles.placeholderPhoto]} />
+            <View style={[styles.photo, dynamicStyles.placeholderPhoto]} />
           )}
 
           {/* Pagination dots */}
@@ -105,7 +166,7 @@ export function ProfileDetailModal({
                   key={index}
                   style={[
                     styles.paginationDot,
-                    index === currentPhotoIndex && styles.paginationDotActive,
+                    index === currentPhotoIndex && dynamicStyles.paginationDotActive,
                   ]}
                 />
               ))}
@@ -115,18 +176,18 @@ export function ProfileDetailModal({
 
         {/* Profile info */}
         <View style={styles.infoContainer}>
-          <Text color="dark" style={styles.name} variant="title">
+          <Text style={styles.name} variant="title">
             {profile.firstName}, {profile.age}
           </Text>
 
           {genderText && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={theme.colors.mutedForeground}
                 name="person-outline"
                 size={20}
               />
-              <Text color="dark" style={styles.infoText} variant="body">
+              <Text style={dynamicStyles.infoText} variant="body">
                 {genderText}
               </Text>
             </View>
@@ -135,11 +196,11 @@ export function ProfileDetailModal({
           {lookingForText && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={theme.colors.mutedForeground}
                 name="heart-outline"
                 size={20}
               />
-              <Text color="dark" style={styles.infoText} variant="body">
+              <Text style={dynamicStyles.infoText} variant="body">
                 {lookingForText}
               </Text>
             </View>
@@ -148,11 +209,11 @@ export function ProfileDetailModal({
           {profile.location && (
             <View style={styles.infoRow}>
               <Ionicons
-                color={colors.text.secondary}
+                color={theme.colors.mutedForeground}
                 name="location-outline"
                 size={20}
               />
-              <Text color="dark" style={styles.infoText} variant="body">
+              <Text style={dynamicStyles.infoText} variant="body">
                 {profile.location}
               </Text>
             </View>
@@ -164,16 +225,16 @@ export function ProfileDetailModal({
           <Pressable
             accessibilityLabel="Pass"
             onPress={onPass}
-            style={[styles.actionButton, styles.passButton]}
+            style={[dynamicStyles.actionButton, dynamicStyles.passButton]}
           >
-            <Ionicons color={colors.error} name="close" size={36} />
+            <Ionicons color={theme.colors.destructive} name="close" size={36} />
           </Pressable>
           <Pressable
             accessibilityLabel="Like"
             onPress={onLike}
-            style={[styles.actionButton, styles.likeButton]}
+            style={[dynamicStyles.actionButton, dynamicStyles.likeButton]}
           >
-            <Ionicons color={colors.success} name="heart" size={36} />
+            <Ionicons color={theme.colors.chart2} name="heart" size={36} />
           </Pressable>
         </View>
       </SafeAreaView>
@@ -182,19 +243,6 @@ export function ProfileDetailModal({
 }
 
 const styles = StyleSheet.create({
-  actionButton: {
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: 35,
-    elevation: 5,
-    height: 70,
-    justifyContent: 'center',
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    width: 70,
-  },
   buttonContainer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -202,27 +250,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 20,
     paddingTop: 16,
-  },
-  closeButton: {
-    alignItems: 'center',
-    backgroundColor: colors.background.card,
-    borderRadius: 20,
-    elevation: 2,
-    height: 40,
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 16,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    top: 16,
-    width: 40,
-    zIndex: 10,
-  },
-  container: {
-    backgroundColor: colors.white,
-    flex: 1,
   },
   infoContainer: {
     flex: 1,
@@ -234,14 +261,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     marginTop: 12,
-  },
-  infoText: {
-    color: colors.text.secondary,
-    flex: 1,
-  },
-  likeButton: {
-    borderColor: colors.success,
-    borderWidth: 2,
   },
   name: {
     fontSize: 32,
@@ -262,13 +281,6 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
   },
-  paginationDotActive: {
-    backgroundColor: colors.white,
-  },
-  passButton: {
-    borderColor: colors.error,
-    borderWidth: 2,
-  },
   photo: {
     height: PHOTO_HEIGHT,
     width: SCREEN_WIDTH,
@@ -276,8 +288,5 @@ const styles = StyleSheet.create({
   photoContainer: {
     height: PHOTO_HEIGHT,
     position: 'relative',
-  },
-  placeholderPhoto: {
-    backgroundColor: colors.border.light,
   },
 });

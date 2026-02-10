@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text } from '@artemis/ui';
+import { Checkbox, Text, useTheme, type Theme } from '@artemis/ui';
 import { useAppOnboarding } from '@/hooks/useAppOnboarding';
 import { useGetGendersQuery } from '@/store/api/apiSlice';
 import type { GenderData } from '@/types/api';
@@ -11,6 +11,8 @@ const MAX_GENDERS = 5;
 
 export default function EditGenderScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { data: onboardingData, updateData } = useAppOnboarding();
   const [selectedIds, setSelectedIds] = useState<string[]>(
     onboardingData.genderIds || []
@@ -87,21 +89,15 @@ export default function EditGenderScreen() {
               </Text>
             )}
           </View>
-          <View
-            style={[
-              styles.checkbox,
-              selected && styles.checkboxSelected,
-              disabled && styles.checkboxDisabled,
-            ]}
-          >
-            {selected && (
-              <Ionicons color={colors.white} name="checkmark" size={16} />
-            )}
-          </View>
+          <Checkbox
+            checked={selected}
+            disabled={disabled}
+            onCheckedChange={() => handleSelect(item)}
+          />
         </TouchableOpacity>
       );
     },
-    [atMaxGenders, handleSelect, isSelected]
+    [atMaxGenders, handleSelect, isSelected, styles]
   );
 
   if (isLoading) {
@@ -123,7 +119,7 @@ export default function EditGenderScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-          <Ionicons color={colors.text.primary} name="close" size={24} />
+          <Ionicons color={theme.colors.foreground} name="close" size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Gender Identity</Text>
         <TouchableOpacity
@@ -162,114 +158,100 @@ export default function EditGenderScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  checkbox: {
-    alignItems: 'center',
-    borderColor: colors.border.medium,
-    borderRadius: 4,
-    borderWidth: 2,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  checkboxDisabled: {
-    borderColor: colors.border.light,
-  },
-  checkboxSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  container: {
-    backgroundColor: colors.white,
-    flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.border.light,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  headerButton: {
-    minWidth: 50,
-    padding: spacing.xs,
-  },
-  headerButtonDisabled: {
-    opacity: 0.5,
-  },
-  item: {
-    alignItems: 'center',
-    borderBottomColor: colors.border.light,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  itemContent: {
-    flex: 1,
-    marginRight: spacing.md,
-  },
-  itemDescription: {
-    color: colors.text.muted,
-    fontSize: 13,
-    marginTop: 2,
-  },
-  itemDescriptionDisabled: {
-    color: colors.border.medium,
-  },
-  itemDisabled: {
-    opacity: 0.5,
-  },
-  itemLabel: {
-    color: colors.text.primary,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  itemLabelDisabled: {
-    color: colors.text.muted,
-  },
-  itemLabelSelected: {
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  itemSelected: {
-    backgroundColor: colors.selected.background,
-  },
-  limitNotice: {
-    backgroundColor: colors.selected.background,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  limitText: {
-    color: colors.text.secondary,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  listContent: {
-    paddingBottom: spacing.xl,
-  },
-  loadingContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  loadingText: {
-    color: colors.text.muted,
-    fontSize: 16,
-  },
-  saveText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'right',
-  },
-  saveTextDisabled: {
-    color: colors.text.muted,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+      flex: 1,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.md,
+    },
+    headerButton: {
+      minWidth: 50,
+      padding: theme.spacing.xs,
+    },
+    headerButtonDisabled: {
+      opacity: 0.5,
+    },
+    item: {
+      alignItems: 'center',
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      flexDirection: 'row',
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    itemContent: {
+      flex: 1,
+      marginRight: theme.spacing.md,
+    },
+    itemDescription: {
+      color: theme.colors.mutedForeground,
+      fontSize: 13,
+      marginTop: 2,
+    },
+    itemDescriptionDisabled: {
+      color: theme.colors.ring,
+    },
+    itemDisabled: {
+      opacity: 0.5,
+    },
+    itemLabel: {
+      color: theme.colors.foreground,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    itemLabelDisabled: {
+      color: theme.colors.mutedForeground,
+    },
+    itemLabelSelected: {
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    itemSelected: {
+      backgroundColor: theme.colors.accent,
+    },
+    limitNotice: {
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.sm,
+    },
+    limitText: {
+      color: theme.colors.mutedForeground,
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    listContent: {
+      paddingBottom: theme.spacing.xl,
+    },
+    loadingContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+    },
+    loadingText: {
+      color: theme.colors.mutedForeground,
+      fontSize: 16,
+    },
+    saveText: {
+      color: theme.colors.primary,
+      fontSize: 16,
+      fontWeight: '600',
+      textAlign: 'right',
+    },
+    saveTextDisabled: {
+      color: theme.colors.mutedForeground,
+    },
+    title: {
+      color: theme.colors.foreground,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+  });
+}

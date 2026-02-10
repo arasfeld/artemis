@@ -1,5 +1,7 @@
+import { useMemo } from 'react';
 import { StyleSheet, Text as RNText, View } from 'react-native';
-import { Text, borderRadius, colors, spacing } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
+
 import type { MessageData } from '@/types/api';
 
 interface MessageBubbleProps {
@@ -16,6 +18,8 @@ export function MessageBubble({
   message,
   showTime = false,
 }: MessageBubbleProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const { content, createdAt, isFromMe } = message;
 
   return (
@@ -50,43 +54,45 @@ export function MessageBubble({
   );
 }
 
-const styles = StyleSheet.create({
-  bubble: {
-    borderRadius: borderRadius.lg,
-    maxWidth: '80%',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  bubbleFromMe: {
-    backgroundColor: colors.primary,
-    borderBottomRightRadius: 4,
-  },
-  bubbleFromThem: {
-    backgroundColor: colors.border.light,
-    borderBottomLeftRadius: 4,
-  },
-  container: {
-    marginVertical: 2,
-    paddingHorizontal: spacing.md,
-  },
-  fromMe: {
-    alignItems: 'flex-end',
-  },
-  fromThem: {
-    alignItems: 'flex-start',
-  },
-  text: {
-    lineHeight: 20,
-  },
-  time: {
-    color: colors.text.muted,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  timeFromMe: {
-    marginRight: 4,
-  },
-  timeFromThem: {
-    marginLeft: 4,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    bubble: {
+      borderRadius: theme.borderRadius.lg,
+      maxWidth: '80%',
+      paddingHorizontal: theme.spacing.md,
+      paddingVertical: theme.spacing.sm,
+    },
+    bubbleFromMe: {
+      backgroundColor: theme.colors.primary,
+      borderBottomRightRadius: 4,
+    },
+    bubbleFromThem: {
+      backgroundColor: theme.colors.muted,
+      borderBottomLeftRadius: 4,
+    },
+    container: {
+      marginVertical: 2,
+      paddingHorizontal: theme.spacing.md,
+    },
+    fromMe: {
+      alignItems: 'flex-end',
+    },
+    fromThem: {
+      alignItems: 'flex-start',
+    },
+    text: {
+      lineHeight: 20,
+    },
+    time: {
+      color: theme.colors.mutedForeground,
+      fontSize: 11,
+      marginTop: 2,
+    },
+    timeFromMe: {
+      marginRight: 4,
+    },
+    timeFromThem: {
+      marginLeft: 4,
+    },
+  });
+}

@@ -1,7 +1,8 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Text, borderRadius, colors } from '@artemis/ui';
+import { Text, useTheme } from '@artemis/ui';
+
 import type { DiscoverProfile } from '@/types/api';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -15,11 +16,34 @@ interface ProfileCardProps {
 export const ProfileCard = memo(function ProfileCard({
   profile,
 }: ProfileCardProps) {
+  const { theme } = useTheme();
   const primaryPhoto =
     profile.photos.find((p) => p.displayOrder === 0) || profile.photos[0];
 
+  const dynamicStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        card: {
+          backgroundColor: theme.colors.card,
+          borderRadius: theme.borderRadius.xl,
+          elevation: 5,
+          height: CARD_HEIGHT,
+          overflow: 'hidden',
+          shadowColor: theme.colors.black,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          width: CARD_WIDTH,
+        },
+        placeholderImage: {
+          backgroundColor: theme.colors.border,
+        },
+      }),
+    [theme.colorScheme],
+  );
+
   return (
-    <View style={styles.card}>
+    <View style={dynamicStyles.card}>
       {primaryPhoto ? (
         <Image
           resizeMode="cover"
@@ -27,14 +51,14 @@ export const ProfileCard = memo(function ProfileCard({
           style={styles.image}
         />
       ) : (
-        <View style={[styles.image, styles.placeholderImage]} />
+        <View style={[styles.image, dynamicStyles.placeholderImage]} />
       )}
       <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.8)']}
+        colors={['transparent', theme.colors.overlay]}
         style={styles.gradient}
       />
       <View style={styles.infoContainer}>
-        <Text color="light" style={styles.name} variant="title">
+        <Text style={styles.name} variant="title">
           {profile.firstName}, {profile.age}
         </Text>
       </View>
@@ -43,18 +67,6 @@ export const ProfileCard = memo(function ProfileCard({
 });
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.xl,
-    elevation: 5,
-    height: CARD_HEIGHT,
-    overflow: 'hidden',
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    width: CARD_WIDTH,
-  },
   gradient: {
     bottom: 0,
     height: '40%',
@@ -76,8 +88,5 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 28,
     fontWeight: 'bold',
-  },
-  placeholderImage: {
-    backgroundColor: colors.border.light,
   },
 });

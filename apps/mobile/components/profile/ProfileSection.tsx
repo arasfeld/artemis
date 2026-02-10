@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, Text } from '@artemis/ui';
+import { Text, useTheme, type Theme } from '@artemis/ui';
 
 interface ProfileSectionProps {
   children: React.ReactNode;
@@ -15,13 +16,16 @@ export function ProfileSection({
   showChevron = true,
   title,
 }: ProfileSectionProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   const content = (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         {showChevron && (
           <Ionicons
-            color={colors.text.muted}
+            color={theme.colors.mutedForeground}
             name="chevron-forward"
             size={20}
           />
@@ -45,28 +49,30 @@ export function ProfileSection({
   return content;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.white,
-    borderBottomColor: colors.border.light,
-    borderBottomWidth: 1,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  content: {
-    marginTop: spacing.xs,
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pressed: {
-    backgroundColor: colors.background.card,
-  },
-  title: {
-    color: colors.text.primary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.background,
+      borderBottomColor: theme.colors.border,
+      borderBottomWidth: 1,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.md,
+    },
+    content: {
+      marginTop: theme.spacing.xs,
+    },
+    header: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    pressed: {
+      backgroundColor: theme.colors.card,
+    },
+    title: {
+      color: theme.colors.foreground,
+      fontSize: 16,
+      fontWeight: '600',
+    },
+  });
+}

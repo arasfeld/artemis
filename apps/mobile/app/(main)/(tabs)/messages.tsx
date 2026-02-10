@@ -1,14 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { ScreenContainer, Text, colors, spacing } from '@artemis/ui';
+import { ScreenContainer, Text, useTheme, type Theme } from '@artemis/ui';
+
 import { ConversationItem } from '@/components/messages';
 import { useGetConversationsQuery } from '@/store/api/apiSlice';
 import type { ConversationData } from '@/types/api';
 
 export default function MessagesScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const {
     data: conversations = [],
     isLoading,
@@ -39,17 +42,17 @@ export default function MessagesScreen() {
   // Empty state
   if (!isLoading && conversations.length === 0) {
     return (
-      <ScreenContainer withGradient={false}>
+      <ScreenContainer>
         <View style={styles.emptyContainer}>
           <Ionicons
-            color={colors.text.muted}
+            color={theme.colors.mutedForeground}
             name="chatbubbles-outline"
             size={64}
           />
-          <Text color="dark" style={styles.emptyTitle} variant="title">
+          <Text style={styles.emptyTitle} variant="title">
             No conversations yet
           </Text>
-          <Text center color="dark" style={styles.emptySubtitle} variant="body">
+          <Text center style={styles.emptySubtitle} variant="body">
             When you match with someone, you can start chatting here
           </Text>
         </View>
@@ -58,9 +61,9 @@ export default function MessagesScreen() {
   }
 
   return (
-    <ScreenContainer withGradient={false}>
+    <ScreenContainer>
       <View style={styles.header}>
-        <Text color="dark" variant="title">
+        <Text variant="title">
           Messages
         </Text>
       </View>
@@ -70,10 +73,10 @@ export default function MessagesScreen() {
         keyExtractor={keyExtractor}
         refreshControl={
           <RefreshControl
-            colors={[colors.primary]}
+            colors={[theme.colors.primary]}
             onRefresh={refetch}
             refreshing={isLoading}
-            tintColor={colors.primary}
+            tintColor={theme.colors.primary}
           />
         }
         renderItem={renderItem}
@@ -83,26 +86,28 @@ export default function MessagesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  emptyContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.xl,
-  },
-  emptySubtitle: {
-    paddingHorizontal: spacing.xl,
-  },
-  emptyTitle: {
-    marginBottom: spacing.sm,
-    marginTop: spacing.md,
-  },
-  header: {
-    paddingBottom: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.lg,
-  },
-  listContent: {
-    flexGrow: 1,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    emptyContainer: {
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
+      padding: theme.spacing.xl,
+    },
+    emptySubtitle: {
+      paddingHorizontal: theme.spacing.xl,
+    },
+    emptyTitle: {
+      marginBottom: theme.spacing.sm,
+      marginTop: theme.spacing.md,
+    },
+    header: {
+      paddingBottom: theme.spacing.md,
+      paddingHorizontal: theme.spacing.md,
+      paddingTop: theme.spacing.lg,
+    },
+    listContent: {
+      flexGrow: 1,
+    },
+  });
+}

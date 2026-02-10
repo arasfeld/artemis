@@ -1,117 +1,278 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
   ActivityIndicator,
-  type ViewStyle,
+  Pressable,
+  StyleSheet,
+  Text,
   type TextStyle,
+  type ViewStyle,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { typography } from '../theme/typography';
-import { borderRadius, shadow, spacing } from '../theme/spacing';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
-interface ButtonProps {
+const destructiveMuted = 'rgba(220, 38, 38, 0.1)';
+const destructiveMutedPressed = 'rgba(220, 38, 38, 0.2)';
+
+export type ButtonVariant =
+  | 'default'
+  | 'destructive'
+  | 'ghost'
+  | 'link'
+  | 'outline'
+  | 'secondary';
+
+export type ButtonSize =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'icon'
+  | 'icon-xs'
+  | 'icon-sm'
+  | 'icon-lg';
+
+export interface ButtonProps {
   children: React.ReactNode;
-  onPress: () => void;
-  variant?: ButtonVariant;
   disabled?: boolean;
-  loading?: boolean;
   fullWidth?: boolean;
+  loading?: boolean;
+  onPress: () => void;
+  size?: ButtonSize;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  variant?: ButtonVariant;
+}
+
+function buildSizeStyles(
+  theme: Theme
+): Record<ButtonSize, { container: ViewStyle; text: TextStyle; gap: number }> {
+  const { typography } = theme;
+  return {
+    xs: {
+      container: {
+        height: 28,
+        paddingHorizontal: 10,
+        paddingVertical: 0,
+        gap: 4,
+      },
+      text: { fontSize: 13 },
+      gap: 4,
+    },
+    sm: {
+      container: {
+        height: 36,
+        paddingHorizontal: 12,
+        paddingVertical: 0,
+        gap: 6,
+      },
+      text: { fontSize: typography.fontSize.sm },
+      gap: 6,
+    },
+    md: {
+      container: {
+        height: 44,
+        paddingHorizontal: 16,
+        paddingVertical: 0,
+        gap: 8,
+      },
+      text: { fontSize: typography.fontSize.base },
+      gap: 8,
+    },
+    lg: {
+      container: {
+        height: 52,
+        paddingHorizontal: 20,
+        paddingVertical: 0,
+        gap: 8,
+      },
+      text: { fontSize: typography.fontSize.base },
+      gap: 8,
+    },
+    icon: {
+      container: {
+        width: 44,
+        height: 44,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
+    },
+    'icon-xs': {
+      container: {
+        width: 28,
+        height: 28,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
+    },
+    'icon-sm': {
+      container: {
+        width: 36,
+        height: 36,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
+    },
+    'icon-lg': {
+      container: {
+        width: 52,
+        height: 52,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+      text: {},
+      gap: 0,
+    },
+  };
 }
 
 export function Button({
   children,
-  onPress,
-  variant = 'primary',
   disabled = false,
-  loading = false,
   fullWidth = false,
+  loading = false,
+  onPress,
+  size = 'md',
   style,
   textStyle,
+  variant = 'default',
 }: ButtonProps) {
+  const { theme } = useTheme();
+  const { colors } = theme;
+  const sizeStyles = useMemo(() => buildSizeStyles(theme), [theme]);
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const isDisabled = disabled || loading;
+  const sizeConfig = sizeStyles[size];
+  const isIconSize = size.startsWith('icon');
+
+  const getContainerStyle = ({
+    pressed,
+  }: {
+    pressed: boolean;
+  }): ViewStyle[] => {
+    const base: ViewStyle[] = [
+      styles.base,
+      sizeConfig.container,
+      { borderRadius: theme.borderRadius.md },
+      ...(fullWidth ? [styles.fullWidth] : []),
+      ...(isDisabled ? [styles.disabled] : []),
+    ];
+
+    switch (variant) {
+      case 'default':
+        base.push({
+          backgroundColor: pressed ? 'rgba(52, 52, 52, 0.8)' : colors.primary,
+        });
+        break;
+      case 'outline':
+        base.push({
+          backgroundColor: pressed ? colors.muted : colors.background,
+          borderColor: colors.border,
+          borderWidth: 1,
+        });
+        break;
+      case 'secondary':
+        base.push({
+          backgroundColor: pressed
+            ? 'rgba(245, 245, 245, 0.8)'
+            : colors.secondary,
+        });
+        break;
+      case 'ghost':
+        base.push({
+          backgroundColor: pressed ? colors.muted : 'transparent',
+        });
+        break;
+      case 'destructive':
+        base.push({
+          backgroundColor: pressed ? destructiveMutedPressed : destructiveMuted,
+        });
+        break;
+      case 'link':
+        base.push({ backgroundColor: 'transparent' });
+        break;
+    }
+
+    return base;
+  };
+
+  const getTextStyle = (): TextStyle[] => {
+    const base: TextStyle[] = [
+      styles.textBase,
+      sizeConfig.text,
+      ...(!isIconSize ? [{ paddingVertical: 4 }] : []),
+    ];
+
+    switch (variant) {
+      case 'default':
+      case 'secondary':
+        base.push({ color: colors.primaryForeground });
+        break;
+      case 'outline':
+      case 'ghost':
+        base.push({ color: colors.foreground });
+        break;
+      case 'destructive':
+        base.push({ color: colors.destructive });
+        break;
+      case 'link':
+        base.push({ color: colors.primary, textDecorationLine: 'underline' });
+        break;
+    }
+
+    return base;
+  };
+
+  const spinnerColor =
+    variant === 'default' || variant === 'secondary'
+      ? colors.primaryForeground
+      : variant === 'destructive'
+        ? colors.destructive
+        : variant === 'link'
+          ? colors.primary
+          : colors.foreground;
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.base,
-        variantStyles[variant],
-        fullWidth && styles.fullWidth,
-        isDisabled && styles.disabled,
-        style,
-      ]}
-      onPress={onPress}
+    <Pressable
       disabled={isDisabled}
-      activeOpacity={0.8}
+      onPress={onPress}
+      style={({ pressed }) => [
+        ...getContainerStyle({ pressed }),
+        ...(style ? [style] : []),
+      ]}
     >
       {loading ? (
-        <ActivityIndicator
-          color={variant === 'primary' ? colors.primary : colors.white}
-          size="small"
-        />
+        <ActivityIndicator color={spinnerColor} size="small" />
       ) : (
-        <Text style={[textStyles.base, textVariantStyles[variant], textStyle]}>
+        <Text style={[...getTextStyle(), ...(textStyle ? [textStyle] : [])]}>
           {children}
         </Text>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: borderRadius.full,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 52,
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  disabled: {
-    opacity: 0.6,
-  },
-});
-
-const variantStyles = StyleSheet.create({
-  primary: {
-    backgroundColor: colors.white,
-    ...shadow.md,
-  },
-  secondary: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: colors.white,
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-    paddingHorizontal: spacing.md,
-  },
-});
-
-const textStyles = StyleSheet.create({
-  base: {
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.semibold,
-  },
-});
-
-const textVariantStyles = StyleSheet.create({
-  primary: {
-    color: colors.primary,
-  },
-  secondary: {
-    color: colors.white,
-  },
-  ghost: {
-    color: colors.white,
-    textDecorationLine: 'underline',
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    base: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    fullWidth: {
+      width: '100%',
+    },
+    textBase: {
+      fontWeight: theme.typography.fontWeight.medium,
+    },
+  });
+}

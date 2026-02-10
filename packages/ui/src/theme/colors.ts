@@ -1,49 +1,84 @@
-export const colors = {
-  // Primary gradient
-  gradient: {
-    start: '#83b59c',
-    end: '#4f685b',
-  },
-
-  // Solid colors
-  primary: '#4f685b',
-  primaryLight: '#83b59c',
-
-  // Neutrals
-  white: '#FFFFFF',
+export const lightColors = {
+  accent: '#e0cfac',
+  accentForeground: '#2c2024',
+  background: '#f2dfbc',
   black: '#000000',
+  border: '#bfa780',
+  card: '#f1e3c7',
+  cardForeground: '#64430d',
+  chart1: '#ed5f1a',
+  chart2: '#1cb6a6',
+  chart3: '#0e6977',
+  chart4: '#fdc010',
+  chart5: '#f68c10',
+  destructive: '#f9281d',
+  destructiveForeground: '#fff6f8',
+  foreground: '#61440a',
+  input: '#bfa780',
+  muted: '#e4cea5',
+  mutedForeground: '#815f2d',
+  popover: '#f1e3c7',
+  popoverForeground: '#64430d',
+  primary: '#a3a85c',
+  primaryForeground: '#fff6f8',
+  ring: '#815f2d',
+  secondary: '#e7d5b3',
+  secondaryForeground: '#7f602c',
+  sidebar: '#e7d2a8',
+  sidebarAccent: '#dac59b',
+  sidebarAccentForeground: '#2c2024',
+  sidebarBorder: '#e1e1e1',
+  sidebarForeground: '#61440a',
+  sidebarPrimary: '#2c2024',
+  sidebarPrimaryForeground: '#fff6f8',
+  sidebarRing: '#a1a1a1',
+  white: '#ffffff',
 
-  // Text
-  text: {
-    primary: '#333333',
-    secondary: '#666666',
-    muted: '#999999',
-    light: '#FFFFFF',
-    lightMuted: 'rgba(255, 255, 255, 0.7)',
-  },
-
-  // Backgrounds
-  background: {
-    card: '#FFFFFF',
-    cardHover: '#F9F9F9',
-    overlay: 'rgba(0, 0, 0, 0.5)',
-  },
-
-  // Borders
-  border: {
-    light: '#EEEEEE',
-    medium: '#DDDDDD',
-    onDark: 'rgba(255, 255, 255, 0.3)',
-  },
-
-  // States
-  error: '#E53935',
-  success: '#43A047',
-  warning: '#FB8C00',
-
-  // Selection
-  selected: {
-    background: 'rgba(79, 104, 91, 0.1)',
-    border: '#4f685b',
-  },
+  // RN-specific (modal backdrop, divider on dark)
+  overlay: 'rgba(0, 0, 0, 0.5)',
 } as const;
+
+export const darkColors: Colors = {
+  accent: '#3d332b',
+  accentForeground: '#e0cfac',
+  background: '#1a1512',
+  black: '#000000',
+  border: '#3d332b',
+  card: '#26201d',
+  cardForeground: '#e9d4b3',
+  chart1: '#ed5f1a',
+  chart2: '#1cb6a6',
+  chart3: '#0e6977',
+  chart4: '#fdc010',
+  chart5: '#f68c10',
+  destructive: '#f9281d',
+  destructiveForeground: '#fff6f8',
+  foreground: '#e9d4b3',
+  input: '#3d332b',
+  muted: '#2b2523',
+  mutedForeground: '#bfa780',
+  popover: '#26201d',
+  popoverForeground: '#e9d4b3',
+  primary: '#8b906e',
+  primaryForeground: '#fff6f8',
+  ring: '#8b906e',
+  secondary: '#3d332b',
+  secondaryForeground: '#e7d5b3',
+  sidebar: '#211c18',
+  sidebarAccent: '#3d332b',
+  sidebarAccentForeground: '#e0cfac',
+  sidebarBorder: '#3d332b',
+  sidebarForeground: '#e9d4b3',
+  sidebarPrimary: '#8b906e',
+  sidebarPrimaryForeground: '#fff6f8',
+  sidebarRing: '#8b906e',
+  white: '#ffffff',
+
+  // RN-specific
+  overlay: 'rgba(0, 0, 0, 0.7)',
+} as const;
+
+export type Colors = { [K in keyof typeof lightColors]: string };
+
+// Backward compat — will be removed after migration
+export const colors = lightColors;

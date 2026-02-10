@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet, type ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { spacing } from '../theme/spacing';
+
+import type { Theme } from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 interface BackButtonProps {
   onPress: () => void;
@@ -13,24 +14,29 @@ interface BackButtonProps {
 
 export function BackButton({
   onPress,
-  color = colors.white,
+  color,
   size = 28,
   style,
 }: BackButtonProps) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
   return (
     <TouchableOpacity
       style={[styles.container, style]}
       onPress={onPress}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
-      <Ionicons name="chevron-back" size={size} color={color} />
+      <Ionicons name="chevron-back" size={size} color={color ?? theme.colors.foreground} />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: spacing.xs,
-    marginLeft: -spacing.xs,
-  },
-});
+function createStyles(theme: Theme) {
+  return StyleSheet.create({
+    container: {
+      marginLeft: -theme.spacing.xs,
+      padding: theme.spacing.xs,
+    },
+  });
+}
