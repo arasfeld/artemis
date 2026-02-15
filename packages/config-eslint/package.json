@@ -1,5 +1,5 @@
 {
-  "name": "@artemis/eslint-config",
+  "name": "@artemis/config-eslint",
   "version": "0.0.0",
   "type": "module",
   "private": true,

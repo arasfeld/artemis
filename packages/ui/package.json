@@ -28,8 +28,8 @@
     "react-native-safe-area-context": "*"
   },
   "devDependencies": {
-    "@artemis/eslint-config": "workspace:*",
-    "@artemis/typescript-config": "workspace:*",
+    "@artemis/config-eslint": "workspace:*",
+    "@artemis/config-typescript": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "~19.1.10",
     "typescript": "5.9.2"

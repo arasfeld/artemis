@@ -1,4 +1,4 @@
-import { config } from '@artemis/eslint-config/base';
+import { config } from '@artemis/config-eslint/base';
 import globals from 'globals';
 
 /** @type {import("eslint").Linter.Config[]} */

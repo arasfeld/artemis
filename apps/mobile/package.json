@@ -55,7 +55,7 @@
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@artemis/eslint-config": "workspace:*",
+    "@artemis/config-eslint": "workspace:*",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.10",
     "jest": "^29.5.0",

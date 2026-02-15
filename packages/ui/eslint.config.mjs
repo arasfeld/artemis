@@ -1,4 +1,4 @@
-import { config } from '@artemis/eslint-config/react-internal';
+import { config } from '@artemis/config-eslint/react-internal';
 
 /** @type {import("eslint").Linter.Config} */
 export default config;

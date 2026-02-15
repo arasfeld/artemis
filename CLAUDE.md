@@ -54,9 +54,9 @@ This is a **Turborepo** monorepo using **pnpm workspaces**:
 - **apps/api**: NestJS backend with PostgreSQL
 - **apps/mobile**: React Native/Expo mobile app
 - **apps/web**: Next.js web application
-- **packages/ui**: Shared React Native component library (built with tsup)
-- **packages/eslint-config**: Shared ESLint configurations
-- **packages/typescript-config**: Shared TypeScript configurations
+- **packages/config-eslint**: Shared ESLint configurations
+- **packages/config-typescript**: Shared TypeScript configurations
+- **packages/ui**: Shared React Native component library
 
 ### Backend (apps/api)
 
@@ -122,6 +122,7 @@ Copy `apps/api/.env.example` to `apps/api/.env` and configure:
 ## Current Development Status
 
 ### Implemented Features
+
 - User authentication (Google OAuth)
 - Complete onboarding flow
 - Discover feed with smart matching
@@ -130,6 +131,7 @@ Copy `apps/api/.env.example` to `apps/api/.env` and configure:
 - Profile creation during onboarding
 
 ### Not Yet Implemented
+
 - **Messaging**: No chat functionality between matches
 - **View Likes**: Cannot see who has liked you
 - **Profile Editing**: Cannot modify profile after onboarding

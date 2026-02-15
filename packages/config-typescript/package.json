@@ -1,5 +1,5 @@
 {
-  "name": "@artemis/typescript-config",
+  "name": "@artemis/config-typescript",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

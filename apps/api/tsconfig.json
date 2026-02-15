@@ -1,5 +1,5 @@
 {
-  "extends": "@artemis/typescript-config/nestjs.json",
+  "extends": "@artemis/config-typescript/nestjs.json",
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist"
