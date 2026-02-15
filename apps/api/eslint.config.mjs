@@ -1,13 +1,9 @@
-import { config } from '@artemis/config-eslint/base';
-import globals from 'globals';
+import { nestJsConfig } from '@artemis/config-eslint/nest-js';
 
-/** @type {import("eslint").Linter.Config[]} */
+/** @type {import("eslint").Linter.Config} */
 export default [
-  ...config,
+  ...nestJsConfig,
   {
-    files: ['*.config.js'],
-    languageOptions: {
-      globals: globals.node,
-    },
+    ignores: ['eslint.config.mjs'],
   },
 ];
