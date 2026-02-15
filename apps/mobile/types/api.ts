@@ -58,6 +58,7 @@ export interface ProfileData {
   locationRegion?: string;
   locationType?: LocationType;
   locationZipCode?: string;
+  pets: PetData[];
   photos: PhotoData[];
   relationshipTypes?: RelationshipTypeData[];
   seeking: GenderData[];
@@ -99,6 +100,44 @@ export interface ConfirmPhotoUploadRequest {
   key: string;
 }
 
+// Pet types
+export interface PetTypeData {
+  id: string;
+  name: string;
+}
+
+export interface PetPhotoData {
+  createdAt: string;
+  displayOrder: number;
+  id: string;
+  url: string;
+}
+
+export interface PetData {
+  birthday?: string;
+  breed?: string;
+  createdAt: string;
+  displayOrder: number;
+  id: string;
+  name: string;
+  petType: PetTypeData;
+  photos: PetPhotoData[];
+}
+
+export interface CreatePetRequest {
+  birthday?: string;
+  breed?: string;
+  name: string;
+  petTypeId: string;
+}
+
+export interface UpdatePetRequest {
+  birthday?: string | null;
+  breed?: string | null;
+  name?: string;
+  petTypeId?: string;
+}
+
 // Discover types
 export interface DiscoverProfile {
   age: number;
@@ -109,6 +148,7 @@ export interface DiscoverProfile {
   }[];
   id: string;
   location?: string;
+  pets: PetData[];
   photos: {
     displayOrder: number;
     id: string;

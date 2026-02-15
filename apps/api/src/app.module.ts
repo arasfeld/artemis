@@ -6,6 +6,8 @@ import { DatabaseModule } from './modules/database/database.module';
 import { DiscoverModule } from './modules/discover/discover.module';
 import { GendersModule } from './modules/genders/genders.module';
 import { MessagesModule } from './modules/messages/messages.module';
+import { PetTypesModule } from './modules/pet-types/pet-types.module';
+import { PetsModule } from './modules/pets/pets.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { RelationshipTypesModule } from './modules/relationship-types/relationship-types.module';
 
@@ -18,6 +20,8 @@ import { RelationshipTypesModule } from './modules/relationship-types/relationsh
     DiscoverModule,
     GendersModule,
     MessagesModule,
+    PetsModule,
+    PetTypesModule,
     ProfileModule,
     RelationshipTypesModule,
   ],

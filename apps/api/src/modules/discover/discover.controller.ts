@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../database/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { InteractionType } from '../database/entities/interaction.entity';
+import { User } from '../database/entities/user.entity';
 import { DiscoverService } from './discover.service';
 
 class InteractionDto {

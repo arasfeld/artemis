@@ -9,6 +9,7 @@ import { Match } from '../database/entities/match.entity';
 import { UserPhoto } from '../database/entities/user-photo.entity';
 import { UserProfile } from '../database/entities/user-profile.entity';
 import { User } from '../database/entities/user.entity';
+import { PetsService } from '../pets/pets.service';
 
 export interface DiscoverProfile {
   age: number;
@@ -19,6 +20,7 @@ export interface DiscoverProfile {
   }>;
   id: string;
   location?: string;
+  pets: Record<string, unknown>[];
   photos: Array<{
     displayOrder: number;
     id: string;
@@ -47,6 +49,7 @@ export interface MatchResult {
 export class DiscoverService {
   constructor(
     private readonly em: EntityManager,
+    private readonly petsService: PetsService,
     @Inject(STORAGE_SERVICE) private readonly storage: IStorageService
   ) {}
 
@@ -178,6 +181,7 @@ export class DiscoverService {
     }
 
     // Fetch genders for each candidate
+    const placeholders = userIds.map(() => '?').join(', ');
     const genderResults = await this.em.getConnection().execute<
       Array<{
         gender_id: string;
@@ -192,10 +196,10 @@ export class DiscoverService {
         g.name as gender_name
       from user_profile_genders upg
       join genders g on g.id = upg.gender_id
-      where upg.user_profile_user_id = any(?)
+      where upg.user_profile_user_id in (${placeholders})
       order by g.display_order
     `,
-      [userIds]
+      userIds
     );
 
     const gendersByUser = new Map<
@@ -215,9 +219,9 @@ export class DiscoverService {
     // Fetch relationship options for each candidate
     const relResults = await this.em.getConnection().execute<
       Array<{
-        user_id: string;
-        relationship_type_id: string;
         name: string;
+        relationship_type_id: string;
+        user_id: string;
       }>
     >(
       `
@@ -227,9 +231,9 @@ export class DiscoverService {
           rt.name
         from user_profile_relationship_types upr
         join relationship_types rt on rt.id = upr.relationship_type_id
-        where upr.user_profile_user_id = any(?)
+        where upr.user_profile_user_id in (${userIds.map(() => '?').join(', ')})
       `,
-      [userIds]
+      userIds
     );
 
     const relByUser = new Map<string, Array<{ id: string; name: string }>>();
@@ -240,12 +244,20 @@ export class DiscoverService {
         .push({ id: row.relationship_type_id, name: row.name });
     }
 
+    // Fetch pets for each candidate
+    const petsByUser = new Map<string, Record<string, unknown>[]>();
+    for (const uid of userIds) {
+      const pets = await this.petsService.getUserPets(uid);
+      petsByUser.set(uid, pets);
+    }
+
     return results.map((r) => ({
       age: r.age,
       firstName: r.first_name,
       genders: gendersByUser.get(r.user_id) || [],
       id: r.user_id,
       location: r.location_country || undefined,
+      pets: petsByUser.get(r.user_id) || [],
       photos: photosByUser.get(r.user_id) || [],
       relationshipTypes: relByUser.get(r.user_id) || [],
     }));

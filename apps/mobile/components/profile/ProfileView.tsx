@@ -3,7 +3,12 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, useTheme, type Theme } from '@artemis/ui';
 
-import type { GenderData, PhotoData, RelationshipTypeData } from '@/types/api';
+import type {
+  GenderData,
+  PetData,
+  PhotoData,
+  RelationshipTypeData,
+} from '@/types/api';
 import { PhotoCarousel } from './PhotoCarousel';
 import { ProfileSection } from './ProfileSection';
 
@@ -12,6 +17,7 @@ export type ProfileEditSection =
   | 'gender'
   | 'location'
   | 'name'
+  | 'pets'
   | 'photos'
   | 'relationship'
   | 'seeking';
@@ -26,6 +32,7 @@ interface ProfileViewProps {
   onEditSection: (section: ProfileEditSection) => void;
   onSettingsPress?: () => void;
   onSignOut: () => void;
+  pets?: PetData[];
   photos: PhotoData[];
   relationshipTypes?: RelationshipTypeData[];
   seeking: GenderData[];
@@ -41,6 +48,7 @@ export function ProfileView({
   onEditSection,
   onSettingsPress,
   onSignOut,
+  pets,
   photos,
   relationshipTypes,
   seeking,
@@ -163,6 +171,25 @@ export function ProfileView({
           />
           <Text style={styles.infoValue}>{locationText}</Text>
         </View>
+      </ProfileSection>
+
+      {/* My Pets Section */}
+      <ProfileSection title="My Pets" onPress={() => onEditSection('pets')}>
+        {pets && pets.length > 0 ? (
+          pets.map((pet) => (
+            <View key={pet.id} style={styles.infoRow}>
+              <Ionicons
+                color={theme.colors.mutedForeground}
+                name="paw"
+                size={18}
+              />
+              <Text style={styles.infoLabel}>{pet.petType.name}:</Text>
+              <Text style={styles.infoValue}>{pet.name}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.sectionHint}>Add your pets</Text>
+        )}
       </ProfileSection>
 
       {/* Settings Section */}

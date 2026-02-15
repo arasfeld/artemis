@@ -4,12 +4,15 @@ import { getToken } from '@/lib/storage';
 import type {
   ConfirmPhotoUploadRequest,
   ConversationData,
+  CreatePetRequest,
   DiscoverProfile,
   GenderData,
   GetUploadUrlRequest,
   GetUploadUrlResponse,
   MatchData,
   MessageData,
+  PetData,
+  PetTypeData,
   PhotoData,
   ProfileData,
   RelationshipTypeData,
@@ -17,6 +20,7 @@ import type {
   SwipeRequest,
   SwipeResponse,
   UnreadCountResponse,
+  UpdatePetRequest,
   UpdateProfileData,
   UserProfile,
 } from '@/types/api';
@@ -40,6 +44,8 @@ export const apiSlice = createApi({
     'Genders',
     'Matches',
     'Messages',
+    'Pets',
+    'PetTypes',
     'Profile',
     'RelationshipTypes',
     'UnreadCount',
@@ -194,6 +200,83 @@ export const apiSlice = createApi({
       invalidatesTags: ['Profile'],
     }),
 
+    // Pet type endpoints
+    getPetTypes: builder.query<PetTypeData[], void>({
+      query: () => '/pet-types',
+      providesTags: ['PetTypes'],
+    }),
+
+    // Pet endpoints
+    getPets: builder.query<PetData[], void>({
+      query: () => '/pets',
+      providesTags: ['Pets'],
+    }),
+    createPet: builder.mutation<PetData, CreatePetRequest>({
+      query: (data) => ({
+        url: '/pets',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+    updatePet: builder.mutation<PetData, { petId: string } & UpdatePetRequest>({
+      query: ({ petId, ...data }) => ({
+        url: `/pets/${petId}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+    deletePet: builder.mutation<{ success: boolean }, string>({
+      query: (petId) => ({
+        url: `/pets/${petId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+    getPetPhotoUploadUrl: builder.mutation<
+      GetUploadUrlResponse,
+      { petId: string } & GetUploadUrlRequest
+    >({
+      query: ({ petId, ...data }) => ({
+        url: `/pets/${petId}/photos/upload-url`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    confirmPetPhotoUpload: builder.mutation<
+      PetData,
+      { petId: string } & ConfirmPhotoUploadRequest
+    >({
+      query: ({ petId, ...data }) => ({
+        url: `/pets/${petId}/photos/confirm`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+    deletePetPhoto: builder.mutation<
+      PetData,
+      { petId: string; photoId: string }
+    >({
+      query: ({ petId, photoId }) => ({
+        url: `/pets/${petId}/photos/${photoId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+    reorderPetPhotos: builder.mutation<
+      PetData,
+      { petId: string; photoIds: string[] }
+    >({
+      query: ({ petId, photoIds }) => ({
+        url: `/pets/${petId}/photos/reorder`,
+        method: 'PATCH',
+        body: { photoIds },
+      }),
+      invalidatesTags: ['Pets', 'Profile'],
+    }),
+
     // Discover endpoints
     getDiscoverFeed: builder.query<DiscoverProfile[], void>({
       query: () => '/discover',
@@ -209,7 +292,7 @@ export const apiSlice = createApi({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['Conversations', 'Discover', 'Matches'],
+      invalidatesTags: ['Conversations', 'Matches'],
     }),
 
     // Messaging endpoints
@@ -292,7 +375,11 @@ export const apiSlice = createApi({
 
 export const {
   useAddPhotoMutation,
+  useConfirmPetPhotoUploadMutation,
   useConfirmPhotoUploadMutation,
+  useCreatePetMutation,
+  useDeletePetMutation,
+  useDeletePetPhotoMutation,
   useDeletePhotoMutation,
   useGetAuthProfileQuery,
   useGetConversationsQuery,
@@ -300,6 +387,9 @@ export const {
   useGetGendersQuery,
   useGetMatchesQuery,
   useGetMessagesQuery,
+  useGetPetPhotoUploadUrlMutation,
+  useGetPetTypesQuery,
+  useGetPetsQuery,
   useGetPhotoUploadUrlMutation,
   useGetProfileQuery,
   useGetRelationshipTypesQuery,
@@ -307,7 +397,9 @@ export const {
   useLogoutMutation,
   useMarkMessagesAsReadMutation,
   useRecordSwipeMutation,
+  useReorderPetPhotosMutation,
   useReorderPhotosMutation,
   useSendMessageMutation,
+  useUpdatePetMutation,
   useUpdateProfileMutation,
 } = apiSlice;

@@ -181,10 +181,10 @@ export default function PhotosScreen() {
           disabled={!isValid || isUploadingPhoto}
           fullWidth
           loading={isUploadingPhoto}
-          onPress={() => router.replace('/(main)/(tabs)')}
+          onPress={() => router.push('/(main)/onboarding/pets')}
           size="lg"
         >
-          Finish
+          Next
         </Button>
       </View>
     </ScreenContainer>

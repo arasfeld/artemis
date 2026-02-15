@@ -23,6 +23,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="relationship" />
       <Stack.Screen name="age-range" />
       <Stack.Screen name="photos" />
+      <Stack.Screen name="pets" />
     </Stack>
   );
 }

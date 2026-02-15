@@ -10,6 +10,7 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { v4 } from 'uuid';
+import { Pet } from './pet.entity';
 import { Permission } from './permission.entity';
 import { Role } from './role.entity';
 import { UserAuthentication } from './user-authentication.entity';
@@ -64,6 +65,9 @@ export class User {
     hidden: true,
   })
   public userSecrets?: UserSecrets;
+
+  @OneToMany(() => Pet, (pet) => pet.owner)
+  public pets = new Collection<Pet>(this);
 
   @OneToOne(() => UserProfile, (userProfile) => userProfile.user)
   public userProfile?: UserProfile;

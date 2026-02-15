@@ -5,11 +5,11 @@ import {
   Image,
   Modal,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   View,
   ViewToken,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, useTheme } from '@artemis/ui';
 
@@ -215,6 +215,21 @@ export function ProfileDetailModal({
               />
               <Text style={dynamicStyles.infoText} variant="body">
                 {profile.location}
+              </Text>
+            </View>
+          )}
+
+          {profile.pets && profile.pets.length > 0 && (
+            <View style={styles.infoRow}>
+              <Ionicons
+                color={theme.colors.mutedForeground}
+                name="paw"
+                size={20}
+              />
+              <Text style={dynamicStyles.infoText} variant="body">
+                {profile.pets
+                  .map((p) => `${p.name} (${p.petType.name})`)
+                  .join(', ')}
               </Text>
             </View>
           )}

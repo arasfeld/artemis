@@ -12,6 +12,7 @@ export default function ProfileEditLayout() {
       <Stack.Screen name="gender" />
       <Stack.Screen name="location" />
       <Stack.Screen name="name" />
+      <Stack.Screen name="pets" />
       <Stack.Screen name="photos" />
       <Stack.Screen name="relationship" />
       <Stack.Screen name="seeking" />

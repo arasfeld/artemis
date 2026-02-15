@@ -14,6 +14,7 @@ import {
   UserProfile,
 } from '../database/entities/user-profile.entity';
 import { User } from '../database/entities/user.entity';
+import { PetsService } from '../pets/pets.service';
 
 export interface UpdateProfileDto {
   ageRangeMax?: number;
@@ -53,6 +54,7 @@ export interface ConfirmPhotoUploadDto {
 export class ProfileService {
   constructor(
     private readonly em: EntityManager,
+    private readonly petsService: PetsService,
     @Inject(STORAGE_SERVICE) private readonly storage: IStorageService
   ) {}
 
@@ -303,6 +305,11 @@ export class ProfileService {
     // Sort photos by display order
     photos.sort((a, b) => a.displayOrder - b.displayOrder);
 
+    // Get user's pets with signed photo URLs
+    const userId =
+      typeof profile.user === 'string' ? profile.user : profile.user.id;
+    const pets = await this.petsService.getUserPets(userId);
+
     return {
       ageRangeMax: profile.ageRangeMax,
       ageRangeMin: profile.ageRangeMin,
@@ -312,7 +319,7 @@ export class ProfileService {
         id: g.id,
         name: g.name,
       })),
-      id: profile.user.id,
+      id: userId,
       isOnboardingComplete: this.calculateOnboardingComplete(profile),
       locationCity: profile.locationCity,
       locationCountry: profile.locationCountry,
@@ -322,6 +329,7 @@ export class ProfileService {
       locationRegion: profile.locationRegion,
       locationType: profile.locationType,
       locationZipCode: profile.locationZipCode,
+      pets,
       photos,
       relationshipTypes: profile.relationshipTypes.getItems().map((r) => ({
         id: r.id,

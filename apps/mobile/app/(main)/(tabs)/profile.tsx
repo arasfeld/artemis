@@ -61,6 +61,7 @@ export default function ProfileScreen() {
       location={locationDisplay}
       onEditSection={handleEditSection}
       onSignOut={handleSignOut}
+      pets={profile.pets}
       photos={profile.photos}
       relationshipTypes={profile.relationshipTypes}
       seeking={profile.seeking}

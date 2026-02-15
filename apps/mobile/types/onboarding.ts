@@ -47,7 +47,7 @@ export interface OnboardingContextType {
   updateData: (partial: Partial<OnboardingData>) => void;
 }
 
-export const TOTAL_ONBOARDING_STEPS = 7;
+export const TOTAL_ONBOARDING_STEPS = 8;
 
 export const initialOnboardingData: OnboardingData = {
   ageRangeMax: 45,
